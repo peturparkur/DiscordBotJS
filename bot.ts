@@ -21,7 +21,7 @@ let GREETINGS = ["hi", "hello", "hey", "helloo", "yo", "hellooo", "g morning", "
                 "how is it going", "how's it going", "how's it goin'", "how's it goin", "how is life been treating you", 
                 "how's life been treating you", "how have you been", "how've you been", "what is up", 
                 "what's up", "what is cracking", "what's cracking", "what is good", "what's good", 
-                "what is happening", "what's happening", "what is new", "what's new", "what is neww", 
+                "what is happening", "what's happening", "what is new", "what's new", "what is new", 
                 "g’day", "howdy", "top of the morning to you", "top of the morning to ya"]
 
 let SELF = [
