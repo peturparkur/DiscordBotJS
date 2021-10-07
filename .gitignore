@@ -1,2 +1,3 @@
 ## ignore internal configuration for environment
 .env
+node_modules/
