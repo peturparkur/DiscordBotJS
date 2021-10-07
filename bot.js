@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,6 +53,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var Discord = require("discord.js");
 var dotenv_1 = require("dotenv");
+var classes_js_1 = require("./utility/classes.js");
+var games_js_1 = require("./utility/games.js");
 console.log("Hello");
 dotenv_1.config();
 var TOKEN = process.env.TOKEN;
@@ -47,8 +64,12 @@ function Clamp(x, a, b) {
     if (b === void 0) { b = 1; }
     return Math.max(Math.min(x, b), a);
 }
-var time_to_listen = 60;
-var client = new Discord.Client();
+var time_to_listen = 60 * 5; //in seconds
+var client = new Discord.Client({ ws: { intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES',
+            'GUILD_PRESENCES', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES',
+            'DIRECT_MESSAGES', 'GUILD_MESSAGE_TYPING', 'GUILD_MESSAGE_REACTIONS']
+    }
+});
 var GREETINGS = ["hi", "hello", "hey", "helloo", "yo", "hellooo", "g morning", "gmorning", "good morning",
     "morning", "good day", "good afternoon", "good evening", /*"greetings"*/ , "greeting",
     "good to see you", "its good seeing you", "how are you", "how're you", "how are you doing",
@@ -57,14 +78,83 @@ var GREETINGS = ["hi", "hello", "hey", "helloo", "yo", "hellooo", "g morning", "
     "how is it going", "how's it going", "how's it goin'", "how's it goin", "how is life been treating you",
     "how's life been treating you", "how have you been", "how've you been", "what is up",
     "what's up", "what is cracking", "what's cracking", "what is good", "what's good",
-    "what is happening", "what's happening", "what is new", "what's new", "what is neww",
+    "what is happening", "what's happening", "what is new", "what's new", "what is new",
     "g’day", "howdy", "top of the morning to you", "top of the morning to ya"];
 var SELF = [
     "bot", "pybot", "ai", "robot", "automation", "computer", "machine", "droid"
 ];
+var Reminder = /** @class */ (function () {
+    function Reminder(name, date) {
+        this.name = name;
+        this.time = date;
+    }
+    return Reminder;
+}());
+var GameRooms = new Array();
+var REMINDERS = new Map();
 var LISTENING = new Map(); // who we listen to for commands
+var CommandHandler = /** @class */ (function (_super) {
+    __extends(CommandHandler, _super);
+    function CommandHandler() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CommandHandler.prototype.dispatchCommand = function (type, message) {
+        var _this = this;
+        var _a, _b;
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        if (!this.listeners.has(type)) // No Event with this name
+            return 1;
+        if (args.length > 0) {
+            (_a = this.listeners.get(type)) === null || _a === void 0 ? void 0 : _a.forEach(function (func) { func.call(_this, message, args); }); //call all functions
+        }
+        else {
+            (_b = this.listeners.get(type)) === null || _b === void 0 ? void 0 : _b.forEach(function (func) { func.call(_this, message); }); //call all functions
+        }
+        return 0;
+    };
+    return CommandHandler;
+}(classes_js_1.EventHandler));
+var CommandListener = new CommandHandler();
+// Commands
+CommandListener.addEventListener('image', function (msg) {
+    //msg.channel.send('response', {files : './image.png'})
+    msg.channel.send('Test', { files: ['./image.png'] });
+});
+CommandListener.addEventListener('dice roll', function (msg) {
+    msg.channel.send("Dice Roll: " + Math.floor(Math.random() * 7));
+});
+CommandListener.addEventListener('play', function (msg) {
+    var message = msg.content.toLowerCase().split(" ");
+    //console.log("Message content: ", message);
+    message = message.slice(1, message.length); //the remaining stuff besides play
+    //console.log("Message: ", message);
+    if (message[0] === "tictactoe") {
+        var room = new classes_js_1.Room([msg.member]);
+        GameRooms.push(room);
+        room.addEventListener('message', function (args) {
+            //console.log("Arguments: ", args);
+            //console.log("Arguments[0]: ", args[0]);
+            var member = args[0];
+            var content = args[1];
+            console.log("Member: ", member);
+            console.log("Content: ", content);
+            console.log("Received Message " + content + " from " + member.nickname);
+        });
+        room.game = new games_js_1.TicTacToe(3, 3);
+        msg.channel.send("Created TicTacToe Room");
+    }
+});
 var COMMANDS = new Map();
-COMMANDS.set("dice roll", function () { return Math.floor(Math.random() * 7); });
+//COMMANDS.set("dice roll", () => {return Math.floor(Math.random() * 7)});
+//COMMANDS.set("image", () => {
+//    let attach = new Discord.MessageAttachment('./image.png');
+//    return attach;
+//});
+//COMMANDS.set("set reminder", (member : Discord.GuildMember, name : string, date : Date) => {REMINDERS.set(member, new Reminder(name, date))})
+//let VoiceStateManagers = new Array<Discord.VoiceStateManager>();
 // ALL EVENTS: https://gist.github.com/koad/316b265a91d933fd1b62dddfcc3ff584
 client.on("ready", function () { return __awaiter(void 0, void 0, void 0, function () {
     var _a;
@@ -76,27 +166,25 @@ client.on("ready", function () { return __awaiter(void 0, void 0, void 0, functi
 }); });
 //called when a message has been sent
 client.on("message", function (message) { return __awaiter(void 0, void 0, void 0, function () {
-    var author, norm_content, _a, _b, _i, x, i, _c, SELF_1, y, r, elem;
+    var author, words, r, norm_content, _a, _b, _i, x, i, _c, SELF_1, y, r, elem;
     return __generator(this, function (_d) {
         switch (_d.label) {
             case 0:
                 author = message.author;
                 if (author.bot)
                     return [2 /*return*/];
-                /*
-                if(message.content.endsWith("bot"))
-                {
-                    await message.channel.send(`You called me ${message.member.displayName}?`)
-                }*/
+                //If we're listening to this person's commands
                 if (LISTENING.has(message.member)) {
-                    //this person already greeted us => can call functions
-                    COMMANDS.forEach(function (func, key) {
-                        if (message.content == key) {
-                            message.channel.send("<@" + message.author.id + "> : " + func());
-                            LISTENING.set(message.member, time_to_listen);
+                    words = message.content.toLowerCase().split(' ');
+                    r = CommandListener.dispatchCommand(words[0], message);
+                    //Tell Each gameRoom that this person has messaged
+                    GameRooms.forEach(function (element) {
+                        if (!element.HasMember(message.member))
                             return;
-                        }
+                        element.dispatchEvent('message', message.member, message.content.toLowerCase());
                     });
+                    if (r === 0)
+                        LISTENING.set(message.member, time_to_listen); //if it was succesful => keep listening to this person
                 }
                 norm_content = message.content.toLowerCase();
                 _a = [];
@@ -146,8 +234,12 @@ client.on("typingStart", function (chn, user) { return __awaiter(void 0, void 0,
 //member is the user
 client.on("voiceStateUpdate", function (before, after) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
+        console.log('---------------');
         console.log(((before.member != null) ? before.member.displayName : "Null") + " => " + ((after.member != null) ? after.member.displayName : "Null"));
         console.log(((before.channel != null) ? before.channel.name : "Null") + " => " + ((after.channel != null) ? after.channel.name : "Null"));
+        console.log("Video on? => " + after.member.voice.selfVideo);
+        console.log("Streaming? => " + after.member.voice.streaming);
+        console.log('---------------');
         return [2 /*return*/];
     });
 }); });
@@ -161,15 +253,34 @@ client.on("guildMemberSpeaking", function (member, speaking) { return __awaiter(
 //Called when the member changes themselves eg.: role, nickname, etc
 client.on("guildMemberUpdate", function (before, after) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        console.log("Member " + before.displayName + " : " + before.displayName + " changed their profile");
-        console.log("Member " + after.displayName + " : " + after.displayName + " changed their profile");
+        //console.log(`Member ${before.displayName} : ${before.displayName} changed their profile`);
+        console.log("Member " + after.displayName + " changed their profile");
         return [2 /*return*/];
     });
 }); });
 //Called when a user's details are changed
-client.on("userUpdate", function (oldUser, newUser) {
-    console.log("user's details (e.g. username) are changed");
-});
+client.on("userUpdate", function (oldUser, newUser) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        console.log("user's details (e.g. username) are changed");
+        return [2 /*return*/];
+    });
+}); });
+// presenceUpdate
+/* Emitted whenever a guild member's presence changes, or they change one of their details.
+PARAMETER    TYPE               DESCRIPTION
+oldMember    GuildMember        The member before the presence update
+newMember    GuildMember        The member after the presence update    */
+client.on("presenceUpdate", function (oldMember, newMember) { return __awaiter(void 0, void 0, void 0, function () {
+    var date, timeString;
+    return __generator(this, function (_a) {
+        console.log("presence update");
+        date = new Date();
+        timeString = date.getHours() + "h :" + date.getMinutes() + "m :" + date.getSeconds() + "s @ " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+        console.log("the guild member " + newMember.member.displayName + " at time " + timeString + " presence changes from [" + ((oldMember != null) ? oldMember.activities : "Null") + ", " + ((oldMember != null) ? oldMember.clientStatus : "Null") + ", " + ((oldMember != null) ? oldMember.status : "Null") + "] => [" + newMember.activities + ", " + newMember.clientStatus + ", " + newMember.status + "]");
+        return [2 /*return*/];
+    });
+}); });
+//client.guilds.cache.each(guild => {guild.members.cache.each(member => {member.client.on("presenceUpdate", (before, after) =>{console.log(`Presence update ${after.member.displayName}`)})})});
 var countdown = setInterval(function () {
     LISTENING.forEach(function (x, key) {
         LISTENING.set(key, x - 1);
@@ -178,5 +289,5 @@ var countdown = setInterval(function () {
             LISTENING["delete"](key);
         }
     });
-}, 1 * 1000); //1000 milliseconds
+}, 1 * 1000); //1000 milliseconds = 1 second
 client.login(TOKEN);
