@@ -45,9 +45,11 @@ class DiscordBot extends Discord.Client {
                 const cntn = content.slice(1); //text without command
                 const split = cntn.split(" "); //text seperated into the arguments
                 const cmd = split[0];
-                if (debug)
+                if (debug) {
                     console.log(`From ${split}: Calling ${cmd}`);
-                this.commandHandler.emit(cmd, message, content.slice(1), split.slice(1));
+                    console.log(`args: ${content.slice(1)}`);
+                }
+                this.commandHandler.emit(cmd, message, content.slice(1));
             }
         });
     }

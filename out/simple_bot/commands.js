@@ -24,10 +24,12 @@ function FilterTodaysPost(posts) {
     }
     return todays;
 }
-async function GetRedditTodaysTop(message, content, subreddit, idx = '-1') {
+async function GetRedditTodaysTop(message, content) {
+    const cntn = content.split(" ");
+    let subreddit = cntn[1];
+    let index = cntn.length >= 3 ? parseInt(cntn[2]) : -1;
     const posts = await GetReddit(subreddit, 100);
     const todays = FilterTodaysPost(posts);
-    let index = parseInt(idx);
     if (index < 0) {
         index = Math.floor(Math.random() * todays.length);
     }

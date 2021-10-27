@@ -29,11 +29,12 @@ function FilterTodaysPost(posts : any){
     }
     return todays
 }
-async function GetRedditTodaysTop(message : Discord.Message, content : string, subreddit : string, idx : string = '-1'){
+async function GetRedditTodaysTop(message : Discord.Message, content : string){
+    const cntn = content.split(" ")
+    let subreddit = cntn[1]
+    let index = cntn.length >= 3 ? parseInt(cntn[2]) : -1
     const posts = await GetReddit(subreddit, 100)
     const todays = FilterTodaysPost(posts)
-
-    let index = parseInt(idx)
 
     if (index < 0){
         index = Math.floor(Math.random() * todays.length)
