@@ -1,10 +1,11 @@
 import * as Discord from "discord.js";
 import { config } from "dotenv";
 import { EventHandler } from "../utility/event_handler.js";
-import { FilterTikTok, Test, GetRedditTodaysTop } from "./commands.js";
+import { FilterTikTok, Test, GetRedditTodaysTop, InviteLink } from "./commands.js";
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
 config();
+// Invite Link: https://discord.com/api/oauth2/authorize?client_id=867508786033590272&permissions=8&scope=bot
 let TOKEN = process.env.TOKEN;
 console.log(TOKEN);
 console.log("Hello World");
@@ -21,6 +22,7 @@ class DiscordBot extends Discord.Client {
         // Assume all commands have format: (message, content, ...args) => void
         this.addEvent('test', Test);
         this.addEvent('reddit', GetRedditTodaysTop);
+        this.addEvent('invite', InviteLink);
         this.on('message', FilterTikTok);
         //called when the user types typing
         this.on("typingStart", async (chn, user) => {

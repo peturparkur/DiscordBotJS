@@ -1,4 +1,5 @@
 import fetch from "node-fetch"; // making web requests
+import { INVITE_LINK } from "./constants.js";
 function Mention(user) {
     return `<@${user.id}>`;
 }
@@ -23,11 +24,17 @@ function FilterTodaysPost(posts) {
     }
     return todays;
 }
-async function GetRedditTodaysTop(message, content, subreddit, index = -1) {
+async function GetRedditTodaysTop(message, content, subreddit, idx = '-1') {
     const posts = await GetReddit(subreddit, 100);
     const todays = FilterTodaysPost(posts);
+    let index = parseInt(idx);
     if (index < 0) {
         index = Math.floor(Math.random() * todays.length);
+    }
+    if (todays.length <= 0) {
+        await message.delete();
+        await message.channel.send('No Post from today');
+        return;
     }
     const post = todays[index];
     const is_video = post['is_video'];
@@ -36,6 +43,7 @@ async function GetRedditTodaysTop(message, content, subreddit, index = -1) {
         const end = loc.split('.')[3];
         //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
         if (loc.includes('.mp4')) {
+            await message.delete();
             await message.channel.send({ files: [loc] });
         }
         // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
@@ -47,12 +55,17 @@ async function GetRedditTodaysTop(message, content, subreddit, index = -1) {
             // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
             // const blob = await response.blob()
             // console.log(response)
+            await message.delete();
             await message.channel.send({ files: [loc] });
         }
     }
 }
-function Test(message, content) {
-    message.channel.send(`received message : ${content}`);
+async function Test(message, content) {
+    await message.channel.send(`received message : ${content}`);
+}
+async function InviteLink(message, content) {
+    await message.delete();
+    await message.channel.send(`${Mention(message.author)} here is the invite link: ${INVITE_LINK}`);
 }
 function IsTikTok(s) {
     if (s.includes('https://www.tiktok.com/'))
@@ -70,4 +83,4 @@ async function FilterTikTok(msg) {
     await msg.delete();
     await msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
 }
-export { Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop };
+export { Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop, InviteLink };

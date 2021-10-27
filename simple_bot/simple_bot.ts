@@ -2,7 +2,7 @@ import * as Discord from "discord.js";
 import {config} from "dotenv";
 import { type } from "os";
 import {EventHandler} from "../utility/event_handler.js"
-import {DiscordCommand, FilterTikTok, Test, Mention, GetRedditTodaysTop} from "./commands.js"
+import {DiscordCommand, FilterTikTok, Test, Mention, GetRedditTodaysTop, InviteLink} from "./commands.js"
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
 config()
@@ -33,6 +33,7 @@ class DiscordBot extends Discord.Client{
         // Assume all commands have format: (message, content, ...args) => void
         this.addEvent('test', Test)
         this.addEvent('reddit', GetRedditTodaysTop)
+        this.addEvent('invite', InviteLink)
 
         this.on('message', FilterTikTok)
 

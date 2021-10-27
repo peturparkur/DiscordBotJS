@@ -1,5 +1,6 @@
 import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
+import { INVITE_LINK } from "./constants.js";
 type DiscordCommand = (message : Discord.Message, content : string, ...args : unknown[]) => void
 
 function Mention(user : Discord.User){
@@ -28,12 +29,20 @@ function FilterTodaysPost(posts : any){
     }
     return todays
 }
-async function GetRedditTodaysTop(message : Discord.Message, content : string, subreddit : string, index : number = -1){
+async function GetRedditTodaysTop(message : Discord.Message, content : string, subreddit : string, idx : string = '-1'){
     const posts = await GetReddit(subreddit, 100)
     const todays = FilterTodaysPost(posts)
 
+    let index = parseInt(idx)
+
     if (index < 0){
         index = Math.floor(Math.random() * todays.length)
+    }
+    if (todays.length <= 0)
+    {
+        await message.delete()
+        await message.channel.send('No Post from today')
+        return
     }
     const post = todays[index]
 
@@ -43,6 +52,7 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string, s
         const end = loc.split('.')[3]
         //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
         if (loc.includes('.mp4')){
+            await message.delete()
             await message.channel.send({files : [loc]})
         }
         // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
@@ -55,13 +65,19 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string, s
             // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
             // const blob = await response.blob()
             // console.log(response)
+            await message.delete()
             await message.channel.send({files : [loc]})
         }
     }
 }
 
-function Test(message : Discord.Message, content : string){
-    message.channel.send(`received message : ${content}`)
+async function Test(message : Discord.Message, content : string){
+    await message.channel.send(`received message : ${content}`)
+}
+
+async function InviteLink(message : Discord.Message, content : string){
+    await message.delete()
+    await message.channel.send(`${Mention(message.author)} here is the invite link: ${INVITE_LINK}`)
 }
 
 function IsTikTok(s : string){
@@ -78,4 +94,4 @@ async function FilterTikTok(msg : Discord.Message){
     await msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
 }
 
-export {DiscordCommand, Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop}
+export {DiscordCommand, Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop, InviteLink}
