@@ -54,6 +54,7 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string){
         //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
         if (loc.includes('.mp4')){
             await message.delete()
+            await message.channel.send(`Title: ${post['title']}`)
             await message.channel.send({files : [loc]})
         }
         // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
@@ -67,6 +68,7 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string){
             // const blob = await response.blob()
             // console.log(response)
             await message.delete()
+            await message.channel.send(`Title: ${post['title']}`)
             await message.channel.send({files : [loc]})
         }
     }
