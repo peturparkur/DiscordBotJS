@@ -45,7 +45,7 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string){
         await message.channel.send('No Post from today')
         return
     }
-    const post = todays[index]
+    const post = todays.length > index ? todays[index] : todays[todays.length - 1]
 
     const is_video = post['is_video']
     if (is_video){

@@ -38,7 +38,7 @@ async function GetRedditTodaysTop(message, content) {
         await message.channel.send('No Post from today');
         return;
     }
-    const post = todays[index];
+    const post = todays.length > index ? todays[index] : todays[todays.length - 1];
     const is_video = post['is_video'];
     if (is_video) {
         const loc = post['secure_media']['reddit_video']['fallback_url'];
