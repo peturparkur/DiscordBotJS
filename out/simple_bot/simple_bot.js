@@ -10,7 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as Discord from "discord.js";
 import { config } from "dotenv";
 import { EventHandler } from "../utility/event_handler.js";
-import { FilterTikTok, Test, GetRedditTodaysTop, InviteLink, StreamYT } from "./commands.js";
+import * as commands from "./commands/commands.js";
+import { FilterTikTok } from "./commands/src/tiktok.js";
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
 config();
@@ -20,24 +21,22 @@ console.log(TOKEN);
 console.log("Hello World");
 //type DiscordCommand = (message : Discord.Message, content : string, ...args : unknown[]) => void
 class DiscordBot extends Discord.Client {
-    constructor(prefix = '>', debug = true, options = { ws: { intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES',
+    constructor(prefix = '.', debug = true, options = { ws: { intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES',
                 'GUILD_PRESENCES', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES',
                 'DIRECT_MESSAGES', 'GUILD_MESSAGE_TYPING', 'GUILD_MESSAGE_REACTIONS'] } }) {
         super(options);
         this.commandPrefix = '!';
         this.prefixes = new Map();
-        //Music bot settings
-        this.volumes = new Map();
         this.commandPrefix = prefix; //prefix should be server specific
         this.commandHandler = new EventHandler();
         this.on("ready", () => {
             this.Setup();
         });
         // Assume all commands have format: (message, content, ...args) => void
-        this.addEvent('test', Test);
-        this.addEvent('reddit', GetRedditTodaysTop);
-        this.addEvent('invite', InviteLink);
-        this.addEvent('stream', StreamYT);
+        this.addEvent('test', commands.Test);
+        this.addEvent('reddit', commands.GetRedditTodaysTop);
+        this.addEvent('invite', commands.InviteLink);
+        this.addEvent('stream', commands.StreamYT);
         this.addEvent('settings', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
             const stg = cntn[1]; //setting to change
@@ -103,3 +102,4 @@ class DiscordBot extends Discord.Client {
 }
 const bot = new DiscordBot();
 bot.login(TOKEN);
+export { DiscordBot };

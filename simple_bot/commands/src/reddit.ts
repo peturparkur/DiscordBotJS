@@ -1,14 +1,5 @@
 import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
-import { INVITE_LINK } from "./constants.js";
-import ytdl from "ytdl-core"; //youtube system
-import yts from "yt-search"
-import fs from "fs" // file-system
-type DiscordCommand = (client : Discord.Client, message : Discord.Message, ...args : string[]) => void
-
-function Mention(user : Discord.User){
-    return `<@${user.id}>`
-}
 
 async function GetReddit(subreddit : string, count : number = 50){
     const response = await fetch(`https://www.reddit.com/r/${subreddit}/.json?limit=${count}`, 
@@ -32,7 +23,7 @@ function FilterTodaysPost(posts : any){
     }
     return todays
 }
-async function GetRedditTodaysTop(client : Discord.Client, message : Discord.Message, ...content : string[]){
+export async function GetRedditTodaysTop(client : Discord.Client, message : Discord.Message, ...content : string[]){
     //const cntn = content.split(" ")
     const cntn = content
     let subreddit = cntn[0]
@@ -77,60 +68,3 @@ async function GetRedditTodaysTop(client : Discord.Client, message : Discord.Mes
         }
     }
 }
-
-async function Test(client : Discord.Client, message : Discord.Message, ...content : string[]){
-    await message.channel.send(`received message : ${message.content}`)
-}
-
-async function StreamYT(client : Discord.Client, message : Discord.Message, ...content : string[]){
-    //const args = content.split(" ")
-    let url = content[0]
-    const vc = message.member.voice.channel
-    if (vc === null){
-        await message.channel.send(`${message.member.displayName} Please join a Voice Channel`)
-        return
-    }
-    const vcConn = await vc.join()
-    if (!ytdl.validateURL(url)){
-        const finder = async (query) =>{
-            const res = await yts(query)
-            return (res.videos.length > 1)? res.videos[0] : null;
-        }
-
-        const video = await finder(content.join(" "))
-        if(video){
-            url = video.url
-        }
-        else{
-            await message.channel.send(`Error finding video`)
-        }
-    }
-    const vd = ytdl(url, {filter : "audioonly"})
-    //console.log(vd)
-    vcConn.play(vd, {seek : 0, volume : 1}).on("finish", () =>{
-        vc.leave()
-    })
-    await message.channel.send(`Playing ${url}`)
-}
-
-async function InviteLink(client : Discord.Client, message : Discord.Message){
-    await message.channel.send(`${message.member.displayName} here is the invite link: ${INVITE_LINK}`)
-}
-
-function IsTikTok(s : string){
-    if (s.includes('https://www.tiktok.com/')) return true
-    if (s.includes('https://vm.tiktok.com/')) return true
-    return false
-}
-
-
-// Message function
-async function FilterTikTok(msg : Discord.Message){
-    if (msg.author.bot) return;
-    const content = msg.content.toLowerCase().trim();
-    if (!IsTikTok(content)) return;
-    await msg.delete();
-    await msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
-}
-
-export {DiscordCommand, Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop, InviteLink, StreamYT}

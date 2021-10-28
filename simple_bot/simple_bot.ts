@@ -2,7 +2,10 @@ import * as Discord from "discord.js";
 import {config} from "dotenv";
 import { type } from "os";
 import {EventHandler} from "../utility/event_handler.js"
-import {DiscordCommand, FilterTikTok, Test, Mention, GetRedditTodaysTop, InviteLink, StreamYT} from "./commands.js"
+import { Mention } from "./utility/util.js";
+import * as commands from "./commands/commands.js"
+import {DiscordCommand, FilterTikTok} from "./commands/src/tiktok.js"
+
 import ytdl from "ytdl-core"; //youtube system
 import fs from "fs" // file-system
 
@@ -23,10 +26,7 @@ class DiscordBot extends Discord.Client{
     commandPrefix : string = '!'
     prefixes : Map<Discord.Guild, string> = new Map()
 
-    //Music bot settings
-    volumes : Map<Discord.Guild, number> = new Map()
-
-    constructor(prefix : string = '>', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
+    constructor(prefix : string = '.', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
         ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 
         'GUILD_PRESENCES', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES', 
         'DIRECT_MESSAGES', 'GUILD_MESSAGE_TYPING', 'GUILD_MESSAGE_REACTIONS']}},
@@ -40,10 +40,10 @@ class DiscordBot extends Discord.Client{
         })
 
         // Assume all commands have format: (message, content, ...args) => void
-        this.addEvent('test', Test)
-        this.addEvent('reddit', GetRedditTodaysTop)
-        this.addEvent('invite', InviteLink)
-        this.addEvent('stream', StreamYT)
+        this.addEvent('test', commands.Test)
+        this.addEvent('reddit', commands.GetRedditTodaysTop)
+        this.addEvent('invite', commands.InviteLink)
+        this.addEvent('stream', commands.StreamYT)
 
 
         this.addEvent('settings', async (client : Discord.Client, msg : Discord.Message, content : string) => {
@@ -114,6 +114,7 @@ class DiscordBot extends Discord.Client{
         this.commandHandler.addEventListener(eventName, callback)
     }
 }
-
 const bot = new DiscordBot()
 bot.login(TOKEN)
+
+export {DiscordBot}
