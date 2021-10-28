@@ -23,6 +23,9 @@ class DiscordBot extends Discord.Client{
     commandPrefix : string = '!'
     prefixes : Map<Discord.Guild, string> = new Map()
 
+    //Music bot settings
+    volumes : Map<Discord.Guild, number> = new Map()
+
     constructor(prefix : string = '>', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
         ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 
         'GUILD_PRESENCES', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES', 
@@ -97,7 +100,7 @@ class DiscordBot extends Discord.Client{
                     console.log(`args: ${content.slice(1)}`)
                 }
                 try{
-                    this.commandHandler.emit(cmd, this, message, ...split)
+                    this.commandHandler.emit(cmd, this, message, ...split.slice(1))
                 }
                 catch(err){
                     message.reply(`There was an error with the command ${cmd}(${split})`)

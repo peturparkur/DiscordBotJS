@@ -26,6 +26,8 @@ class DiscordBot extends Discord.Client {
         super(options);
         this.commandPrefix = '!';
         this.prefixes = new Map();
+        //Music bot settings
+        this.volumes = new Map();
         this.commandPrefix = prefix; //prefix should be server specific
         this.commandHandler = new EventHandler();
         this.on("ready", () => {
@@ -86,7 +88,7 @@ class DiscordBot extends Discord.Client {
                     console.log(`args: ${content.slice(1)}`);
                 }
                 try {
-                    this.commandHandler.emit(cmd, this, message, ...split);
+                    this.commandHandler.emit(cmd, this, message, ...split.slice(1));
                 }
                 catch (err) {
                     message.reply(`There was an error with the command ${cmd}(${split})`);

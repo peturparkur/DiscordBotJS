@@ -41,8 +41,8 @@ function GetRedditTodaysTop(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         //const cntn = content.split(" ")
         const cntn = content;
-        let subreddit = cntn[1];
-        let index = cntn.length >= 3 ? parseInt(cntn[2]) : -1;
+        let subreddit = cntn[0];
+        let index = cntn.length >= 3 ? parseInt(cntn[1]) : -1;
         const posts = yield GetReddit(subreddit, 100);
         const todays = FilterTodaysPost(posts);
         if (index < 0) {
@@ -82,13 +82,13 @@ function GetRedditTodaysTop(client, message, ...content) {
 }
 function Test(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield message.channel.send(`received message : ${content}`);
+        yield message.channel.send(`received message : ${message.content}`);
     });
 }
 function StreamYT(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         //const args = content.split(" ")
-        let url = content[1];
+        let url = content[0];
         const vc = message.member.voice.channel;
         if (vc === null) {
             yield message.channel.send(`${message.member.displayName} Please join a Voice Channel`);
@@ -100,7 +100,7 @@ function StreamYT(client, message, ...content) {
                 const res = yield yts(query);
                 return (res.videos.length > 1) ? res.videos[0] : null;
             });
-            const video = yield finder(content.slice(1).join(" "));
+            const video = yield finder(content.join(" "));
             if (video) {
                 url = video.url;
             }

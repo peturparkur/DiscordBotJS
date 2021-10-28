@@ -4,7 +4,7 @@ import { INVITE_LINK } from "./constants.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search"
 import fs from "fs" // file-system
-type DiscordCommand = (client : Discord.Client, message : Discord.Message, ...content : string[]) => void
+type DiscordCommand = (client : Discord.Client, message : Discord.Message, ...args : string[]) => void
 
 function Mention(user : Discord.User){
     return `<@${user.id}>`
@@ -35,8 +35,8 @@ function FilterTodaysPost(posts : any){
 async function GetRedditTodaysTop(client : Discord.Client, message : Discord.Message, ...content : string[]){
     //const cntn = content.split(" ")
     const cntn = content
-    let subreddit = cntn[1]
-    let index = cntn.length >= 3 ? parseInt(cntn[2]) : -1
+    let subreddit = cntn[0]
+    let index = cntn.length >= 3 ? parseInt(cntn[1]) : -1
     const posts = await GetReddit(subreddit, 100)
     const todays = FilterTodaysPost(posts)
 
@@ -79,12 +79,12 @@ async function GetRedditTodaysTop(client : Discord.Client, message : Discord.Mes
 }
 
 async function Test(client : Discord.Client, message : Discord.Message, ...content : string[]){
-    await message.channel.send(`received message : ${content}`)
+    await message.channel.send(`received message : ${message.content}`)
 }
 
 async function StreamYT(client : Discord.Client, message : Discord.Message, ...content : string[]){
     //const args = content.split(" ")
-    let url = content[1]
+    let url = content[0]
     const vc = message.member.voice.channel
     if (vc === null){
         await message.channel.send(`${message.member.displayName} Please join a Voice Channel`)
@@ -97,7 +97,7 @@ async function StreamYT(client : Discord.Client, message : Discord.Message, ...c
             return (res.videos.length > 1)? res.videos[0] : null;
         }
 
-        const video = await finder(content.slice(1).join(" "))
+        const video = await finder(content.join(" "))
         if(video){
             url = video.url
         }
