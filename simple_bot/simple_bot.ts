@@ -2,7 +2,10 @@ import * as Discord from "discord.js";
 import {config} from "dotenv";
 import { type } from "os";
 import {EventHandler} from "../utility/event_handler.js"
-import {DiscordCommand, FilterTikTok, Test, Mention, GetRedditTodaysTop, InviteLink} from "./commands.js"
+import {DiscordCommand, FilterTikTok, Test, Mention, GetRedditTodaysTop, InviteLink, StreamYT} from "./commands.js"
+import ytdl from "ytdl-core"; //youtube system
+import fs from "fs" // file-system
+
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
 config()
@@ -20,7 +23,7 @@ class DiscordBot extends Discord.Client{
     commandPrefix : string = '!'
     prefixes : Map<Discord.Guild, string> = new Map()
 
-    constructor(prefix : string = '!', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents:  
+    constructor(prefix : string = '>', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
         ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 
         'GUILD_PRESENCES', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES', 
         'DIRECT_MESSAGES', 'GUILD_MESSAGE_TYPING', 'GUILD_MESSAGE_REACTIONS']}},
@@ -37,16 +40,17 @@ class DiscordBot extends Discord.Client{
         this.addEvent('test', Test)
         this.addEvent('reddit', GetRedditTodaysTop)
         this.addEvent('invite', InviteLink)
+        this.addEvent('stream', StreamYT)
 
 
-        this.addEvent('settings', async (msg : Discord.Message, content : string) => {
+        this.addEvent('settings', async (client : Discord.Client, msg : Discord.Message, content : string) => {
             const cntn = content.split(" ")
             const stg = cntn[1] //setting to change
             if (stg == "prefix")
                 this.prefixes.set(msg.guild, cntn[2])
                 await msg.channel.send(`prefix changed to ${cntn[2]}`)
         })
-        this.addEvent('help', async (msg : Discord.Message, cntn : string) => {
+        this.addEvent('help', async (client : Discord.Client, msg : Discord.Message, cntn : string) => {
             let ret = ""
             for (const k of this.commandHandler.listeners.keys()){
                 ret += `${k}`
@@ -54,11 +58,10 @@ class DiscordBot extends Discord.Client{
             }
             await msg.channel.send(ret)
         })
-
         this.on('message', FilterTikTok)
 
         //called when the user types typing
-        this.on("typingStart", async (chn, user) => {
+        this.on("typingStart", async (chn : Discord.Channel, user) => {
             console.log(`User ${user.username} is typing in channel ${chn.id}`);
         });
     }
@@ -66,7 +69,11 @@ class DiscordBot extends Discord.Client{
     private Setup(debug : boolean = false){
         this.guilds.cache.forEach(guild => {
             console.log("Connected guilds: ", guild.name)
-            this.prefixes.set(guild, "!")
+            this.prefixes.set(guild, this.commandPrefix)
+        })
+
+        this.voice.connections.forEach(vc => {
+            vc.disconnect()
         })
 
         // Setup command calls
@@ -90,7 +97,7 @@ class DiscordBot extends Discord.Client{
                     console.log(`args: ${content.slice(1)}`)
                 }
 
-                this.commandHandler.emit(cmd, message, content.slice(1))
+                this.commandHandler.emit(cmd, this, message, ...split)
             }
         });
     }

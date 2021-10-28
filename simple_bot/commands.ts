@@ -1,7 +1,9 @@
 import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
 import { INVITE_LINK } from "./constants.js";
-type DiscordCommand = (message : Discord.Message, content : string, ...args : unknown[]) => void
+import ytdl from "ytdl-core"; //youtube system
+import fs from "fs" // file-system
+type DiscordCommand = (client : Discord.Client, message : Discord.Message, ...content : string[]) => void
 
 function Mention(user : Discord.User){
     return `<@${user.id}>`
@@ -29,8 +31,9 @@ function FilterTodaysPost(posts : any){
     }
     return todays
 }
-async function GetRedditTodaysTop(message : Discord.Message, content : string){
-    const cntn = content.split(" ")
+async function GetRedditTodaysTop(client : Discord.Client, message : Discord.Message, ...content : string[]){
+    //const cntn = content.split(" ")
+    const cntn = content
     let subreddit = cntn[1]
     let index = cntn.length >= 3 ? parseInt(cntn[2]) : -1
     const posts = await GetReddit(subreddit, 100)
@@ -52,8 +55,11 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string){
         const end = loc.split('.')[3]
         //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
         if (loc.includes('.mp4')){
-            await message.channel.send(`${message.member.displayName}: ${post['title']}`)
+            await message.channel.send(`${post['title']}`)
             await message.channel.send({files : [loc]})
+        }
+        else{
+            await message.channel.send(`Content is not compatible: ${loc}`)
         }
         // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
     }
@@ -65,17 +71,37 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string){
             // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
             // const blob = await response.blob()
             // console.log(response)
-            await message.channel.send(`${message.member.displayName}: ${post['title']}`)
+            await message.channel.send(`${post['title']}`)
             await message.channel.send({files : [loc]})
         }
     }
 }
 
-async function Test(message : Discord.Message, content : string){
+async function Test(client : Discord.Client, message : Discord.Message, ...content : string[]){
     await message.channel.send(`received message : ${content}`)
 }
 
-async function InviteLink(message : Discord.Message, content : string){
+async function StreamYT(client : Discord.Client, message : Discord.Message, ...content : string[]){
+    //const args = content.split(" ")
+    const url = content[1]
+    const vc = message.member.voice.channel
+    if (vc === null){
+        await message.channel.send(`${message.member.displayName} Please join a Voice Channel`)
+        return
+    }
+    const vcConn = await vc.join()
+    if (!ytdl.validateURL(url)){
+        await message.channel.send(`${url} is not valid`)
+    }
+    const vd = ytdl(url, {filter : "audioonly"})
+    console.log(vd)
+    vcConn.play(vd, {seek : 0, volume : 1, type : 'opus'}).on("finish", () =>{
+        vc.leave()
+    })
+    await message.channel.send(`Playing ${url}`)
+}
+
+async function InviteLink(client : Discord.Client, message : Discord.Message){
     await message.channel.send(`${message.member.displayName} here is the invite link: ${INVITE_LINK}`)
 }
 
@@ -85,6 +111,8 @@ function IsTikTok(s : string){
     return false
 }
 
+
+// Message function
 async function FilterTikTok(msg : Discord.Message){
     if (msg.author.bot) return;
     const content = msg.content.toLowerCase().trim();
@@ -93,4 +121,4 @@ async function FilterTikTok(msg : Discord.Message){
     await msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
 }
 
-export {DiscordCommand, Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop, InviteLink}
+export {DiscordCommand, Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop, InviteLink, StreamYT}

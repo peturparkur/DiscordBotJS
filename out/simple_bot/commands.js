@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import fetch from "node-fetch"; // making web requests
 import { INVITE_LINK } from "./constants.js";
+import ytdl from "ytdl-core"; //youtube system
 function Mention(user) {
     return `<@${user.id}>`;
 }
@@ -35,9 +36,10 @@ function FilterTodaysPost(posts) {
     }
     return todays;
 }
-function GetRedditTodaysTop(message, content) {
+function GetRedditTodaysTop(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
-        const cntn = content.split(" ");
+        //const cntn = content.split(" ")
+        const cntn = content;
         let subreddit = cntn[1];
         let index = cntn.length >= 3 ? parseInt(cntn[2]) : -1;
         const posts = yield GetReddit(subreddit, 100);
@@ -56,8 +58,11 @@ function GetRedditTodaysTop(message, content) {
             const end = loc.split('.')[3];
             //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
             if (loc.includes('.mp4')) {
-                yield message.channel.send(`${message.member.displayName}: ${post['title']}`);
+                yield message.channel.send(`${post['title']}`);
                 yield message.channel.send({ files: [loc] });
+            }
+            else {
+                yield message.channel.send(`Content is not compatible: ${loc}`);
             }
             // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
         }
@@ -68,18 +73,39 @@ function GetRedditTodaysTop(message, content) {
                 // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
                 // const blob = await response.blob()
                 // console.log(response)
-                yield message.channel.send(`${message.member.displayName}: ${post['title']}`);
+                yield message.channel.send(`${post['title']}`);
                 yield message.channel.send({ files: [loc] });
             }
         }
     });
 }
-function Test(message, content) {
+function Test(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         yield message.channel.send(`received message : ${content}`);
     });
 }
-function InviteLink(message, content) {
+function StreamYT(client, message, ...content) {
+    return __awaiter(this, void 0, void 0, function* () {
+        //const args = content.split(" ")
+        const url = content[1];
+        const vc = message.member.voice.channel;
+        if (vc === null) {
+            yield message.channel.send(`${message.member.displayName} Please join a Voice Channel`);
+            return;
+        }
+        const vcConn = yield vc.join();
+        if (!ytdl.validateURL(url)) {
+            yield message.channel.send(`${url} is not valid`);
+        }
+        const vd = ytdl(url, { filter: "audioonly" });
+        console.log(vd);
+        vcConn.play(vd, { seek: 0, volume: 1, type: 'opus' }).on("finish", () => {
+            vc.leave();
+        });
+        yield message.channel.send(`Playing ${url}`);
+    });
+}
+function InviteLink(client, message) {
     return __awaiter(this, void 0, void 0, function* () {
         yield message.channel.send(`${message.member.displayName} here is the invite link: ${INVITE_LINK}`);
     });
@@ -91,6 +117,7 @@ function IsTikTok(s) {
         return true;
     return false;
 }
+// Message function
 function FilterTikTok(msg) {
     return __awaiter(this, void 0, void 0, function* () {
         if (msg.author.bot)
@@ -102,4 +129,4 @@ function FilterTikTok(msg) {
         yield msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
     });
 }
-export { Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop, InviteLink };
+export { Test, IsTikTok, FilterTikTok, Mention, GetRedditTodaysTop, InviteLink, StreamYT };
