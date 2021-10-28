@@ -23,6 +23,13 @@ class DiscordBot extends Discord.Client {
         this.addEvent('test', Test);
         this.addEvent('reddit', GetRedditTodaysTop);
         this.addEvent('invite', InviteLink);
+        this.addEvent('help', (msg, cntn) => {
+            let ret = "";
+            for (const k of this.commandHandler.listeners.keys()) {
+                ret += `${k} \n`;
+            }
+            msg.channel.send(ret);
+        });
         this.on('message', FilterTikTok);
         //called when the user types typing
         this.on("typingStart", async (chn, user) => {

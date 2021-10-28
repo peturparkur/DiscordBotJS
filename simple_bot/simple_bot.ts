@@ -34,6 +34,13 @@ class DiscordBot extends Discord.Client{
         this.addEvent('test', Test)
         this.addEvent('reddit', GetRedditTodaysTop)
         this.addEvent('invite', InviteLink)
+        this.addEvent('help', (msg : Discord.Message, cntn : string) => {
+            let ret = ""
+            for (const k of this.commandHandler.listeners.keys()){
+                ret += `${k} \n`
+            }
+            msg.channel.send(ret)
+        })
 
         this.on('message', FilterTikTok)
 
