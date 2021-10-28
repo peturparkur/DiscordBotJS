@@ -26,7 +26,11 @@ class DiscordBot extends Discord.Client {
         this.addEvent('help', (msg, cntn) => {
             let ret = "";
             for (const k of this.commandHandler.listeners.keys()) {
-                ret += `${k} \n`;
+                ret += `${k} `;
+                for (const f of this.commandHandler.listeners.get(k)) {
+                    ret += `${f.arguments}`;
+                }
+                ret += "\n";
             }
             msg.channel.send(ret);
         });
