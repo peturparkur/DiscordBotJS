@@ -18,6 +18,7 @@ console.log("Hello World")
 class DiscordBot extends Discord.Client{
     commandHandler : EventHandler //handles command requests
     commandPrefix : string = '!'
+    prefixes : Map<Discord.Guild, string> = new Map()
 
     constructor(prefix : string = '!', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents:  
         ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 
@@ -26,21 +27,32 @@ class DiscordBot extends Discord.Client{
         )
     {
         super(options)
-        this.commandPrefix = prefix
+        this.commandPrefix = prefix //prefix should be server specific
         this.commandHandler = new EventHandler()
-        this.Setup(debug)
+        this.on("ready", () => {
+            this.Setup()
+        })
 
         // Assume all commands have format: (message, content, ...args) => void
         this.addEvent('test', Test)
         this.addEvent('reddit', GetRedditTodaysTop)
         this.addEvent('invite', InviteLink)
-        this.addEvent('help', (msg : Discord.Message, cntn : string) => {
+
+
+        this.addEvent('settings', async (msg : Discord.Message, content : string) => {
+            const cntn = content.split(" ")
+            const stg = cntn[1] //setting to change
+            if (stg == "prefix")
+                this.prefixes.set(msg.guild, cntn[2])
+                await msg.channel.send(`prefix changed to ${cntn[2]}`)
+        })
+        this.addEvent('help', async (msg : Discord.Message, cntn : string) => {
             let ret = ""
             for (const k of this.commandHandler.listeners.keys()){
                 ret += `${k}`
                 ret += "\n"
             }
-            msg.channel.send(ret)
+            await msg.channel.send(ret)
         })
 
         this.on('message', FilterTikTok)
@@ -52,14 +64,19 @@ class DiscordBot extends Discord.Client{
     }
 
     private Setup(debug : boolean = false){
+        this.guilds.cache.forEach(guild => {
+            console.log("guilds: ", guild.id)
+            this.prefixes.set(guild, "!")
+        })
+
         // Setup command calls
         this.on("message", async (message) => {
             //check the author
             const author = message.author;
             if (author.bot) return;
             const content = message.content.toLowerCase().trim()
-
-            const call = content.startsWith(this.commandPrefix)
+            console.log("guild: ", message.guild.id)
+            const call = content.startsWith(this.prefixes.get(message.guild))
             if (debug)  console.log(`[${message.member.displayName}, ${call}] : ${content}`)
 
             // Assume command message format: "prefix_command ...args"

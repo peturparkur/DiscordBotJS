@@ -26,9 +26,9 @@ function FilterTodaysPost(posts) {
         if (!('created_utc' in data))
             continue;
         const posted_utc = parseInt(data['created_utc']);
-        console.log(`posted_utc : ${posted_utc} vs ${data['created_utc']}, NOW ${utc_now}`);
+        //console.log(`posted_utc : ${posted_utc} vs ${data['created_utc']}, NOW ${utc_now}`)
         let delta = utc_now - posted_utc;
-        console.log(delta > 1000 * 60 * 60 * 24);
+        //console.log(delta > 1000 * 60 * 60 * 24)
         if (delta > 1000 * 60 * 60 * 24)
             continue; // 1000ms * 60s * 60m * 24h
         todays.push(data);
@@ -46,8 +46,7 @@ function GetRedditTodaysTop(message, content) {
             index = Math.floor(Math.random() * todays.length);
         }
         if (todays.length <= 0) {
-            yield message.delete();
-            yield message.channel.send('No Post from today');
+            yield message.channel.send(`${message.member.displayName}: No post has been found for today`);
             return;
         }
         const post = todays.length > index ? todays[index] : todays[todays.length - 1];
@@ -57,8 +56,7 @@ function GetRedditTodaysTop(message, content) {
             const end = loc.split('.')[3];
             //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
             if (loc.includes('.mp4')) {
-                yield message.delete();
-                yield message.channel.send(`Title: ${post['title']}`);
+                yield message.channel.send(`${message.member.displayName}: ${post['title']}`);
                 yield message.channel.send({ files: [loc] });
             }
             // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
@@ -70,8 +68,7 @@ function GetRedditTodaysTop(message, content) {
                 // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
                 // const blob = await response.blob()
                 // console.log(response)
-                yield message.delete();
-                yield message.channel.send(`Title: ${post['title']}`);
+                yield message.channel.send(`${message.member.displayName}: ${post['title']}`);
                 yield message.channel.send({ files: [loc] });
             }
         }
@@ -84,8 +81,7 @@ function Test(message, content) {
 }
 function InviteLink(message, content) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield message.delete();
-        yield message.channel.send(`${Mention(message.author)} here is the invite link: ${INVITE_LINK}`);
+        yield message.channel.send(`${message.member.displayName} here is the invite link: ${INVITE_LINK}`);
     });
 }
 function IsTikTok(s) {

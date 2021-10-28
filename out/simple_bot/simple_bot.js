@@ -25,21 +25,31 @@ class DiscordBot extends Discord.Client {
                 'DIRECT_MESSAGES', 'GUILD_MESSAGE_TYPING', 'GUILD_MESSAGE_REACTIONS'] } }) {
         super(options);
         this.commandPrefix = '!';
-        this.commandPrefix = prefix;
+        this.prefixes = new Map();
+        this.commandPrefix = prefix; //prefix should be server specific
         this.commandHandler = new EventHandler();
-        this.Setup(debug);
+        this.on("ready", () => {
+            this.Setup();
+        });
         // Assume all commands have format: (message, content, ...args) => void
         this.addEvent('test', Test);
         this.addEvent('reddit', GetRedditTodaysTop);
         this.addEvent('invite', InviteLink);
-        this.addEvent('help', (msg, cntn) => {
+        this.addEvent('settings', (msg, content) => __awaiter(this, void 0, void 0, function* () {
+            const cntn = content.split(" ");
+            const stg = cntn[1]; //setting to change
+            if (stg == "prefix")
+                this.prefixes.set(msg.guild, cntn[2]);
+            yield msg.channel.send(`prefix changed to ${cntn[2]}`);
+        }));
+        this.addEvent('help', (msg, cntn) => __awaiter(this, void 0, void 0, function* () {
             let ret = "";
             for (const k of this.commandHandler.listeners.keys()) {
                 ret += `${k}`;
                 ret += "\n";
             }
-            msg.channel.send(ret);
-        });
+            yield msg.channel.send(ret);
+        }));
         this.on('message', FilterTikTok);
         //called when the user types typing
         this.on("typingStart", (chn, user) => __awaiter(this, void 0, void 0, function* () {
@@ -47,6 +57,10 @@ class DiscordBot extends Discord.Client {
         }));
     }
     Setup(debug = false) {
+        this.guilds.cache.forEach(guild => {
+            console.log("guilds: ", guild.id);
+            this.prefixes.set(guild, "!");
+        });
         // Setup command calls
         this.on("message", (message) => __awaiter(this, void 0, void 0, function* () {
             //check the author
@@ -54,7 +68,8 @@ class DiscordBot extends Discord.Client {
             if (author.bot)
                 return;
             const content = message.content.toLowerCase().trim();
-            const call = content.startsWith(this.commandPrefix);
+            console.log("guild: ", message.guild.id);
+            const call = content.startsWith(this.prefixes.get(message.guild));
             if (debug)
                 console.log(`[${message.member.displayName}, ${call}] : ${content}`);
             // Assume command message format: "prefix_command ...args"

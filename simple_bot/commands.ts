@@ -20,10 +20,10 @@ function FilterTodaysPost(posts : any){
         const data = p["data"]
         if (!('created_utc' in data)) continue
         const posted_utc = parseInt(data['created_utc'])
-        console.log(`posted_utc : ${posted_utc} vs ${data['created_utc']}, NOW ${utc_now}`)
+        //console.log(`posted_utc : ${posted_utc} vs ${data['created_utc']}, NOW ${utc_now}`)
 
         let delta = utc_now - posted_utc
-        console.log(delta > 1000 * 60 * 60 * 24)
+        //console.log(delta > 1000 * 60 * 60 * 24)
         if (delta > 1000 * 60 * 60 * 24) continue // 1000ms * 60s * 60m * 24h
         todays.push(data)
     }
@@ -41,8 +41,7 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string){
     }
     if (todays.length <= 0)
     {
-        await message.delete()
-        await message.channel.send('No Post from today')
+        await message.channel.send(`${message.member.displayName}: No post has been found for today`)
         return
     }
     const post = todays.length > index ? todays[index] : todays[todays.length - 1]
@@ -53,8 +52,7 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string){
         const end = loc.split('.')[3]
         //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
         if (loc.includes('.mp4')){
-            await message.delete()
-            await message.channel.send(`Title: ${post['title']}`)
+            await message.channel.send(`${message.member.displayName}: ${post['title']}`)
             await message.channel.send({files : [loc]})
         }
         // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
@@ -67,8 +65,7 @@ async function GetRedditTodaysTop(message : Discord.Message, content : string){
             // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
             // const blob = await response.blob()
             // console.log(response)
-            await message.delete()
-            await message.channel.send(`Title: ${post['title']}`)
+            await message.channel.send(`${message.member.displayName}: ${post['title']}`)
             await message.channel.send({files : [loc]})
         }
     }
@@ -79,8 +76,7 @@ async function Test(message : Discord.Message, content : string){
 }
 
 async function InviteLink(message : Discord.Message, content : string){
-    await message.delete()
-    await message.channel.send(`${Mention(message.author)} here is the invite link: ${INVITE_LINK}`)
+    await message.channel.send(`${message.member.displayName} here is the invite link: ${INVITE_LINK}`)
 }
 
 function IsTikTok(s : string){
