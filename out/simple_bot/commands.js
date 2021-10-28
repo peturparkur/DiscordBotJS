@@ -110,7 +110,7 @@ function StreamYT(client, message, ...content) {
         }
         const vd = ytdl(url, { filter: "audioonly" });
         //console.log(vd)
-        vcConn.play(vd, { seek: 0, volume: 1, type: 'opus' }).on("finish", () => {
+        vcConn.play(vd, { seek: 0, volume: 1 }).on("finish", () => {
             vc.leave();
         });
         yield message.channel.send(`Playing ${url}`);
