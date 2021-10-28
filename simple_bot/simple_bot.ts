@@ -37,10 +37,7 @@ class DiscordBot extends Discord.Client{
         this.addEvent('help', (msg : Discord.Message, cntn : string) => {
             let ret = ""
             for (const k of this.commandHandler.listeners.keys()){
-                ret += `${k} `
-                for(const f of this.commandHandler.listeners.get(k)){
-                    ret += `${f.toString()}`
-                }
+                ret += `${k}`
                 ret += "\n"
             }
             msg.channel.send(ret)

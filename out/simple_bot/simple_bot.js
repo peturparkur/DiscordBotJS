@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import * as Discord from "discord.js";
 import { config } from "dotenv";
 import { EventHandler } from "../utility/event_handler.js";
@@ -26,23 +35,20 @@ class DiscordBot extends Discord.Client {
         this.addEvent('help', (msg, cntn) => {
             let ret = "";
             for (const k of this.commandHandler.listeners.keys()) {
-                ret += `${k} `;
-                for (const f of this.commandHandler.listeners.get(k)) {
-                    ret += `${f.toString()}`;
-                }
+                ret += `${k}`;
                 ret += "\n";
             }
             msg.channel.send(ret);
         });
         this.on('message', FilterTikTok);
         //called when the user types typing
-        this.on("typingStart", async (chn, user) => {
+        this.on("typingStart", (chn, user) => __awaiter(this, void 0, void 0, function* () {
             console.log(`User ${user.username} is typing in channel ${chn.id}`);
-        });
+        }));
     }
     Setup(debug = false) {
         // Setup command calls
-        this.on("message", async (message) => {
+        this.on("message", (message) => __awaiter(this, void 0, void 0, function* () {
             //check the author
             const author = message.author;
             if (author.bot)
@@ -62,7 +68,7 @@ class DiscordBot extends Discord.Client {
                 }
                 this.commandHandler.emit(cmd, message, content.slice(1));
             }
-        });
+        }));
     }
     addEvent(eventName, callback) {
         this.commandHandler.addEventListener(eventName, callback);

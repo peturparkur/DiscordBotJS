@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import * as Discord from "discord.js";
 import { config } from "dotenv";
 import { EventHandler, Room } from './utility/classes.js';
@@ -90,14 +99,14 @@ const COMMANDS = new Map();
 //COMMANDS.set("set reminder", (member : Discord.GuildMember, name : string, date : Date) => {REMINDERS.set(member, new Reminder(name, date))})
 //let VoiceStateManagers = new Array<Discord.VoiceStateManager>();
 // ALL EVENTS: https://gist.github.com/koad/316b265a91d933fd1b62dddfcc3ff584
-client.on("ready", async () => {
+client.on("ready", () => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     console.log(`Logged in as ${(_a = client.user) === null || _a === void 0 ? void 0 : _a.tag}`);
     client.guilds.cache.each(g => { console.log(`Joined Guild: ${g.name}`); });
     //client.guilds.cache.each(g =>{VoiceStateManagers.push(g.voiceStates)});
-});
+}));
 //called when a message has been sent
-client.on("message", async (message) => {
+client.on("message", (message) => __awaiter(void 0, void 0, void 0, function* () {
     //check the author
     let author = message.author;
     if (author.bot)
@@ -124,7 +133,7 @@ client.on("message", async (message) => {
                 let r = Clamp(i + Math.floor(Math.random() * 3), 0, GREETINGS.length - 1);
                 //let elem = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
                 let elem = GREETINGS[r];
-                await message.channel.send(`${elem} ${message.member.displayName}`);
+                yield message.channel.send(`${elem} ${message.member.displayName}`);
                 console.log(`Start listening to ${message.member.displayName}`);
                 LISTENING.set(message.member, time_to_listen); //we will listen to this person for 60 seconds
                 break;
@@ -132,46 +141,46 @@ client.on("message", async (message) => {
         }
     }
     console.log(`${author.username} aka. ${message.member.displayName} sent msg ${message.content} in channel ${message.channel.id}`);
-});
+}));
 //called when the user types typing
-client.on("typingStart", async (chn, user) => {
+client.on("typingStart", (chn, user) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`User ${user.username} is typing in channel ${chn.id}`);
-});
+}));
 //Called when someone joins or leaves a voice channel
 //member is the user
-client.on("voiceStateUpdate", async (before, after) => {
+client.on("voiceStateUpdate", (before, after) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('---------------');
     console.log(`${(before.member != null) ? before.member.displayName : "Null"} => ${(after.member != null) ? after.member.displayName : "Null"}`);
     console.log(`${(before.channel != null) ? before.channel.name : "Null"} => ${(after.channel != null) ? after.channel.name : "Null"}`);
     console.log(`Video on? => ${after.member.voice.selfVideo}`);
     console.log(`Streaming? => ${after.member.voice.streaming}`);
     console.log('---------------');
-});
+}));
 //Called when the member starts/stops speaking
-client.on("guildMemberSpeaking", async (member, speaking) => {
+client.on("guildMemberSpeaking", (member, speaking) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`The server member ${member.displayName} is speaking ${speaking}`);
-});
+}));
 //Called when the member changes themselves eg.: role, nickname, etc
-client.on("guildMemberUpdate", async (before, after) => {
+client.on("guildMemberUpdate", (before, after) => __awaiter(void 0, void 0, void 0, function* () {
     //console.log(`Member ${before.displayName} : ${before.displayName} changed their profile`);
     console.log(`Member ${after.displayName} changed their profile`);
-});
+}));
 //Called when a user's details are changed
-client.on("userUpdate", async (oldUser, newUser) => {
+client.on("userUpdate", (oldUser, newUser) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`user's details (e.g. username) are changed`);
-});
+}));
 // presenceUpdate
 /* Emitted whenever a guild member's presence changes, or they change one of their details.
 PARAMETER    TYPE               DESCRIPTION
 oldMember    GuildMember        The member before the presence update
 newMember    GuildMember        The member after the presence update    */
-client.on("presenceUpdate", async (oldMember, newMember) => {
+client.on("presenceUpdate", (oldMember, newMember) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("presence update");
     //clientStatus => desktop, mobile, web
     let date = new Date();
     let timeString = date.getHours() + "h :" + date.getMinutes() + "m :" + date.getSeconds() + "s @ " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
     console.log(`the guild member ${newMember.member.displayName} at time ${timeString} presence changes from [${(oldMember != null) ? oldMember.activities : "Null"}, ${(oldMember != null) ? oldMember.clientStatus : "Null"}, ${(oldMember != null) ? oldMember.status : "Null"}] => [${newMember.activities}, ${newMember.clientStatus}, ${newMember.status}]`);
-});
+}));
 //client.guilds.cache.each(guild => {guild.members.cache.each(member => {member.client.on("presenceUpdate", (before, after) =>{console.log(`Presence update ${after.member.displayName}`)})})});
 const countdown = setInterval(() => {
     LISTENING.forEach((x, key) => {
