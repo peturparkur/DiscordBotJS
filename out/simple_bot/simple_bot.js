@@ -58,7 +58,7 @@ class DiscordBot extends Discord.Client {
     }
     Setup(debug = false) {
         this.guilds.cache.forEach(guild => {
-            console.log("guilds: ", guild.id);
+            console.log("Connected guilds: ", guild.name);
             this.prefixes.set(guild, "!");
         });
         // Setup command calls
@@ -68,7 +68,7 @@ class DiscordBot extends Discord.Client {
             if (author.bot)
                 return;
             const content = message.content.toLowerCase().trim();
-            console.log("guild: ", message.guild.id);
+            // console.log("guild: ", message.guild.name)
             const call = content.startsWith(this.prefixes.get(message.guild));
             if (debug)
                 console.log(`[${message.member.displayName}, ${call}] : ${content}`);
