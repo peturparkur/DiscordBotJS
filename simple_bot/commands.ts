@@ -2,6 +2,7 @@ import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
 import { INVITE_LINK } from "./constants.js";
 import ytdl from "ytdl-core"; //youtube system
+import yts from "yt-search"
 import fs from "fs" // file-system
 type DiscordCommand = (client : Discord.Client, message : Discord.Message, ...content : string[]) => void
 
@@ -83,7 +84,7 @@ async function Test(client : Discord.Client, message : Discord.Message, ...conte
 
 async function StreamYT(client : Discord.Client, message : Discord.Message, ...content : string[]){
     //const args = content.split(" ")
-    const url = content[1]
+    let url = content[1]
     const vc = message.member.voice.channel
     if (vc === null){
         await message.channel.send(`${message.member.displayName} Please join a Voice Channel`)
@@ -91,10 +92,21 @@ async function StreamYT(client : Discord.Client, message : Discord.Message, ...c
     }
     const vcConn = await vc.join()
     if (!ytdl.validateURL(url)){
-        await message.channel.send(`${url} is not valid`)
+        const finder = async (query) =>{
+            const res = await yts(query)
+            return (res.videos.length > 1)? res.videos[0] : null;
+        }
+
+        const video = await finder(content.slice(1).join(" "))
+        if(video){
+            url = video.url
+        }
+        else{
+            await message.channel.send(`Error finding video`)
+        }
     }
     const vd = ytdl(url, {filter : "audioonly"})
-    console.log(vd)
+    //console.log(vd)
     vcConn.play(vd, {seek : 0, volume : 1, type : 'opus'}).on("finish", () =>{
         vc.leave()
     })

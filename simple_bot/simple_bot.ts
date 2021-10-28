@@ -96,8 +96,13 @@ class DiscordBot extends Discord.Client{
                     console.log(`From ${split}: Calling ${cmd}`)
                     console.log(`args: ${content.slice(1)}`)
                 }
-
-                this.commandHandler.emit(cmd, this, message, ...split)
+                try{
+                    this.commandHandler.emit(cmd, this, message, ...split)
+                }
+                catch(err){
+                    message.reply(`There was an error with the command ${cmd}(${split})`)
+                    console.log(err)
+                }
             }
         });
     }
