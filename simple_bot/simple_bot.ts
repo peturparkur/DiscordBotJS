@@ -39,7 +39,7 @@ class DiscordBot extends Discord.Client{
             for (const k of this.commandHandler.listeners.keys()){
                 ret += `${k} `
                 for(const f of this.commandHandler.listeners.get(k)){
-                    ret += `${f.arguments}`
+                    ret += `${f.toString()}`
                 }
                 ret += "\n"
             }
