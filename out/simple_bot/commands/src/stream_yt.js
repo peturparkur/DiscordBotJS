@@ -69,6 +69,7 @@ export function SkipYT(client, message, ...args) {
             yield message.channel.send("You need to be in a channel to execute this command");
             return;
         }
+        NextSong(playlist, 1);
         playlist.connection.dispatcher.end();
     });
 }
