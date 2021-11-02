@@ -47,8 +47,13 @@ export async function GetRedditTodaysTop(client : Discord.Client, message : Disc
         const end = loc.split('.')[3]
         //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
         if (loc.includes('.mp4')){
-            await message.channel.send(`${post['title']}`)
-            await message.channel.send({files : [loc]})
+            try{
+                await message.channel.send(`${post['title']}`)
+                await message.channel.send({files : [loc]})
+            }
+            catch (err){
+                console.log(`Failed to send reddit MP4 ${err}`)
+            }
         }
         else{
             await message.channel.send(`Content is not compatible: ${loc}`)
@@ -63,8 +68,13 @@ export async function GetRedditTodaysTop(client : Discord.Client, message : Disc
             // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
             // const blob = await response.blob()
             // console.log(response)
-            await message.channel.send(`${post['title']}`)
-            await message.channel.send({files : [loc]})
+            try{
+                await message.channel.send(`${post['title']}`)
+                await message.channel.send({files : [loc]})
+            }
+            catch (err){
+                console.log(`Failed to send reddit post ${err}`)
+            }
         }
     }
 }

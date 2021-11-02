@@ -53,8 +53,13 @@ export function GetRedditTodaysTop(client, message, ...content) {
             const end = loc.split('.')[3];
             //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
             if (loc.includes('.mp4')) {
-                yield message.channel.send(`${post['title']}`);
-                yield message.channel.send({ files: [loc] });
+                try {
+                    yield message.channel.send(`${post['title']}`);
+                    yield message.channel.send({ files: [loc] });
+                }
+                catch (err) {
+                    console.log(`Failed to send reddit MP4 ${err}`);
+                }
             }
             else {
                 yield message.channel.send(`Content is not compatible: ${loc}`);
@@ -68,8 +73,13 @@ export function GetRedditTodaysTop(client, message, ...content) {
                 // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
                 // const blob = await response.blob()
                 // console.log(response)
-                yield message.channel.send(`${post['title']}`);
-                yield message.channel.send({ files: [loc] });
+                try {
+                    yield message.channel.send(`${post['title']}`);
+                    yield message.channel.send({ files: [loc] });
+                }
+                catch (err) {
+                    console.log(`Failed to send reddit post ${err}`);
+                }
             }
         }
     });
