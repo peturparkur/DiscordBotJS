@@ -42,7 +42,7 @@ export function PrintPlaylist(list : Playlist){
     list.songs.forEach(song => {
         arr.push(song.title)
     })
-    return arr.join(", ")
+    return arr.join("\n ")
 }
 export function NextSong(list : Playlist, i : number = 1){
     if(list.loop){

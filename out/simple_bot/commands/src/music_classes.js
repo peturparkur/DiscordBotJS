@@ -34,7 +34,7 @@ export function PrintPlaylist(list) {
     list.songs.forEach(song => {
         arr.push(song.title);
     });
-    return arr.join(", ");
+    return arr.join("\n ");
 }
 export function NextSong(list, i = 1) {
     if (list.loop) {
