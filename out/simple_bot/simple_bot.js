@@ -39,6 +39,7 @@ class DiscordBot extends Discord.Client {
         this.addEvent('play', commands.StreamYT);
         this.addEvent('skip', commands.SkipYT);
         this.addEvent('stop', commands.StopYT);
+        this.addEvent('playlist', commands.ShowPlaylist);
         this.addEvent('settings', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
             const stg = cntn[1]; //setting to change

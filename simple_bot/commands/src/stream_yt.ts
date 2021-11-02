@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { NextSong, Playlist, Song} from "./music_classes.js";
+import { NextSong, Playlist, PrintPlaylist, Song} from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search"
 import fs from "fs" // file-system
@@ -81,6 +81,20 @@ export async function StopYT(client : Discord.Client, message : Discord.Message,
     playlist.songs = [];
     playlist.connection.dispatcher.end()
     playlist.connection.disconnect()
+}
+
+export async function ShowPlaylist(client : Discord.Client, message : Discord.Message, ...args : string[]) {
+    let playlist = playlists.get(message.guild)
+    if (!playlist){
+        await message.channel.send("No song is being played")
+        return
+    }
+    if(!message.member.voice.channel){
+        await message.channel.send("You need to be in a channel to execute this command")
+        return
+    }
+    const txt = PrintPlaylist(playlist)
+    await message.channel.send(`Current Playlist: ` + txt)
 }
 
 async function PlaySong(guild : Discord.Guild, channel : Discord.VoiceChannel, txtChannel : Discord.TextChannel, playlist : Playlist){

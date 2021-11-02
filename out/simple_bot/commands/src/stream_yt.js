@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { NextSong, Playlist, Song } from "./music_classes.js";
+import { NextSong, Playlist, PrintPlaylist, Song } from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search";
 const playlists = new Map();
@@ -87,6 +87,21 @@ export function StopYT(client, message, ...args) {
         playlist.songs = [];
         playlist.connection.dispatcher.end();
         playlist.connection.disconnect();
+    });
+}
+export function ShowPlaylist(client, message, ...args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let playlist = playlists.get(message.guild);
+        if (!playlist) {
+            yield message.channel.send("No song is being played");
+            return;
+        }
+        if (!message.member.voice.channel) {
+            yield message.channel.send("You need to be in a channel to execute this command");
+            return;
+        }
+        const txt = PrintPlaylist(playlist);
+        yield message.channel.send(`Current Playlist: ` + txt);
     });
 }
 function PlaySong(guild, channel, txtChannel, playlist) {

@@ -46,6 +46,7 @@ class DiscordBot extends Discord.Client{
         this.addEvent('play', commands.StreamYT)
         this.addEvent('skip', commands.SkipYT)
         this.addEvent('stop', commands.StopYT)
+        this.addEvent('playlist', commands.ShowPlaylist)
 
 
         this.addEvent('settings', async (client : Discord.Client, msg : Discord.Message, content : string) => {
