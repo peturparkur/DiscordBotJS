@@ -19,6 +19,15 @@ export class Playlist {
         }
         this.loop = loop;
     }
+    Next(i = 1) {
+        if (this.loop) {
+            RollArray(this.songs, i);
+            return this.songs[0];
+        }
+        else {
+            return this.songs.splice(i, 1)[0]; //remove the i-th element
+        }
+    }
 }
 export function PrintPlaylist(list) {
     const arr = [];

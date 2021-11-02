@@ -64,8 +64,8 @@ export async function SkipYT(client : Discord.Client, message : Discord.Message,
         await message.channel.send("You need to be in a channel to execute this command")
         return
     }
-    NextSong(playlist, 1)
-    PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
+    //NextSong(playlist, 1)
+    //PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
     playlist.connection.dispatcher.end()
 }
 
@@ -109,7 +109,8 @@ async function PlaySong(guild : Discord.Guild, txtChannel : Discord.TextChannel,
     const stream = ytdl(song.url, {filter : "audioonly"})
     //console.log(vd)
     playlist.connection.play(stream, {seek : 0, volume : 1}).on("finish", () =>{
-        NextSong(playlist, 1)
+        //NextSong(playlist, 1)
+        playlist.Next()
         PlaySong(guild, txtChannel, playlist)
     });
     await txtChannel.send(`Playing ${song.title}, ${song.url}`)

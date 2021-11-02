@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { NextSong, Playlist, PrintPlaylist, Song } from "./music_classes.js";
+import { Playlist, PrintPlaylist, Song } from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search";
 const playlists = new Map();
@@ -69,8 +69,8 @@ export function SkipYT(client, message, ...args) {
             yield message.channel.send("You need to be in a channel to execute this command");
             return;
         }
-        NextSong(playlist, 1);
-        PlaySong(message.guild, message.channel, playlist);
+        //NextSong(playlist, 1)
+        //PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
         playlist.connection.dispatcher.end();
     });
 }
@@ -116,7 +116,8 @@ function PlaySong(guild, txtChannel, playlist) {
         const stream = ytdl(song.url, { filter: "audioonly" });
         //console.log(vd)
         playlist.connection.play(stream, { seek: 0, volume: 1 }).on("finish", () => {
-            NextSong(playlist, 1);
+            //NextSong(playlist, 1)
+            playlist.Next();
             PlaySong(guild, txtChannel, playlist);
         });
         yield txtChannel.send(`Playing ${song.title}, ${song.url}`);
