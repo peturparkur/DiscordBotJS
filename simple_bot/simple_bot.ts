@@ -43,7 +43,9 @@ class DiscordBot extends Discord.Client{
         this.addEvent('test', commands.Test)
         this.addEvent('reddit', commands.GetRedditTodaysTop)
         this.addEvent('invite', commands.InviteLink)
-        this.addEvent('stream', commands.StreamYT)
+        this.addEvent('play', commands.StreamYT)
+        this.addEvent('skip', commands.SkipYT)
+        this.addEvent('stop', commands.StopYT)
 
 
         this.addEvent('settings', async (client : Discord.Client, msg : Discord.Message, content : string) => {

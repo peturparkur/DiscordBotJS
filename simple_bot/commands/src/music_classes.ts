@@ -1,26 +1,50 @@
 import { RollArray } from "../../../utility/putil_maths.js"
+import * as Discord from "discord.js"
 
-interface Song{title : string, artist : string, url : string, length : number}
-class Song implements Song{
-    constructor(url : string, title : string = "unknown", artist : string = "blank", length : number | string = 60 * 3){
-        this.title = title
-        this.artist = artist
-        this.url = url
-        if(typeof length === 'string'){
-            try{
-                this.length = parseInt(length)
-            }
-            catch(err){
-                console.log(`Can't convert ${length} into number`)
-            }
-        }
-        else{
-            this.length = length
-        }
+export interface Song{title : string, artist : string, url : string, length : number}
+export class Song implements Song{
+    constructor(url : string, title : string = 'blank', artist : string = 'unknown', length : number = 1){
+        this.title = title //title if possible
+        this.artist = artist //artis if possible
+        this.url = url //url to read
+        this.length = length // length is seconds
     }
 }
 
-interface Playlist{title : string, songs : Array<Song>}
+
+export interface Playlist{title : string, songs : Array<Song>, current : Song, loop : boolean}
+export class Playlist implements Playlist{
+    connection : Discord.VoiceConnection = null
+
+    constructor(title : string = '', loop : boolean = false, songs : Array<Song> | null = null){
+        this.title = title
+        if(songs){
+            this.songs = songs.slice(0)
+        }
+        else{
+            this.songs = new Array()
+        }
+        this.loop = loop
+    }
+}
+export function PrintPlaylist(list : Playlist){
+    const arr : string[] = []
+    list.songs.forEach(song => {
+        arr.push(song.title)
+    })
+    return arr.join(", ")
+}
+export function NextSong(list : Playlist, i : number = 1){
+    if(list.loop){
+        RollArray(list.songs, i)
+        return list.songs[0]
+    }
+    else{
+        return list.songs.splice(i, 1)[0] //remove the i-th element
+    }
+}
+
+/*
 class Playlist implements Playlist{
     loop : boolean = false
     idx : number = 0
@@ -53,5 +77,6 @@ class Playlist implements Playlist{
         }
     }
 }
+*/
 
-export {Playlist, Song}
+// export {Playlist, Song, PrintPlaylist, NextSong}

@@ -7,37 +7,98 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { NextSong, Playlist, Song } from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search";
+const playlists = new Map();
 export function StreamYT(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         //const args = content.split(" ")
         let url = content[0];
         const vc = message.member.voice.channel;
+        let playlist = playlists.get(message.guild); //get the playlist of this guild
         if (vc === null) {
             yield message.channel.send(`${message.member.displayName} Please join a Voice Channel`);
             return;
         }
-        const vcConn = yield vc.join();
-        if (!ytdl.validateURL(url)) {
-            const finder = (query) => __awaiter(this, void 0, void 0, function* () {
-                const res = yield yts(query);
-                return (res.videos.length > 1) ? res.videos[0] : null;
+        function get_song(content, url) {
+            return __awaiter(this, void 0, void 0, function* () {
+                if (!ytdl.validateURL(url)) {
+                    const finder = (query) => __awaiter(this, void 0, void 0, function* () {
+                        const res = yield yts(query);
+                        //return (res.videos.length > 1)? res.videos[0] : null;
+                        return (res.videos.length > 1) ? new Song(res.videos[0].url, res.videos[0].title, res.videos[0].author.name, res.videos[0].duration.seconds) : null;
+                    });
+                    const song = yield finder(content.join(" "));
+                    if (song) {
+                        return song;
+                    }
+                    yield message.channel.send(`Error finding video`);
+                }
             });
-            const video = yield finder(content.join(" "));
-            if (video) {
-                url = video.url;
+        }
+        const song = yield get_song(content, url);
+        if (!playlist) {
+            playlists.set(message.guild, new Playlist('playlist', false));
+            playlist = playlists.get(message.guild);
+            try {
+                playlist.connection = yield vc.join();
+                PlaySong(message.guild, vc, message.channel, playlist);
             }
-            else {
-                yield message.channel.send(`Error finding video`);
+            catch (err) {
+                playlists.delete(message.guild);
+                yield message.channel.send("Error in connecting");
             }
         }
-        const vd = ytdl(url, { filter: "audioonly" });
+        playlist.songs.push(song);
+        yield message.channel.send(`Song ${song} was added to the queue`);
+    });
+}
+export function SkipYT(client, message, ...args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let playlist = playlists.get(message.guild);
+        if (!playlist) {
+            yield message.channel.send("No song is being played");
+            return;
+        }
+        if (!message.member.voice.channel) {
+            yield message.channel.send("You need to be in a channel to execute this command");
+            return;
+        }
+        playlist.connection.dispatcher.end();
+    });
+}
+export function StopYT(client, message, ...args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let playlist = playlists.get(message.guild);
+        if (!playlist) {
+            yield message.channel.send("No song is being played");
+            return;
+        }
+        if (!message.member.voice.channel) {
+            yield message.channel.send("You need to be in a channel to execute this command");
+            return;
+        }
+        playlist.songs = [];
+        playlist.connection.dispatcher.end();
+        playlist.connection.disconnect();
+    });
+}
+function PlaySong(guild, channel, txtChannel, playlist) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (playlist.songs.length == 0) {
+            playlist.connection.disconnect();
+            channel.leave();
+            playlists.delete(guild);
+            return;
+        }
+        let song = playlist.songs[0];
+        const stream = ytdl(song.url, { filter: "audioonly" });
         //console.log(vd)
-        const dispatcher = vcConn.play(vd, { seek: 0, volume: 1 }).on("finish", () => {
-            dispatcher.end();
-            vc.leave();
+        playlist.connection.play(stream, { seek: 0, volume: 1 }).on("finish", () => {
+            NextSong(playlist, 1);
+            PlaySong(guild, channel, txtChannel, playlist);
         });
-        yield message.channel.send(`Playing ${url}`);
+        yield txtChannel.send(`Playing ${song.title}, ${song.url}`);
     });
 }
