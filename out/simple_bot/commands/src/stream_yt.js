@@ -41,6 +41,7 @@ export function StreamYT(client, message, ...content) {
         if (!playlist) {
             playlists.set(message.guild, new Playlist('playlist', false));
             playlist = playlists.get(message.guild);
+            playlist.songs.push(song);
             try {
                 playlist.connection = yield vc.join();
                 PlaySong(message.guild, vc, message.channel, playlist);
@@ -50,7 +51,9 @@ export function StreamYT(client, message, ...content) {
                 yield message.channel.send("Error in connecting");
             }
         }
-        playlist.songs.push(song);
+        else {
+            playlist.songs.push(song);
+        }
         yield message.channel.send(`Song ${song} was added to the queue`);
     });
 }

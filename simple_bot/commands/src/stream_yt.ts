@@ -37,6 +37,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     if(!playlist){
         playlists.set(message.guild, new Playlist('playlist', false));
         playlist = playlists.get(message.guild)
+        playlist.songs.push(song)
         try{
             playlist.connection = await vc.join()
             PlaySong(message.guild, vc, message.channel as Discord.TextChannel, playlist)
@@ -46,7 +47,9 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
             await message.channel.send("Error in connecting")
         }
     }
-    playlist.songs.push(song)
+    else{
+        playlist.songs.push(song)
+    }
     await message.channel.send(`Song ${song} was added to the queue`)
 }
 
