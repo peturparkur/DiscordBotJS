@@ -60,7 +60,7 @@ export function StreamYT(client, message, ...content) {
 }
 export function SkipYT(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
-        let playlist = playlists.get(message.guild);
+        const playlist = playlists.get(message.guild);
         if (!playlist) {
             yield message.channel.send("No song is being played");
             return;
@@ -76,7 +76,7 @@ export function SkipYT(client, message, ...args) {
 }
 export function StopYT(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
-        let playlist = playlists.get(message.guild);
+        const playlist = playlists.get(message.guild);
         if (!playlist) {
             yield message.channel.send("No song is being played");
             return;
@@ -92,7 +92,7 @@ export function StopYT(client, message, ...args) {
 }
 export function ShowPlaylist(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
-        let playlist = playlists.get(message.guild);
+        const playlist = playlists.get(message.guild);
         if (!playlist) {
             yield message.channel.send("No song is being played");
             return;

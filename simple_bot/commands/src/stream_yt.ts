@@ -55,7 +55,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
 }
 
 export async function SkipYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
-    let playlist = playlists.get(message.guild)
+    const playlist = playlists.get(message.guild)
     if (!playlist){
         await message.channel.send("No song is being played")
         return
@@ -70,7 +70,7 @@ export async function SkipYT(client : Discord.Client, message : Discord.Message,
 }
 
 export async function StopYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
-    let playlist = playlists.get(message.guild)
+    const playlist = playlists.get(message.guild)
     if (!playlist){
         await message.channel.send("No song is being played")
         return
@@ -85,7 +85,7 @@ export async function StopYT(client : Discord.Client, message : Discord.Message,
 }
 
 export async function ShowPlaylist(client : Discord.Client, message : Discord.Message, ...args : string[]) {
-    let playlist = playlists.get(message.guild)
+    const playlist = playlists.get(message.guild)
     if (!playlist){
         await message.channel.send("No song is being played")
         return
