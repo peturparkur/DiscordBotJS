@@ -71,7 +71,16 @@ export function SkipYT(client, message, ...args) {
         }
         //NextSong(playlist, 1)
         //PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
-        playlist.connection.dispatcher.end();
+        if (playlist.connection.dispatcher) {
+            try {
+                playlist.connection.dispatcher.end();
+            }
+            catch (err) {
+                console.log(`Shouldn't happen ${err}`);
+            }
+        }
+        playlist.Next();
+        PlaySong(message.guild, message.channel, playlist);
     });
 }
 export function StopYT(client, message, ...args) {

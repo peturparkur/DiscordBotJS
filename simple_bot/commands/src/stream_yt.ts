@@ -66,7 +66,16 @@ export async function SkipYT(client : Discord.Client, message : Discord.Message,
     }
     //NextSong(playlist, 1)
     //PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
-    playlist.connection.dispatcher.end()
+    if(playlist.connection.dispatcher){
+        try{
+            playlist.connection.dispatcher.end()
+        }
+        catch (err){
+            console.log(`Shouldn't happen ${err}`)
+        }
+    }
+    playlist.Next()
+    PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
 }
 
 export async function StopYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
