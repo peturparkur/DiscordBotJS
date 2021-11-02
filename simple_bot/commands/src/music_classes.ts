@@ -33,7 +33,7 @@ export class Playlist implements Playlist{
             return this.songs[0]
         }
         else{
-            return this.songs.splice(i, 1)[0] //remove the i-th element
+            return this.songs.splice(i-1, 1)[0] //remove the i-th element
         }
     }
 }

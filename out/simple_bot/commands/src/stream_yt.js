@@ -42,7 +42,7 @@ export function StreamYT(client, message, ...content) {
             playlists.set(message.guild, new Playlist('playlist', false));
             const playlist = playlists.get(message.guild);
             playlist.songs.push(song);
-            yield message.channel.send(`Song ${song.title} was added to the queue`);
+            yield message.channel.send(`Song ${song.title} was added`);
             try {
                 playlist.connection = yield vc.join();
                 PlaySong(message.guild, message.channel, playlist);

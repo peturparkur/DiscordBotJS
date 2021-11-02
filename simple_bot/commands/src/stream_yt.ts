@@ -38,7 +38,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
         playlists.set(message.guild, new Playlist('playlist', false));
         const playlist = playlists.get(message.guild)
         playlist.songs.push(song)
-        await message.channel.send(`Song ${song.title} was added to the queue`)
+        await message.channel.send(`Song ${song.title} was added`)
         try{
             playlist.connection = await vc.join()
             PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
