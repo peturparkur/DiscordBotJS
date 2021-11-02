@@ -16,7 +16,7 @@ export function StreamYT(client, message, ...content) {
         //const args = content.split(" ")
         let url = content[0];
         const vc = message.member.voice.channel;
-        let playlist = playlists.get(message.guild); //get the playlist of this guild
+        const playlist = playlists.get(message.guild); //get the playlist of this guild
         if (vc === null) {
             yield message.channel.send(`${message.member.displayName} Please join a Voice Channel`);
             return;
@@ -40,7 +40,7 @@ export function StreamYT(client, message, ...content) {
         const song = yield get_song(content, url);
         if (!playlist) {
             playlists.set(message.guild, new Playlist('playlist', false));
-            playlist = playlists.get(message.guild);
+            const playlist = playlists.get(message.guild);
             playlist.songs.push(song);
             yield message.channel.send(`Song ${song.title} was added to the queue`);
             try {
@@ -88,6 +88,7 @@ export function StopYT(client, message, ...args) {
         playlist.songs = [];
         playlist.connection.dispatcher.end();
         playlist.connection.disconnect();
+        playlists.delete(message.guild);
     });
 }
 export function ShowPlaylist(client, message, ...args) {

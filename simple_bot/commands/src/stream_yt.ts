@@ -10,7 +10,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     let url = content[0]
     const vc = message.member.voice.channel
 
-    let playlist = playlists.get(message.guild) //get the playlist of this guild
+    const playlist = playlists.get(message.guild) //get the playlist of this guild
 
     if (vc === null){
         await message.channel.send(`${message.member.displayName} Please join a Voice Channel`)
@@ -36,7 +36,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     const song = await get_song(content, url)
     if(!playlist){
         playlists.set(message.guild, new Playlist('playlist', false));
-        playlist = playlists.get(message.guild)
+        const playlist = playlists.get(message.guild)
         playlist.songs.push(song)
         await message.channel.send(`Song ${song.title} was added to the queue`)
         try{
@@ -82,6 +82,7 @@ export async function StopYT(client : Discord.Client, message : Discord.Message,
     playlist.songs = [];
     playlist.connection.dispatcher.end()
     playlist.connection.disconnect()
+    playlists.delete(message.guild)
 }
 
 export async function ShowPlaylist(client : Discord.Client, message : Discord.Message, ...args : string[]) {
