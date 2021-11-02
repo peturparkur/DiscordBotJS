@@ -41,7 +41,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
         await message.channel.send(`Song ${song.title} was added to the queue`)
         try{
             playlist.connection = await vc.join()
-            PlaySong(message.guild, vc, message.channel as Discord.TextChannel, playlist)
+            PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
         }
         catch (err){
             playlists.delete(message.guild)
@@ -65,6 +65,7 @@ export async function SkipYT(client : Discord.Client, message : Discord.Message,
         return
     }
     NextSong(playlist, 1)
+    PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
     playlist.connection.dispatcher.end()
 }
 
@@ -97,10 +98,9 @@ export async function ShowPlaylist(client : Discord.Client, message : Discord.Me
     await message.channel.send(`Current Playlist: ` + txt)
 }
 
-async function PlaySong(guild : Discord.Guild, channel : Discord.VoiceChannel, txtChannel : Discord.TextChannel, playlist : Playlist){
+async function PlaySong(guild : Discord.Guild, txtChannel : Discord.TextChannel, playlist : Playlist){
     if (playlist.songs.length == 0){
         playlist.connection.disconnect()
-        channel.leave()
         playlists.delete(guild)
         return
     }
@@ -110,7 +110,7 @@ async function PlaySong(guild : Discord.Guild, channel : Discord.VoiceChannel, t
     //console.log(vd)
     playlist.connection.play(stream, {seek : 0, volume : 1}).on("finish", () =>{
         NextSong(playlist, 1)
-        PlaySong(guild, channel, txtChannel, playlist)
+        PlaySong(guild, txtChannel, playlist)
     });
     await txtChannel.send(`Playing ${song.title}, ${song.url}`)
 }

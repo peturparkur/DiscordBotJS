@@ -45,7 +45,7 @@ export function StreamYT(client, message, ...content) {
             yield message.channel.send(`Song ${song.title} was added to the queue`);
             try {
                 playlist.connection = yield vc.join();
-                PlaySong(message.guild, vc, message.channel, playlist);
+                PlaySong(message.guild, message.channel, playlist);
             }
             catch (err) {
                 playlists.delete(message.guild);
@@ -70,6 +70,7 @@ export function SkipYT(client, message, ...args) {
             return;
         }
         NextSong(playlist, 1);
+        PlaySong(message.guild, message.channel, playlist);
         playlist.connection.dispatcher.end();
     });
 }
@@ -104,11 +105,10 @@ export function ShowPlaylist(client, message, ...args) {
         yield message.channel.send(`Current Playlist: ` + txt);
     });
 }
-function PlaySong(guild, channel, txtChannel, playlist) {
+function PlaySong(guild, txtChannel, playlist) {
     return __awaiter(this, void 0, void 0, function* () {
         if (playlist.songs.length == 0) {
             playlist.connection.disconnect();
-            channel.leave();
             playlists.delete(guild);
             return;
         }
@@ -117,7 +117,7 @@ function PlaySong(guild, channel, txtChannel, playlist) {
         //console.log(vd)
         playlist.connection.play(stream, { seek: 0, volume: 1 }).on("finish", () => {
             NextSong(playlist, 1);
-            PlaySong(guild, channel, txtChannel, playlist);
+            PlaySong(guild, txtChannel, playlist);
         });
         yield txtChannel.send(`Playing ${song.title}, ${song.url}`);
     });
