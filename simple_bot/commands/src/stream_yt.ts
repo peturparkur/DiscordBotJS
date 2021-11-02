@@ -38,6 +38,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
         playlists.set(message.guild, new Playlist('playlist', false));
         playlist = playlists.get(message.guild)
         playlist.songs.push(song)
+        await message.channel.send(`Song ${song.title} was added to the queue`)
         try{
             playlist.connection = await vc.join()
             PlaySong(message.guild, vc, message.channel as Discord.TextChannel, playlist)
@@ -49,8 +50,8 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     }
     else{
         playlist.songs.push(song)
+        await message.channel.send(`Song ${song.title} was added to the queue`)
     }
-    await message.channel.send(`Song ${song} was added to the queue`)
 }
 
 export async function SkipYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {

@@ -42,6 +42,7 @@ export function StreamYT(client, message, ...content) {
             playlists.set(message.guild, new Playlist('playlist', false));
             playlist = playlists.get(message.guild);
             playlist.songs.push(song);
+            yield message.channel.send(`Song ${song.title} was added to the queue`);
             try {
                 playlist.connection = yield vc.join();
                 PlaySong(message.guild, vc, message.channel, playlist);
@@ -53,8 +54,8 @@ export function StreamYT(client, message, ...content) {
         }
         else {
             playlist.songs.push(song);
+            yield message.channel.send(`Song ${song.title} was added to the queue`);
         }
-        yield message.channel.send(`Song ${song} was added to the queue`);
     });
 }
 export function SkipYT(client, message, ...args) {
