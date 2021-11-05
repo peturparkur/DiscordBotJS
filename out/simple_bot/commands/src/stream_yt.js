@@ -41,8 +41,13 @@ export function StreamYT(client, message, ...content) {
         if (!playlist) {
             playlists.set(message.guild, new Playlist('playlist', false));
             const playlist = playlists.get(message.guild);
-            playlist.songs.push(song);
-            yield message.channel.send(`Song ${song.title} was added`);
+            try {
+                playlist.songs.push(song);
+                yield message.channel.send(`Song ${song.title} was added`);
+            }
+            catch (err) {
+                console.log(`Song is weird: ${song}, error ${err}`);
+            }
             try {
                 playlist.connection = yield vc.join();
                 PlaySong(message.guild, message.channel, playlist);
@@ -53,8 +58,13 @@ export function StreamYT(client, message, ...content) {
             }
         }
         else {
-            playlist.songs.push(song);
-            yield message.channel.send(`Song ${song.title} was added to the queue`);
+            try {
+                playlist.songs.push(song);
+                yield message.channel.send(`Song ${song.title} was added to the queue`);
+            }
+            catch (err) {
+                console.log(`Song is weird: ${song}, error ${err}`);
+            }
         }
     });
 }

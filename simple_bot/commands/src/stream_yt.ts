@@ -37,8 +37,13 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     if(!playlist){
         playlists.set(message.guild, new Playlist('playlist', false));
         const playlist = playlists.get(message.guild)
-        playlist.songs.push(song)
-        await message.channel.send(`Song ${song.title} was added`)
+        try{
+            playlist.songs.push(song)
+            await message.channel.send(`Song ${song.title} was added`)
+        }
+        catch (err){
+            console.log(`Song is weird: ${song}, error ${err}`)
+        }
         try{
             playlist.connection = await vc.join()
             PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
@@ -49,8 +54,13 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
         }
     }
     else{
-        playlist.songs.push(song)
-        await message.channel.send(`Song ${song.title} was added to the queue`)
+        try{
+            playlist.songs.push(song)
+            await message.channel.send(`Song ${song.title} was added to the queue`)
+        }
+        catch (err){
+            console.log(`Song is weird: ${song}, error ${err}`)
+        }
     }
 }
 
