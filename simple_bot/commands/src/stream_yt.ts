@@ -21,7 +21,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
             const finder = async (query) => {
                 const res = await yts(query)
                 //return (res.videos.length > 1)? res.videos[0] : null;
-                return (res.videos.length > 1)? new Song(res.videos[0].url, res.videos[0].title, 
+                return (res.videos.length >= 1)? new Song(res.videos[0].url, res.videos[0].title, 
                                                         res.videos[0].author.name, res.videos[0].duration.seconds) : null;
             }
     
@@ -30,6 +30,10 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
                 return song
             }
             await message.channel.send(`Error finding video`)
+        }
+        else{
+            const info = await ytdl.getBasicInfo(url)
+            return new Song(url, info.videoDetails.title, info.videoDetails.author.name, parseInt(info.videoDetails.lengthSeconds))
         }
     }
 
@@ -54,12 +58,12 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
         }
     }
     else{
-        try{
+        if(song){
             playlist.songs.push(song)
             await message.channel.send(`Song ${song.title} was added to the queue`)
         }
-        catch (err){
-            console.log(`Song is weird: ${song}, error ${err}`)
+        else{
+            console.log(`Song is weird: ${song}`)
         }
     }
 }
