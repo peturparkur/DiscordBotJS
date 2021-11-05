@@ -88,13 +88,14 @@ class DiscordBot extends Discord.Client{
             const author = message.author;
             if (author.bot) return;
             const content = message.content.toLowerCase().trim()
+            const contentRaw = message.content.trim()
             // console.log("guild: ", message.guild.name)
             const call = content.startsWith(this.prefixes.get(message.guild))
             if (debug)  console.log(`[${message.member.displayName}, ${call}] : ${content}`)
 
             // Assume command message format: "prefix_command ...args"
             if (call) {
-                const cntn = content.slice(1) //text without command
+                const cntn = contentRaw.slice(1) //text without command
                 const split = cntn.split(" ") //text seperated into the arguments
                 const cmd = split[0]
 
