@@ -41,12 +41,12 @@ export function StreamYT(client, message, ...content) {
         if (!playlist) {
             playlists.set(message.guild, new Playlist('playlist', false));
             const playlist = playlists.get(message.guild);
-            try {
+            if (song) {
                 playlist.songs.push(song);
                 yield message.channel.send(`Song ${song.title} was added`);
             }
-            catch (err) {
-                console.log(`Song is weird: ${song}, error ${err}`);
+            else {
+                console.log(`Song is weird: ${song}`);
             }
             try {
                 playlist.connection = yield vc.join();
