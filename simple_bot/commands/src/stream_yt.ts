@@ -18,6 +18,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     }
     async function get_song(content, url){
         if (!ytdl.validateURL(url)){
+            console.log('Invalid URL')
             const finder = async (query) => {
                 const res = await yts(query)
                 //return (res.videos.length > 1)? res.videos[0] : null;
@@ -32,6 +33,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
             await message.channel.send(`Error finding video`)
         }
         else{
+            console.log('Valid URL')
             const info = await ytdl.getBasicInfo(url)
             console.log(`Info from song: ${info.videoDetails}`)
             return new Song(url, info.videoDetails.title, info.videoDetails.author.name, parseInt(info.videoDetails.lengthSeconds))

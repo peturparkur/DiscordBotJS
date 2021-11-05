@@ -24,6 +24,7 @@ export function StreamYT(client, message, ...content) {
         function get_song(content, url) {
             return __awaiter(this, void 0, void 0, function* () {
                 if (!ytdl.validateURL(url)) {
+                    console.log('Invalid URL');
                     const finder = (query) => __awaiter(this, void 0, void 0, function* () {
                         const res = yield yts(query);
                         //return (res.videos.length > 1)? res.videos[0] : null;
@@ -36,6 +37,7 @@ export function StreamYT(client, message, ...content) {
                     yield message.channel.send(`Error finding video`);
                 }
                 else {
+                    console.log('Valid URL');
                     const info = yield ytdl.getBasicInfo(url);
                     console.log(`Info from song: ${info.videoDetails}`);
                     return new Song(url, info.videoDetails.title, info.videoDetails.author.name, parseInt(info.videoDetails.lengthSeconds));
