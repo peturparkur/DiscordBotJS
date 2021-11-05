@@ -38,7 +38,7 @@ export function StreamYT(client, message, ...content) {
                 }
                 else {
                     console.log('Valid URL');
-                    const info = yield ytdl.getBasicInfo(url);
+                    const info = yield ytdl.getInfo(url);
                     console.log(`Info from song: ${info.videoDetails}`);
                     return new Song(url, info.videoDetails.title, info.videoDetails.author.name, parseInt(info.videoDetails.lengthSeconds));
                 }
