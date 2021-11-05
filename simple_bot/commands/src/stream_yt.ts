@@ -34,10 +34,10 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
         }
         else{
             console.log('Valid URL')
-            //const info = await ytdl.getInfo(url)
+            const info = await ytdl.getInfo(url)
             //console.log(`Info from song: ${info.videoDetails}`)
-            //return new Song(url, info.videoDetails.title, info.videoDetails.author.name, parseInt(info.videoDetails.lengthSeconds))
-            return new Song(url, "", "", 60)
+            return new Song(url, info.videoDetails.title, info.videoDetails.author.name, parseInt(info.videoDetails.lengthSeconds))
+            //return new Song(url, "", "", 60)
         }
     }
 
