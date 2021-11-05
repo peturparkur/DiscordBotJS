@@ -27,7 +27,7 @@ export async function GetRedditTodaysTop(client : Discord.Client, message : Disc
     //const cntn = content.split(" ")
     const cntn = content
     let subreddit = cntn[0]
-    let index = cntn.length >= 3 ? parseInt(cntn[1]) : -1
+    let index = cntn.length >= 2 ? parseInt(cntn[1]) : -1
     const posts = await GetReddit(subreddit, 100)
     const todays = FilterTodaysPost(posts)
 
