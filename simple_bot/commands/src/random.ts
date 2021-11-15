@@ -4,7 +4,7 @@ import { Gaussian, RandInt } from "../../../utility/putil_maths.js"
 export async function Random(client : Discord.Client, message : Discord.Message, ...content : string[]){
     function get_min_max(...content : string[]){
         let _min = 0
-        let _max = 2
+        let _max = 1
         if (content.length > 0){
             if (content.length == 1){
                 try{

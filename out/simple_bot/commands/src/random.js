@@ -12,7 +12,7 @@ export function Random(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         function get_min_max(...content) {
             let _min = 0;
-            let _max = 2;
+            let _max = 1;
             if (content.length > 0) {
                 if (content.length == 1) {
                     try {
