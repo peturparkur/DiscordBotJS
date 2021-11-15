@@ -67,6 +67,22 @@ class DiscordBot extends Discord.Client{
             }
             await msg.channel.send(ret)
         })
+
+        this.addEvent('detail', async (client : Discord.Client, msg : Discord.Message, content : string) => {
+            const cntn = content.split(" ")
+            const key = cntn[1]
+            if (!this.commandHandler.listeners.has(key)){
+                await msg.channel.send(`No command found with name ${key}`)
+                return
+            }
+            const func = this.commandHandler.listeners.get(key)[0]
+            let desc = func.toString()
+            let sub = desc.split("{")
+            desc = sub[0]
+
+            await msg.channel.send(`description of ${key} : ${desc}`)
+        })
+
         this.on('message', FilterTikTok)
 
         //called when the user types typing

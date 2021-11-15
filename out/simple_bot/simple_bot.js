@@ -58,6 +58,19 @@ class DiscordBot extends Discord.Client {
             }
             yield msg.channel.send(ret);
         }));
+        this.addEvent('detail', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
+            const cntn = content.split(" ");
+            const key = cntn[1];
+            if (!this.commandHandler.listeners.has(key)) {
+                yield msg.channel.send(`No command found with name ${key}`);
+                return;
+            }
+            const func = this.commandHandler.listeners.get(key)[0];
+            let desc = func.toString();
+            let sub = desc.split("{");
+            desc = sub[0];
+            yield msg.channel.send(`description of ${key} : ${desc}`);
+        }));
         this.on('message', FilterTikTok);
         //called when the user types typing
         this.on("typingStart", (chn, user) => __awaiter(this, void 0, void 0, function* () {
