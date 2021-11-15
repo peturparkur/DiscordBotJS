@@ -33,4 +33,28 @@ function RollArray(arr, offset = 1) {
         }
     }
 }
-export { RollArray, Clamp, RandomChoice };
+/**
+ *
+ * @param min inclusive minimum
+ * @param max inclusive maximum
+ * @returns random integer in range [min, max]
+ */
+function RandInt(min = 0, max = 1) {
+    return Math.floor(Math.random() * (max + 1 - min) + min);
+}
+/**
+ * Standard Normal variate using Box-Muller transform.
+ * @param mean mean
+ * @param std standard deviation
+ * @returns Gaussian Distribution N(mean, std)
+ */
+function Gaussian(mean = 0, std = 1) {
+    var u = 0, v = 0;
+    while (u === 0)
+        u = Math.random(); //Converting [0,1) to (0,1)
+    while (v === 0)
+        v = Math.random();
+    let val = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    return val * std + mean;
+}
+export { RollArray, Clamp, RandomChoice, Gaussian, RandInt };
