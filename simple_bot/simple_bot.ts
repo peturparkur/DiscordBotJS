@@ -47,6 +47,7 @@ class DiscordBot extends Discord.Client{
         this.addEvent('skip', commands.SkipYT)
         this.addEvent('stop', commands.StopYT)
         this.addEvent('playlist', commands.ShowPlaylist)
+        this.addEvent('coin', commands.Coin_Toss)
         this.addEvent('random', commands.Random)
         this.addEvent('rand', commands.Random_Normal)
 

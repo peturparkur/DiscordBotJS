@@ -8,32 +8,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Gaussian, RandInt } from "../../../utility/putil_maths.js";
+function get_min_max(...content) {
+    let _min = 0;
+    let _max = 1;
+    if (content.length > 0) {
+        if (content.length == 1) {
+            try {
+                _max = parseInt(content[0]);
+            }
+            catch (err) {
+                console.log(`Error ${err}`);
+            }
+        }
+        if (content.length == 2) {
+            try {
+                _min = parseInt(content[0]);
+                _max = parseInt(content[1]);
+            }
+            catch (err) {
+                console.log(`Error ${err}`);
+            }
+        }
+    }
+    return [_min, _max];
+}
 export function Random(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
-        function get_min_max(...content) {
-            let _min = 0;
-            let _max = 1;
-            if (content.length > 0) {
-                if (content.length == 1) {
-                    try {
-                        _max = parseInt(content[0]);
-                    }
-                    catch (err) {
-                        console.log(`Error ${err}`);
-                    }
-                }
-                if (content.length == 2) {
-                    try {
-                        _min = parseInt(content[0]);
-                        _max = parseInt(content[1]);
-                    }
-                    catch (err) {
-                        console.log(`Error ${err}`);
-                    }
-                }
-            }
-            return [_min, _max];
-        }
         const bounds = get_min_max(...content);
         const val = RandInt(bounds[0], bounds[1]);
         yield message.channel.send(`Random Value : ${val}`);
@@ -68,5 +68,14 @@ export function Random_Normal(client, message, ...content) {
         const args = get_args(...content);
         const val = Gaussian(args[0], args[1]);
         yield message.channel.send(`Random Value : ${val}`);
+    });
+}
+export function Coin_Toss(client, message, ...content) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const val = RandInt(0, 1);
+        let msg = "Tails";
+        if (val == 1)
+            msg = "Heads";
+        yield message.channel.send(`Coin Toss : ${msg}`);
     });
 }
