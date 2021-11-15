@@ -45,10 +45,10 @@ class DiscordBot extends Discord.Client {
         this.addEvent('rand', commands.Random_Normal);
         this.addEvent('settings', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
-            const stg = cntn[1]; //setting to change
+            const stg = cntn[0]; //setting to change
             if (stg == "prefix")
-                this.prefixes.set(msg.guild, cntn[2]);
-            yield msg.channel.send(`prefix changed to ${cntn[2]}`);
+                this.prefixes.set(msg.guild, cntn[1]);
+            yield msg.channel.send(`prefix changed to ${cntn[1]}`);
         }));
         this.addEvent('help', (client, msg, cntn) => __awaiter(this, void 0, void 0, function* () {
             let ret = "";
@@ -60,7 +60,7 @@ class DiscordBot extends Discord.Client {
         }));
         this.addEvent('detail', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
-            const key = cntn[1];
+            const key = cntn[0];
             if (!this.commandHandler.listeners.has(key)) {
                 yield msg.channel.send(`No command found with name ${key}`);
                 return;

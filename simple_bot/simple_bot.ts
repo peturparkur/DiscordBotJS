@@ -54,10 +54,10 @@ class DiscordBot extends Discord.Client{
 
         this.addEvent('settings', async (client : Discord.Client, msg : Discord.Message, content : string) => {
             const cntn = content.split(" ")
-            const stg = cntn[1] //setting to change
+            const stg = cntn[0] //setting to change
             if (stg == "prefix")
-                this.prefixes.set(msg.guild, cntn[2])
-                await msg.channel.send(`prefix changed to ${cntn[2]}`)
+                this.prefixes.set(msg.guild, cntn[1])
+                await msg.channel.send(`prefix changed to ${cntn[1]}`)
         })
         this.addEvent('help', async (client : Discord.Client, msg : Discord.Message, cntn : string) => {
             let ret = ""
@@ -70,7 +70,7 @@ class DiscordBot extends Discord.Client{
 
         this.addEvent('detail', async (client : Discord.Client, msg : Discord.Message, content : string) => {
             const cntn = content.split(" ")
-            const key = cntn[1]
+            const key = cntn[0]
             if (!this.commandHandler.listeners.has(key)){
                 await msg.channel.send(`No command found with name ${key}`)
                 return
