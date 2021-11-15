@@ -43,6 +43,7 @@ class DiscordBot extends Discord.Client {
         this.addEvent('coin', commands.Coin_Toss);
         this.addEvent('random', commands.Random);
         this.addEvent('rand', commands.Random_Normal);
+        this.addEvent('function', commands.RandomFunction);
         this.addEvent('settings', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
             const stg = cntn[0]; //setting to change
@@ -65,10 +66,11 @@ class DiscordBot extends Discord.Client {
                 yield msg.channel.send(`No command found with name ${key}`);
                 return;
             }
+            if (key != 'function')
+                return;
             const func = this.commandHandler.listeners.get(key)[0];
             let desc = func.toString();
-            let sub = desc.split("{");
-            desc = sub[0];
+            desc = func.description;
             yield msg.channel.send(`description of ${key} : ${desc}`);
         }));
         this.on('message', FilterTikTok);

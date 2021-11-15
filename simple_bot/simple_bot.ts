@@ -4,10 +4,11 @@ import { type } from "os";
 import {EventHandler} from "../utility/event_handler.js"
 import { Mention } from "./utility/util.js";
 import * as commands from "./commands/commands.js"
-import {DiscordCommand, FilterTikTok} from "./commands/src/tiktok.js"
+import {FilterTikTok} from "./commands/src/tiktok.js"
 
 import ytdl from "ytdl-core"; //youtube system
 import fs from "fs" // file-system
+import { Command, ICommand } from "./utility/comm_class.js";
 
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
@@ -50,6 +51,7 @@ class DiscordBot extends Discord.Client{
         this.addEvent('coin', commands.Coin_Toss)
         this.addEvent('random', commands.Random)
         this.addEvent('rand', commands.Random_Normal)
+        this.addEvent('function', commands.RandomFunction)
 
 
         this.addEvent('settings', async (client : Discord.Client, msg : Discord.Message, content : string) => {
@@ -75,10 +77,10 @@ class DiscordBot extends Discord.Client{
                 await msg.channel.send(`No command found with name ${key}`)
                 return
             }
-            const func = this.commandHandler.listeners.get(key)[0]
+            if(key != 'function') return
+            const func = this.commandHandler.listeners.get(key)[0] as ICommand
             let desc = func.toString()
-            let sub = desc.split("{")
-            desc = sub[0]
+            desc = func.description
 
             await msg.channel.send(`description of ${key} : ${desc}`)
         })
@@ -133,7 +135,7 @@ class DiscordBot extends Discord.Client{
         });
     }
 
-    addEvent(eventName : string, callback : DiscordCommand){
+    addEvent(eventName : string, callback : Command){
         this.commandHandler.addEventListener(eventName, callback)
     }
 }
