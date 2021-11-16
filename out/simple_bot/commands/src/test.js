@@ -10,15 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { CommandConstructor } from "../../utility/comm_class.js";
 export function Test(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield message.channel.send(`received message : ${message.content}`);
+        return message.channel.send(`received message : ${message.content}`);
     });
 }
 function Test2(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield message.channel.send(`received message : ${message.content}`);
+        return message.channel.send(`received message : ${message.content}`);
     });
 }
 export const RandomFunction = CommandConstructor((client, message, ...content) => __awaiter(void 0, void 0, void 0, function* () {
-    yield message.channel.send(`received message : ${message.content}`);
-    return;
+    return message.channel.send(`received message : ${message.content}`);
 }), "Returns a random integer in the given range [min, max] or [0, max]", []);

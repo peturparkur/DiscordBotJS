@@ -39,10 +39,6 @@ export function StreamYT(client, message, ...content) {
                             return s;
                         message.channel.send(`Error finding video`);
                     });
-                    if (song) {
-                        return song;
-                    }
-                    yield message.channel.send(`Error finding video`);
                 }
                 else {
                     console.log('Valid URL');
@@ -94,12 +90,10 @@ export function SkipYT(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
         const playlist = playlists.get(message.guild);
         if (!playlist) {
-            yield message.channel.send("No song is being played");
-            return;
+            return message.channel.send("No song is being played");
         }
         if (!message.member.voice.channel) {
-            yield message.channel.send("You need to be in a channel to execute this command");
-            return;
+            return message.channel.send("You need to be in a channel to execute this command");
         }
         //NextSong(playlist, 1)
         //PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
@@ -119,12 +113,10 @@ export function StopYT(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
         const playlist = playlists.get(message.guild);
         if (!playlist) {
-            yield message.channel.send("No song is being played");
-            return;
+            return message.channel.send("No song is being played");
         }
         if (!message.member.voice.channel) {
-            yield message.channel.send("You need to be in a channel to execute this command");
-            return;
+            return message.channel.send("You need to be in a channel to execute this command");
         }
         playlist.songs = [];
         playlist.connection.dispatcher.end();
@@ -136,15 +128,13 @@ export function ShowPlaylist(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
         const playlist = playlists.get(message.guild);
         if (!playlist) {
-            yield message.channel.send("No song is being played");
-            return;
+            return message.channel.send("No song is being played");
         }
         if (!message.member.voice.channel) {
-            yield message.channel.send("You need to be in a channel to execute this command");
-            return;
+            return message.channel.send("You need to be in a channel to execute this command");
         }
         const txt = PrintPlaylist(playlist);
-        yield message.channel.send(`Current Playlist: ` + txt);
+        return message.channel.send(`Current Playlist: ` + txt);
     });
 }
 function PlaySong(guild, txtChannel, playlist) {
@@ -162,6 +152,6 @@ function PlaySong(guild, txtChannel, playlist) {
             playlist.Next();
             PlaySong(guild, txtChannel, playlist);
         });
-        yield txtChannel.send(`Playing ${song.title}, ${song.url}`);
+        return txtChannel.send(`Playing ${song.title}, ${song.url}`);
     });
 }

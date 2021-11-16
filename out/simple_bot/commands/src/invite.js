@@ -10,6 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { INVITE_LINK } from "../../constants.js";
 export function InviteLink(client, message) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield message.channel.send(`${message.member.displayName} here is the invite link: ${INVITE_LINK}`);
+        return message.channel.send(`${message.member.displayName} here is the invite link: ${INVITE_LINK}`);
     });
 }

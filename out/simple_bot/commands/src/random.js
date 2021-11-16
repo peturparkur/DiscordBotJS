@@ -36,7 +36,7 @@ export function Random(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         const bounds = get_min_max(...content);
         const val = RandInt(bounds[0], bounds[1]);
-        yield message.channel.send(`Random Value : ${val}`);
+        return message.channel.send(`Random Value : ${val}`);
     });
 }
 export function Random_Normal(client, message, ...content) {
@@ -67,7 +67,7 @@ export function Random_Normal(client, message, ...content) {
         }
         const args = get_args(...content);
         const val = Gaussian(args[0], args[1]);
-        yield message.channel.send(`Random Value : ${val}`);
+        return message.channel.send(`Random Value : ${val}`);
     });
 }
 export function Coin_Toss(client, message, ...content) {
@@ -76,6 +76,6 @@ export function Coin_Toss(client, message, ...content) {
         let msg = "Tails";
         if (val == 1)
             msg = "Heads";
-        yield message.channel.send(`Coin Toss : ${msg}`);
+        return message.channel.send(`Coin Toss : ${msg}`);
     });
 }

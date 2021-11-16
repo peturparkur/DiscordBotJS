@@ -23,8 +23,8 @@ function FilterTikTok(msg) {
         const content = msg.content.toLowerCase().trim();
         if (!IsTikTok(content))
             return;
-        yield msg.delete();
-        yield msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
+        msg.delete();
+        return msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
     });
 }
 export { IsTikTok, FilterTikTok, Mention };
