@@ -11,6 +11,15 @@ import { Playlist, PrintPlaylist, Song } from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search";
 const playlists = new Map();
+function finder(query) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const q = yts(query);
+        //const res = await yts(query)
+        return q.then(res => {
+            return (res.videos.length >= 1) ? new Song(res.videos[0].url, res.videos[0].title, res.videos[0].author.name, res.videos[0].duration.seconds) : null;
+        });
+    });
+}
 export function StreamYT(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         //const args = content.split(" ")
@@ -25,14 +34,6 @@ export function StreamYT(client, message, ...content) {
             return __awaiter(this, void 0, void 0, function* () {
                 if (!ytdl.validateURL(url)) {
                     console.log('Invalid URL');
-                    const finder = (query) => __awaiter(this, void 0, void 0, function* () {
-                        const q = yts(query);
-                        //const res = await yts(query)
-                        return q.then(res => {
-                            return (res.videos.length >= 1) ? new Song(res.videos[0].url, res.videos[0].title, res.videos[0].author.name, res.videos[0].duration.seconds) : null;
-                        });
-                        //return (res.videos.length > 1)? res.videos[0] : null;
-                    });
                     const song = finder(content.join(" "));
                     return song.then(s => {
                         if (s)

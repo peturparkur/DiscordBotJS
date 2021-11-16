@@ -5,6 +5,16 @@ import yts from "yt-search"
 import fs from "fs" // file-system
 
 const playlists : Map<Discord.Guild, Playlist> = new Map()
+
+async function finder(query){
+    const q = yts(query)
+    //const res = await yts(query)
+    return q.then(res => {
+        return (res.videos.length >= 1)? new Song(res.videos[0].url, res.videos[0].title, 
+            res.videos[0].author.name, res.videos[0].duration.seconds) : null;
+    })
+}
+
 export async function StreamYT(client : Discord.Client, message : Discord.Message, ...content : string[]){
     //const args = content.split(" ")
     let url = content[0]
@@ -19,16 +29,6 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     async function get_song(content, url){
         if (!ytdl.validateURL(url)){
             console.log('Invalid URL')
-            const finder = async (query) => {
-                const q = yts(query)
-                //const res = await yts(query)
-                return q.then(res => {
-                    return (res.videos.length >= 1)? new Song(res.videos[0].url, res.videos[0].title, 
-                        res.videos[0].author.name, res.videos[0].duration.seconds) : null;
-                })
-                //return (res.videos.length > 1)? res.videos[0] : null;
-            }
-    
             const song = finder(content.join(" "))
             return song.then(s => {
                 if (s)
