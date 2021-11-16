@@ -20,13 +20,21 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
         if (!ytdl.validateURL(url)){
             console.log('Invalid URL')
             const finder = async (query) => {
-                const res = await yts(query)
+                const q = yts(query)
+                //const res = await yts(query)
+                return q.then(res => {
+                    return (res.videos.length >= 1)? new Song(res.videos[0].url, res.videos[0].title, 
+                        res.videos[0].author.name, res.videos[0].duration.seconds) : null;
+                })
                 //return (res.videos.length > 1)? res.videos[0] : null;
-                return (res.videos.length >= 1)? new Song(res.videos[0].url, res.videos[0].title, 
-                                                        res.videos[0].author.name, res.videos[0].duration.seconds) : null;
             }
     
-            const song = await finder(content.join(" "))
+            const song = finder(content.join(" "))
+            return song.then(s => {
+                if (s)
+                    return s
+                message.channel.send(`Error finding video`)
+            })
             if(song){
                 return song
             }
@@ -34,42 +42,49 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
         }
         else{
             console.log('Valid URL')
-            const info = await ytdl.getInfo(url)
+            const info = ytdl.getInfo(url)
+            return info.then(info =>{
+                return new Song(url, info.videoDetails.title, info.videoDetails.author.name, parseInt(info.videoDetails.lengthSeconds))
+            })
             //console.log(`Info from song: ${info.videoDetails}`)
-            return new Song(url, info.videoDetails.title, info.videoDetails.author.name, parseInt(info.videoDetails.lengthSeconds))
             //return new Song(url, "", "", 60)
         }
     }
 
-    const song = await get_song(content, url)
-    if(!playlist){
-        playlists.set(message.guild, new Playlist('playlist', false));
-        const playlist = playlists.get(message.guild)
-        if(song){
-            playlist.songs.push(song)
-            await message.channel.send(`Song ${song.title} was added`)
+    const song = get_song(content, url)
+    song.then(song => {
+        if(!playlist){
+            playlists.set(message.guild, new Playlist('playlist', false));
+            const playlist = playlists.get(message.guild)
+            if(song){
+                playlist.songs.push(song)
+                message.channel.send(`Song ${song.title} was added`)
+            }
+            else{
+                console.log(`Song is weird: ${song}`)
+            }
+            try{
+                vc.join().then(conn =>{
+                    playlist.connection = conn
+                    PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
+                })
+            }
+            catch (err){
+                playlists.delete(message.guild)
+                message.channel.send("Error in connecting")
+            }
         }
         else{
-            console.log(`Song is weird: ${song}`)
+            if(song){
+                playlist.songs.push(song)
+                message.channel.send(`Song ${song.title} was added to the queue`)
+            }
+            else{
+                console.log(`Song is weird: ${song}`)
+            }
         }
-        try{
-            playlist.connection = await vc.join()
-            PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
-        }
-        catch (err){
-            playlists.delete(message.guild)
-            await message.channel.send("Error in connecting")
-        }
-    }
-    else{
-        if(song){
-            playlist.songs.push(song)
-            await message.channel.send(`Song ${song.title} was added to the queue`)
-        }
-        else{
-            console.log(`Song is weird: ${song}`)
-        }
-    }
+    })
+    
 }
 
 export async function SkipYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
