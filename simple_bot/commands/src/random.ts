@@ -30,7 +30,7 @@ export async function Random(client : Discord.Client, message : Discord.Message,
     const bounds = get_min_max(...content)
     
     const val = RandInt(bounds[0], bounds[1])
-    await message.channel.send(`Random Value : ${val}`)
+    return message.channel.send(`Random Value : ${val}`)
 }
 
 export async function Random_Normal(client : Discord.Client, message : Discord.Message, ...content : string[]){
@@ -60,7 +60,7 @@ export async function Random_Normal(client : Discord.Client, message : Discord.M
     }
     const args = get_args(...content)
     const val = Gaussian(args[0], args[1])
-    await message.channel.send(`Random Value : ${val}`)
+    return message.channel.send(`Random Value : ${val}`)
 }
 
 export async function Coin_Toss(client : Discord.Client, message : Discord.Message, ...content : string[]){
@@ -68,5 +68,5 @@ export async function Coin_Toss(client : Discord.Client, message : Discord.Messa
     let msg = "Tails"
     if (val == 1)
         msg = "Heads"
-    await message.channel.send(`Coin Toss : ${msg}`)
+    return message.channel.send(`Coin Toss : ${msg}`)
 }

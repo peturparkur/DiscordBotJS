@@ -15,8 +15,8 @@ async function FilterTikTok(msg : Discord.Message){
     if (msg.author.bot) return;
     const content = msg.content.toLowerCase().trim();
     if (!IsTikTok(content)) return;
-    await msg.delete();
-    await msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
+    msg.delete();
+    return msg.channel.send(`TIKTOK NOT ALLOWED ${Mention(msg.author)}`);
 }
 
 export {DiscordCommand, IsTikTok, FilterTikTok, Mention}
