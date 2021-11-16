@@ -35,10 +35,6 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
                     return s
                 message.channel.send(`Error finding video`)
             })
-            if(song){
-                return song
-            }
-            await message.channel.send(`Error finding video`)
         }
         else{
             console.log('Valid URL')
@@ -90,12 +86,10 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
 export async function SkipYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
     const playlist = playlists.get(message.guild)
     if (!playlist){
-        await message.channel.send("No song is being played")
-        return
+        return message.channel.send("No song is being played")
     }
     if(!message.member.voice.channel){
-        await message.channel.send("You need to be in a channel to execute this command")
-        return
+        return message.channel.send("You need to be in a channel to execute this command")
     }
     //NextSong(playlist, 1)
     //PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
@@ -114,12 +108,10 @@ export async function SkipYT(client : Discord.Client, message : Discord.Message,
 export async function StopYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
     const playlist = playlists.get(message.guild)
     if (!playlist){
-        await message.channel.send("No song is being played")
-        return
+        return message.channel.send("No song is being played")
     }
     if(!message.member.voice.channel){
-        await message.channel.send("You need to be in a channel to execute this command")
-        return
+        return message.channel.send("You need to be in a channel to execute this command")
     }
     playlist.songs = [];
     playlist.connection.dispatcher.end()
@@ -130,15 +122,13 @@ export async function StopYT(client : Discord.Client, message : Discord.Message,
 export async function ShowPlaylist(client : Discord.Client, message : Discord.Message, ...args : string[]) {
     const playlist = playlists.get(message.guild)
     if (!playlist){
-        await message.channel.send("No song is being played")
-        return
+        return message.channel.send("No song is being played")
     }
     if(!message.member.voice.channel){
-        await message.channel.send("You need to be in a channel to execute this command")
-        return
+        return message.channel.send("You need to be in a channel to execute this command")
     }
     const txt = PrintPlaylist(playlist)
-    await message.channel.send(`Current Playlist: ` + txt)
+    return message.channel.send(`Current Playlist: ` + txt)
 }
 
 async function PlaySong(guild : Discord.Guild, txtChannel : Discord.TextChannel, playlist : Playlist){
@@ -156,5 +146,5 @@ async function PlaySong(guild : Discord.Guild, txtChannel : Discord.TextChannel,
         playlist.Next()
         PlaySong(guild, txtChannel, playlist)
     });
-    await txtChannel.send(`Playing ${song.title}, ${song.url}`)
+    return txtChannel.send(`Playing ${song.title}, ${song.url}`)
 }
