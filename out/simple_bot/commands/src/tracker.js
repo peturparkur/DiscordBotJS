@@ -51,7 +51,7 @@ function ActivityTracker(message, before, after) {
         return;
     // Check if a new Day has arrived
     const now = new Date();
-    if (DeltaTime(now.getTime() - last_update.getTime()).days >= 1) {
+    if (DeltaTime(now.getDate() - last_update.getDate()).days >= 1) {
         tracker.forEach((value, key) => {
             tracker.set(key, new Map());
         });
@@ -99,6 +99,7 @@ function TrackPlaytime(client, message, ...content) {
             console.log(`Now tracking playtime of ${message.member.displayName}`);
         }
         if (tracker.size > 0 && !started) {
+            last_update = new Date();
             client.on('presenceUpdate', (before, after) => {
                 if (!tracker.has(after.user))
                     return;

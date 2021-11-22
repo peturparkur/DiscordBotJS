@@ -53,7 +53,7 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
                 
     // Check if a new Day has arrived
     const now = new Date()
-    if(DeltaTime(now.getTime() - last_update.getTime()).days >= 1){
+    if(DeltaTime(now.getDate() - last_update.getDate()).days >= 1){
         tracker.forEach((value, key) =>{
             tracker.set(key, new Map<string, number>())
         })
@@ -105,6 +105,7 @@ async function TrackPlaytime(client : Discord.Client, message : Discord.Message,
         console.log(`Now tracking playtime of ${message.member.displayName}`)
     }
     if (tracker.size > 0 && !started){
+        last_update = new Date()
         client.on('presenceUpdate', (before, after) =>{
             if(!tracker.has(after.user))
                 return
