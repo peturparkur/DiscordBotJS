@@ -44,6 +44,9 @@ class DiscordBot extends Discord.Client {
         this.addEvent('random', commands.Random);
         this.addEvent('rand', commands.Random_Normal);
         this.addEvent('function', commands.RandomFunction);
+        this.addEvent('track', commands.PlaytimeTracker);
+        this.addEvent('check', commands.CheckPlaytimeTracker);
+        this.addEvent('stopt', commands.StopPlaytimeTracker);
         this.addEvent('settings', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
             const stg = cntn[0]; //setting to change
@@ -66,7 +69,7 @@ class DiscordBot extends Discord.Client {
                 yield msg.channel.send(`No command found with name ${key}`);
                 return;
             }
-            if (key != 'function')
+            if (key in ['function', 'track', 'check', 'stopt'])
                 return;
             const func = this.commandHandler.listeners.get(key)[0];
             let desc = func.toString();
@@ -78,6 +81,14 @@ class DiscordBot extends Discord.Client {
         this.on("typingStart", (chn, user) => __awaiter(this, void 0, void 0, function* () {
             console.log(`User ${user.username} is typing in channel ${chn.id}`);
         }));
+        function playing(activities) {
+            for (const a of activities) {
+                if (a.type == "PLAYING") {
+                    return a;
+                }
+            }
+            return null;
+        }
     }
     Setup(debug = false) {
         this.guilds.cache.forEach(guild => {

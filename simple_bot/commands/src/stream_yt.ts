@@ -6,7 +6,7 @@ import fs from "fs" // file-system
 
 const playlists : Map<Discord.Guild, Playlist> = new Map()
 
-async function finder(query){
+async function finder(query : string | yts.Options){
     const q = yts(query)
     //const res = await yts(query)
     return q.then(res => {
@@ -23,7 +23,7 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     const playlist = playlists.get(message.guild) //get the playlist of this guild
 
     if (vc === null){
-        await message.channel.send(`${message.member.displayName} Please join a Voice Channel`)
+        message.channel.send(`${message.member.displayName} Please join a Voice Channel`)
         return
     }
     async function get_song(content, url){

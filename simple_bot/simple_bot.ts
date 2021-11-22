@@ -8,7 +8,8 @@ import {FilterTikTok} from "./commands/src/tiktok.js"
 
 import ytdl from "ytdl-core"; //youtube system
 import fs from "fs" // file-system
-import { Command, ICommand } from "./utility/comm_class.js";
+import { Command } from "./utility/comm_class.js";
+import { CommandConstructor, ICommand } from "./utility/comm_class.js"
 
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
@@ -52,6 +53,9 @@ class DiscordBot extends Discord.Client{
         this.addEvent('random', commands.Random)
         this.addEvent('rand', commands.Random_Normal)
         this.addEvent('function', commands.RandomFunction)
+        this.addEvent('track', commands.PlaytimeTracker)
+        this.addEvent('check', commands.CheckPlaytimeTracker)
+        this.addEvent('stopt', commands.StopPlaytimeTracker)
 
 
         this.addEvent('settings', async (client : Discord.Client, msg : Discord.Message, content : string) => {
@@ -77,7 +81,7 @@ class DiscordBot extends Discord.Client{
                 await msg.channel.send(`No command found with name ${key}`)
                 return
             }
-            if(key != 'function') return
+            if(key in ['function', 'track', 'check', 'stopt']) return
             const func = this.commandHandler.listeners.get(key)[0] as ICommand
             let desc = func.toString()
             desc = func.description
@@ -91,6 +95,15 @@ class DiscordBot extends Discord.Client{
         this.on("typingStart", async (chn : Discord.Channel, user) => {
             console.log(`User ${user.username} is typing in channel ${chn.id}`);
         });
+
+        function playing(activities:Array<Discord.Activity>){
+            for (const a of activities){
+                if (a.type == "PLAYING"){
+                    return a
+                }
+            }
+            return null
+        }
     }
 
     private Setup(debug : boolean = false){

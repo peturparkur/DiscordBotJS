@@ -27,7 +27,7 @@ export function StreamYT(client, message, ...content) {
         const vc = message.member.voice.channel;
         const playlist = playlists.get(message.guild); //get the playlist of this guild
         if (vc === null) {
-            yield message.channel.send(`${message.member.displayName} Please join a Voice Channel`);
+            message.channel.send(`${message.member.displayName} Please join a Voice Channel`);
             return;
         }
         function get_song(content, url) {
