@@ -17,11 +17,12 @@ let started : boolean = false
 let last_update : Date = new Date()
 
 function DeltaTime(dt : number){
+    let diffDays = Math.floor(dt / 86400000); // days
     let diffHrs = Math.floor((dt % 86400000) / 3600000); // hours
     let diffMins = Math.round(((dt % 86400000) % 3600000) / 60000); // minutes
     let diffSeconds = Math.round(((dt % 86400000) % 3600000) % 60000) / 1000; // minutes
     return {
-        "days" : 0,
+        "days" : diffDays,
         "hours" : diffHrs,
         "minutes" : diffMins,
         "seconds" : diffSeconds
@@ -52,12 +53,12 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
                 
     // Check if a new Day has arrived
     const now = new Date()
-    if((now.getUTCDate() - last_update.getUTCDate()) > 0){
+    if(DeltaTime(now.getTime() - last_update.getTime()).days >= 1){
         tracker.forEach((value, key) =>{
             tracker.set(key, new Map<string, number>())
         })
+        last_update = now
     }
-    last_update = now
 
     // Not tracking this guy
     if(!tracker.has(after.user)){
