@@ -11,8 +11,8 @@ class Timer {
     }
 }
 
-const tracker : Map<Discord.User, Map<string, number>> = new Map() // number measure UTC milliseconds
-const updater : Map<Discord.User, number> = new Map()
+const tracker : Map<string, Map<string, number>> = new Map() // number measure UTC milliseconds
+const updater : Map<string, number> = new Map()
 let started : boolean = false
 let last_update : Date = new Date()
 
@@ -29,7 +29,7 @@ function DeltaTime(dt : number){
     }
 }
 
-function playing(activities:Array<Discord.Activity>){
+function playing(activities:Array<Discord.Activity>) : Discord.Activity | null{
     for (const a of activities){
         if (a.type == "PLAYING"){
             return a
@@ -39,13 +39,13 @@ function playing(activities:Array<Discord.Activity>){
 }
 
 function ActivityTracker(message : Discord.Message, before : Discord.Presence, after : Discord.Presence){
-    let v = updater.get(after.user)
+    let v = updater.get(after.user.username)
     if(v){
         if((new Date().getTime() - v) < 500){
             return
         }
     }
-    updater.set(after.user, new Date().getTime())
+    updater.set(after.user.username, new Date().getTime())
         //console.log(updater)
 
     if(!before || !after)
@@ -53,32 +53,29 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
                 
     // Check if a new Day has arrived
     const now = new Date()
-    if(DeltaTime(now.getDate() - last_update.getDate()).days >= 1){
-        tracker.forEach((value, key) =>{
-            tracker.set(key, new Map<string, number>())
-        })
-        last_update = now
-    }
 
     // Not tracking this guy
-    if(!tracker.has(after.user)){
+    if(!tracker.has(after.user.username)){
         return
     }
 
     const activity = playing(before.activities)
     if(!playing(after.activities) && activity){
         // Was playing -> Now they don't
-        const prev = tracker.get(after.member.user)
+        const prev = tracker.get(after.member.user.username)
         //console.log("tracker : ", tracker)
         const prev_time = prev.get(activity.name)
         //console.log("prev : ", prev)
         //console.log("prev_time : ", prev_time)
+        if(!activity.timestamps){
+            console.log("This shouldn't Happen : " + activity)
+        }
         const start = activity.timestamps.start
         if(prev_time != null){
             let dx = now.getTime() - start.getTime()
             //console.log(`dt0 : ${dx}`)
             //console.log(`dt0 : ${now} - ${start}`)
-            tracker.set(after.member.user, 
+            tracker.set(after.member.user.username, 
                 prev.set(activity.name, prev_time + dx))
             //console.log(`dt0 ${activity} -> ${tracker.get(after.member.user).get(activity.name)}`)
         }
@@ -86,7 +83,7 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
             //console.log(`dt1 : ${now.getTime() - start.getTime()}`)
             //console.log(`dt1 : ${now.getTime()} - ${start.getTime()} || ${now.toUTCString()}`)
             //console.log(`dt1 : ${now} - ${start}`)
-            tracker.set(after.member.user, new Map().set(activity.name, 
+            tracker.set(after.member.user.username, prev.set(activity.name, 
                 now.getTime() - start.getTime()))
             //console.log(`dt1 ${activity} -> ${tracker.get(after.member.user).get(activity.name)}`)
         }
@@ -100,21 +97,29 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
  * @param content 
  */
 async function TrackPlaytime(client : Discord.Client, message : Discord.Message, ...content : string[]) {
-    if(!tracker.has(message.member.user)){
-        tracker.set(message.member.user, new Map<string, number>())
-        console.log(`Now tracking playtime of ${message.member.displayName}`)
+    const now = new Date()
+    if((now.getDate() - last_update.getDate()) > 0){
+        tracker.forEach((value, key) =>{
+            tracker.set(key, new Map<string, number>())
+        })
+        last_update = now
+    }
+
+    if(!tracker.has(message.member.user.username)){
+        tracker.set(message.member.user.username, new Map<string, number>())
+        return message.channel.send(`Now tracking playtime of ${message.member.displayName}`)
     }
     if (tracker.size > 0 && !started){
         last_update = new Date()
         client.on('presenceUpdate', (before, after) =>{
-            if(!tracker.has(after.user))
+            if(!tracker.has(after.user.username))
                 return
             
             return ActivityTracker(message, before, after)
         })
         started = true
     }
-    return message.channel.send(`Now tracking playtime of ${message.member.user.username}`)
+    return message.channel.send(`Already tracking playtime of ${message.member.user.username}`)
 }
 
 /**
@@ -125,12 +130,16 @@ async function TrackPlaytime(client : Discord.Client, message : Discord.Message,
  * @returns 
  */
 async function StopTracking(client : Discord.Client, message : Discord.Message, ...content : string[]) {
-    tracker.delete(message.member.user)
+    tracker.delete(message.member.user.username)
     return message.channel.send(`Stopped tracking playtime of ${message.member.user.username}`)
 }
 
 async function CheckPlaytime(client : Discord.Client, message : Discord.Message, ...content : string[]) {
-    const player = tracker.get(message.author)
+    let user = message.author.username
+    if (content.length > 0){
+        user = content[0]
+    }
+    const player = tracker.get(user)
     if(player){
         let games : string = ""
         let sum : number = 0
@@ -140,9 +149,9 @@ async function CheckPlaytime(client : Discord.Client, message : Discord.Message,
             games += `${activity} -> ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds \n`
         })
         let dt = DeltaTime(sum)
-        return message.channel.send(`Today ${message.author.username} played a total of ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds : \n` + games)
+        return message.channel.send(`Today ${user} played a total of ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds : \n` + games)
     }
-    return message.channel.send(`Not tracking playtime of ${message.member.user.username}`)
+    return message.channel.send(`Not tracking playtime of ${user} or ${user} doesn't exist`)
 }
 
 export const PlaytimeTracker = CommandConstructor(

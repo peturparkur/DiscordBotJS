@@ -39,49 +39,46 @@ function playing(activities) {
     return null;
 }
 function ActivityTracker(message, before, after) {
-    let v = updater.get(after.user);
+    let v = updater.get(after.user.username);
     if (v) {
         if ((new Date().getTime() - v) < 500) {
             return;
         }
     }
-    updater.set(after.user, new Date().getTime());
+    updater.set(after.user.username, new Date().getTime());
     //console.log(updater)
     if (!before || !after)
         return;
     // Check if a new Day has arrived
     const now = new Date();
-    if (DeltaTime(now.getDate() - last_update.getDate()).days >= 1) {
-        tracker.forEach((value, key) => {
-            tracker.set(key, new Map());
-        });
-        last_update = now;
-    }
     // Not tracking this guy
-    if (!tracker.has(after.user)) {
+    if (!tracker.has(after.user.username)) {
         return;
     }
     const activity = playing(before.activities);
     if (!playing(after.activities) && activity) {
         // Was playing -> Now they don't
-        const prev = tracker.get(after.member.user);
+        const prev = tracker.get(after.member.user.username);
         //console.log("tracker : ", tracker)
         const prev_time = prev.get(activity.name);
         //console.log("prev : ", prev)
         //console.log("prev_time : ", prev_time)
+        if (!activity.timestamps) {
+            console.log("This shouldn't Happen : " + activity);
+        }
         const start = activity.timestamps.start;
         if (prev_time != null) {
             let dx = now.getTime() - start.getTime();
             //console.log(`dt0 : ${dx}`)
             //console.log(`dt0 : ${now} - ${start}`)
-            tracker.set(after.member.user, prev.set(activity.name, prev_time + dx));
+            tracker.set(after.member.user.username, prev.set(activity.name, prev_time + dx));
             //console.log(`dt0 ${activity} -> ${tracker.get(after.member.user).get(activity.name)}`)
         }
         else {
             //console.log(`dt1 : ${now.getTime() - start.getTime()}`)
             //console.log(`dt1 : ${now.getTime()} - ${start.getTime()} || ${now.toUTCString()}`)
             //console.log(`dt1 : ${now} - ${start}`)
-            tracker.set(after.member.user, new Map().set(activity.name, now.getTime() - start.getTime()));
+            tracker.set(after.member.user.username, prev.set(activity.name, now.getTime() - start.getTime()));
             //console.log(`dt1 ${activity} -> ${tracker.get(after.member.user).get(activity.name)}`)
         }
     }
@@ -94,20 +91,27 @@ function ActivityTracker(message, before, after) {
  */
 function TrackPlaytime(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!tracker.has(message.member.user)) {
-            tracker.set(message.member.user, new Map());
-            console.log(`Now tracking playtime of ${message.member.displayName}`);
+        const now = new Date();
+        if ((now.getDate() - last_update.getDate()) > 0) {
+            tracker.forEach((value, key) => {
+                tracker.set(key, new Map());
+            });
+            last_update = now;
+        }
+        if (!tracker.has(message.member.user.username)) {
+            tracker.set(message.member.user.username, new Map());
+            return message.channel.send(`Now tracking playtime of ${message.member.displayName}`);
         }
         if (tracker.size > 0 && !started) {
             last_update = new Date();
             client.on('presenceUpdate', (before, after) => {
-                if (!tracker.has(after.user))
+                if (!tracker.has(after.user.username))
                     return;
                 return ActivityTracker(message, before, after);
             });
             started = true;
         }
-        return message.channel.send(`Now tracking playtime of ${message.member.user.username}`);
+        return message.channel.send(`Already tracking playtime of ${message.member.user.username}`);
     });
 }
 /**
@@ -119,13 +123,17 @@ function TrackPlaytime(client, message, ...content) {
  */
 function StopTracking(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
-        tracker.delete(message.member.user);
+        tracker.delete(message.member.user.username);
         return message.channel.send(`Stopped tracking playtime of ${message.member.user.username}`);
     });
 }
 function CheckPlaytime(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
-        const player = tracker.get(message.author);
+        let user = message.author.username;
+        if (content.length > 0) {
+            user = content[0];
+        }
+        const player = tracker.get(user);
         if (player) {
             let games = "";
             let sum = 0;
@@ -135,9 +143,9 @@ function CheckPlaytime(client, message, ...content) {
                 games += `${activity} -> ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds \n`;
             });
             let dt = DeltaTime(sum);
-            return message.channel.send(`Today ${message.author.username} played a total of ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds : \n` + games);
+            return message.channel.send(`Today ${user} played a total of ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds : \n` + games);
         }
-        return message.channel.send(`Not tracking playtime of ${message.member.user.username}`);
+        return message.channel.send(`Not tracking playtime of ${user} or ${user} doesn't exist`);
     });
 }
 export const PlaytimeTracker = CommandConstructor(TrackPlaytime, "Tracks your daily playtime for each game", []);
