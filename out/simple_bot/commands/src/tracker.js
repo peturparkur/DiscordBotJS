@@ -61,14 +61,8 @@ function ActivityTracker(message, before, after) {
         const prev = tracker.get(after.member.user.username);
         //console.log("tracker : ", tracker)
         const prev_time = prev.get(activity.name);
-        //console.log("prev : ", prev)
-        //console.log("prev_time : ", prev_time)
-        if (!activity.timestamps) {
-            console.log("This shouldn't Happen : " + activity);
-            return;
-        }
+        console.log(activity.timestamps);
         const start = activity.timestamps.start;
-        console.log(start);
         if (prev_time != null) {
             let dx = now.getTime() - start.getTime();
             //console.log(`dt0 : ${dx}`)
