@@ -69,8 +69,10 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
         //console.log("prev_time : ", prev_time)
         if(!activity.timestamps){
             console.log("This shouldn't Happen : " + activity)
+            return
         }
         const start = activity.timestamps.start
+        console.log(start)
         if(prev_time != null){
             let dx = now.getTime() - start.getTime()
             //console.log(`dt0 : ${dx}`)
