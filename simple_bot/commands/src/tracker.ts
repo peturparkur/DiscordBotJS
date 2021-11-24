@@ -102,20 +102,21 @@ async function TrackPlaytime(client : Discord.Client, message : Discord.Message,
         last_update = now
     }
 
+    if (!started){
+        console.log('Start tracker')
+        last_update = new Date()
+        client.on('presenceUpdate', (before, after) =>{
+            // console.log(`presence change #${after.user.username}`)
+            if(!tracker.has(after.user.username))
+                return
+            // console.log(`presence change post #${after.user.username}`)
+            return ActivityTracker(message, before, after)
+        })
+        started = true
+    }
+
     if(!tracker.has(message.member.user.username)){
         tracker.set(message.member.user.username, new Map<string, number>())
-        if (tracker.size > 0 && !started){
-            console.log('Start tracker')
-            last_update = new Date()
-            client.on('presenceUpdate', (before, after) =>{
-                // console.log(`presence change #${after.user.username}`)
-                if(!tracker.has(after.user.username))
-                    return
-                // console.log(`presence change post #${after.user.username}`)
-                return ActivityTracker(message, before, after)
-            })
-            started = true
-        }
         return message.channel.send(`Now tracking playtime of ${message.author.username}`)
     }
     return message.channel.send(`Already tracking playtime of ${message.member.user.username}`)
