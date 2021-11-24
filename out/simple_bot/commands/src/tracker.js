@@ -103,6 +103,7 @@ function TrackPlaytime(client, message, ...content) {
             client.on('presenceUpdate', (before, after) => {
                 if (!tracker.has(after.user.username))
                     return;
+                console.log('presence change');
                 return ActivityTracker(message, before, after);
             });
             started = true;

@@ -66,7 +66,7 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
         //console.log("tracker : ", tracker)
         const prev_time = prev.get(activity.name)
         console.log(activity.timestamps)
-        
+
         const start = activity.timestamps.start
         if(prev_time != null){
             let dx = now.getTime() - start.getTime()
@@ -111,7 +111,7 @@ async function TrackPlaytime(client : Discord.Client, message : Discord.Message,
         client.on('presenceUpdate', (before, after) =>{
             if(!tracker.has(after.user.username))
                 return
-            
+            console.log('presence change')
             return ActivityTracker(message, before, after)
         })
         started = true
