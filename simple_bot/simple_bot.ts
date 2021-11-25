@@ -79,15 +79,14 @@ class DiscordBot extends Discord.Client{
             const cntn = content.split(" ")
             const key = cntn[0]
             if (!this.commandHandler.listeners.has(key)){
-                await msg.channel.send(`No command found with name ${key}`)
+                msg.channel.send(`No command found with name ${key}`)
                 return
             }
-            if(key in ['function', 'track', 'check', 'stopt']) return
             const func = this.commandHandler.listeners.get(key)[0] as ICommand
             let desc = func.toString()
             desc = func.description
 
-            await msg.channel.send(`description of ${key} : ${desc}`)
+            msg.channel.send(`description of ${key} : ${desc}`)
         })
 
         this.on('message', FilterTikTok)

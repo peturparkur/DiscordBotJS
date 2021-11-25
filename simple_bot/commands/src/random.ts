@@ -1,5 +1,6 @@
 import * as Discord from "discord.js"
 import { Gaussian, RandInt } from "../../../utility/putil_maths.js"
+import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
 
 function get_min_max(...content : string[]){
     let _min = 0
@@ -26,14 +27,18 @@ function get_min_max(...content : string[]){
     return [_min, _max]
 }
 
-export async function Random(client : Discord.Client, message : Discord.Message, ...content : string[]){
+async function _Random(client : Discord.Client, message : Discord.Message, ...content : string[]){
     const bounds = get_min_max(...content)
     
     const val = RandInt(bounds[0], bounds[1])
     return message.channel.send(`Random Value : ${val}`)
 }
 
-export async function Random_Normal(client : Discord.Client, message : Discord.Message, ...content : string[]){
+export const Random = CommandConstructor(_Random, "Generate a random integer between given minimum and maximum values", [])
+export const Random_Normal = CommandConstructor(_Random, "Generate a Normal distribution sample with given mean and variance", [])
+export const Coin_Toss = CommandConstructor(_Random, "Random -> Heads or Tails", [])
+
+export async function _Random_Normal(client : Discord.Client, message : Discord.Message, ...content : string[]){
     function get_args(...content : string[]){
         let _mean = 0
         let _std = 1
@@ -63,7 +68,7 @@ export async function Random_Normal(client : Discord.Client, message : Discord.M
     return message.channel.send(`Random Value : ${val}`)
 }
 
-export async function Coin_Toss(client : Discord.Client, message : Discord.Message, ...content : string[]){
+export async function _Coin_Toss(client : Discord.Client, message : Discord.Message, ...content : string[]){
     const val = RandInt(0, 1)
     let msg = "Tails"
     if (val == 1)

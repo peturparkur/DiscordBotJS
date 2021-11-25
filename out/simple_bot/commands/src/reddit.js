@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import fetch from "node-fetch"; // making web requests
+import { CommandConstructor } from "../../utility/comm_class.js";
 function GetReddit(subreddit, count = 50) {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch(`https://www.reddit.com/r/${subreddit}/.json?limit=${count}`, { method: 'GET', headers: { 'User-agent': 'reddit_discord_bot v0.05' } });
@@ -31,7 +32,8 @@ function FilterTodaysPost(posts) {
     }
     return todays;
 }
-export function GetRedditTodaysTop(client, message, ...content) {
+export const GetRedditTodaysTop = CommandConstructor(_GetRedditTodaysTop, 'Get a random (or given) random post from Todays top reddit posts', []);
+function _GetRedditTodaysTop(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         //const cntn = content.split(" ")
         const cntn = content;

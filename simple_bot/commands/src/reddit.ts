@@ -1,5 +1,6 @@
 import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
+import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
 
 async function GetReddit(subreddit : string, count : number = 50){
     const response = await fetch(`https://www.reddit.com/r/${subreddit}/.json?limit=${count}`, 
@@ -23,7 +24,10 @@ function FilterTodaysPost(posts : any){
     }
     return todays
 }
-export async function GetRedditTodaysTop(client : Discord.Client, message : Discord.Message, ...content : string[]){
+
+export const GetRedditTodaysTop = CommandConstructor(_GetRedditTodaysTop, 'Get a random (or given) random post from Todays top reddit posts', [])
+
+async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Message, ...content : string[]){
     //const cntn = content.split(" ")
     const cntn = content
     let subreddit = cntn[0]

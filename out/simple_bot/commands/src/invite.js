@@ -8,7 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { INVITE_LINK } from "../../constants.js";
-export function InviteLink(client, message) {
+import { CommandConstructor } from "../../utility/comm_class.js";
+export const InviteLink = CommandConstructor(_InviteLink, "Returns the invite link of the bot", []);
+function _InviteLink(client, message) {
     return __awaiter(this, void 0, void 0, function* () {
         return message.channel.send(`${message.member.displayName} here is the invite link: ${INVITE_LINK}`);
     });

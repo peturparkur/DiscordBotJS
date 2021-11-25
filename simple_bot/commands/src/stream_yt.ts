@@ -3,6 +3,7 @@ import { NextSong, Playlist, PrintPlaylist, Song} from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search"
 import fs from "fs" // file-system
+import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
 
 const playlists : Map<Discord.Guild, Playlist> = new Map()
 
@@ -15,7 +16,9 @@ async function finder(query : string | yts.Options){
     })
 }
 
-export async function StreamYT(client : Discord.Client, message : Discord.Message, ...content : string[]){
+export const StreamYT = CommandConstructor(_StreamYT, 'Add a song from name/url to the playlist', [])
+
+async function _StreamYT(client : Discord.Client, message : Discord.Message, ...content : string[]){
     //const args = content.split(" ")
     let url = content[0]
     const vc = message.member.voice.channel
@@ -83,7 +86,9 @@ export async function StreamYT(client : Discord.Client, message : Discord.Messag
     
 }
 
-export async function SkipYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
+export const SkipYT = CommandConstructor(_SkipYT, "Skips the current song in the playlist", [])
+
+async function _SkipYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
     const playlist = playlists.get(message.guild)
     if (!playlist){
         return message.channel.send("No song is being played")
@@ -105,7 +110,9 @@ export async function SkipYT(client : Discord.Client, message : Discord.Message,
     PlaySong(message.guild, message.channel as Discord.TextChannel, playlist)
 }
 
-export async function StopYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
+export const StopYT = CommandConstructor(_StopYT, "clears the current playlist", [])
+
+async function _StopYT(client : Discord.Client, message : Discord.Message, ...args : string[]) {
     const playlist = playlists.get(message.guild)
     if (!playlist){
         return message.channel.send("No song is being played")
@@ -119,7 +126,10 @@ export async function StopYT(client : Discord.Client, message : Discord.Message,
     playlists.delete(message.guild)
 }
 
-export async function ShowPlaylist(client : Discord.Client, message : Discord.Message, ...args : string[]) {
+
+export const ShowPlaylist = CommandConstructor(_ShowPlaylist, "Shows the current songs added to the playlist", [])
+
+async function _ShowPlaylist(client : Discord.Client, message : Discord.Message, ...args : string[]) {
     const playlist = playlists.get(message.guild)
     if (!playlist){
         return message.channel.send("No song is being played")

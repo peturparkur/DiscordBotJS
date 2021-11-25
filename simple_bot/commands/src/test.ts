@@ -1,7 +1,9 @@
 import * as Discord from "discord.js"
 import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
 
-export async function Test(client : Discord.Client, message : Discord.Message, ...content : string[]){
+export const Test = CommandConstructor(_Test, "Test function for testing the connection", [])
+
+async function _Test(client : Discord.Client, message : Discord.Message, ...content : string[]){
     return message.channel.send(`received message : ${message.content}`)
 }
 

@@ -8,7 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { CommandConstructor } from "../../utility/comm_class.js";
-export function Test(client, message, ...content) {
+export const Test = CommandConstructor(_Test, "Test function for testing the connection", []);
+function _Test(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         return message.channel.send(`received message : ${message.content}`);
     });

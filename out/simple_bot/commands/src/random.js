@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Gaussian, RandInt } from "../../../utility/putil_maths.js";
+import { CommandConstructor } from "../../utility/comm_class.js";
 function get_min_max(...content) {
     let _min = 0;
     let _max = 1;
@@ -32,14 +33,17 @@ function get_min_max(...content) {
     }
     return [_min, _max];
 }
-export function Random(client, message, ...content) {
+function _Random(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         const bounds = get_min_max(...content);
         const val = RandInt(bounds[0], bounds[1]);
         return message.channel.send(`Random Value : ${val}`);
     });
 }
-export function Random_Normal(client, message, ...content) {
+export const Random = CommandConstructor(_Random, "Generate a random integer between given minimum and maximum values", []);
+export const Random_Normal = CommandConstructor(_Random, "Generate a Normal distribution sample with given mean and variance", []);
+export const Coin_Toss = CommandConstructor(_Random, "Random -> Heads or Tails", []);
+export function _Random_Normal(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         function get_args(...content) {
             let _mean = 0;
@@ -70,7 +74,7 @@ export function Random_Normal(client, message, ...content) {
         return message.channel.send(`Random Value : ${val}`);
     });
 }
-export function Coin_Toss(client, message, ...content) {
+export function _Coin_Toss(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         const val = RandInt(0, 1);
         let msg = "Tails";

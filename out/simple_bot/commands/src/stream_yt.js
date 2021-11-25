@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Playlist, PrintPlaylist, Song } from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search";
+import { CommandConstructor } from "../../utility/comm_class.js";
 const playlists = new Map();
 function finder(query) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -20,7 +21,8 @@ function finder(query) {
         });
     });
 }
-export function StreamYT(client, message, ...content) {
+export const StreamYT = CommandConstructor(_StreamYT, 'Add a song from name/url to the playlist', []);
+function _StreamYT(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         //const args = content.split(" ")
         let url = content[0];
@@ -87,7 +89,8 @@ export function StreamYT(client, message, ...content) {
         });
     });
 }
-export function SkipYT(client, message, ...args) {
+export const SkipYT = CommandConstructor(_SkipYT, "Skips the current song in the playlist", []);
+function _SkipYT(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
         const playlist = playlists.get(message.guild);
         if (!playlist) {
@@ -110,7 +113,8 @@ export function SkipYT(client, message, ...args) {
         PlaySong(message.guild, message.channel, playlist);
     });
 }
-export function StopYT(client, message, ...args) {
+export const StopYT = CommandConstructor(_StopYT, "clears the current playlist", []);
+function _StopYT(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
         const playlist = playlists.get(message.guild);
         if (!playlist) {
@@ -125,7 +129,8 @@ export function StopYT(client, message, ...args) {
         playlists.delete(message.guild);
     });
 }
-export function ShowPlaylist(client, message, ...args) {
+export const ShowPlaylist = CommandConstructor(_ShowPlaylist, "Shows the current songs added to the playlist", []);
+function _ShowPlaylist(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
         const playlist = playlists.get(message.guild);
         if (!playlist) {
