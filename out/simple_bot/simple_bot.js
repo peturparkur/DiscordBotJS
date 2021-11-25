@@ -31,6 +31,7 @@ class DiscordBot extends Discord.Client {
         this.commandHandler = new EventHandler();
         this.on("ready", () => {
             this.Setup();
+            commands.StartTracker(this);
         });
         // Assume all commands have format: (message, content, ...args) => void
         this.addEvent('test', commands.Test);
@@ -81,14 +82,6 @@ class DiscordBot extends Discord.Client {
         this.on("typingStart", (chn, user) => __awaiter(this, void 0, void 0, function* () {
             console.log(`User ${user.username} is typing in channel ${chn.id}`);
         }));
-        function playing(activities) {
-            for (const a of activities) {
-                if (a.type == "PLAYING") {
-                    return a;
-                }
-            }
-            return null;
-        }
     }
     Setup(debug = false) {
         this.guilds.cache.forEach(guild => {
