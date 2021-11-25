@@ -1,21 +1,16 @@
 import * as Discord from "discord.js";
 import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
 
-class Timer {
-    delta : number;
-    last_update : Date;
-
-    constructor(delta : number = 0, updated : Date = new Date()){
-        this.delta = delta
-        this.last_update = updated
-    }
-}
-
 const tracker : Map<string, Map<string, number>> = new Map() // number measure UTC milliseconds
 const updater : Map<string, number> = new Map()
 let started : boolean = false
 let last_update : Date = new Date()
 
+/**
+ * Construct Date-like structure from utc number -> interpret as time spent from 0
+ * @param dt Time delta
+ * @returns \{days, hours, minutes, seconds} : additive
+ */
 function DeltaTime(dt : number){
     let diffDays = Math.floor(dt / 86400000); // days
     let diffHrs = Math.floor((dt % 86400000) / 3600000); // hours
@@ -29,6 +24,11 @@ function DeltaTime(dt : number){
     }
 }
 
+/**
+ * Checks whether or not activities contain playing
+ * @param activities activities to check through
+ * @returns activity if playing, null otherwise
+ */
 function playing(activities:Array<Discord.Activity>) : Discord.Activity | null{
     for (const a of activities){
         if (a.type == "PLAYING"){
@@ -39,17 +39,19 @@ function playing(activities:Array<Discord.Activity>) : Discord.Activity | null{
 }
 
 function ActivityTracker(message : Discord.Message, before : Discord.Presence, after : Discord.Presence){
+    // need both information
+    if(!before || !after)
+        return
+
+    // Don't update if called in less than 0.5s
+    // Used to solve calls from multiple servers
     let v = updater.get(after.user.username)
     if(v){
         if((new Date().getTime() - v) < 500){
             return
         }
     }
-    updater.set(after.user.username, new Date().getTime())
-        //console.log(updater)
-
-    if(!before || !after)
-        return
+    updater.set(after.user.username, new Date().getTime()) //change last updated time
                 
     // Check if a new Day has arrived
     const now = new Date()
@@ -63,26 +65,20 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
     if(!playing(after.activities) && activity){
         // Was playing -> Now they don't
         const prev = tracker.get(after.member.user.username)
-        //console.log("tracker : ", tracker)
         const prev_time = prev.get(activity.name)
         console.log(activity.timestamps)
 
         const start = activity.timestamps.start
+
+        // Have played previously
         if(prev_time != null){
             let dx = now.getTime() - start.getTime()
-            //console.log(`dt0 : ${dx}`)
-            //console.log(`dt0 : ${now} - ${start}`)
             tracker.set(after.member.user.username, 
                 prev.set(activity.name, prev_time + dx))
-            //console.log(`dt0 ${activity} -> ${tracker.get(after.member.user).get(activity.name)}`)
         }
         else{
-            //console.log(`dt1 : ${now.getTime() - start.getTime()}`)
-            //console.log(`dt1 : ${now.getTime()} - ${start.getTime()} || ${now.toUTCString()}`)
-            //console.log(`dt1 : ${now} - ${start}`)
             tracker.set(after.member.user.username, prev.set(activity.name, 
                 now.getTime() - start.getTime()))
-            //console.log(`dt1 ${activity} -> ${tracker.get(after.member.user).get(activity.name)}`)
         }
     }
 }
@@ -95,24 +91,25 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
  */
 async function TrackPlaytime(client : Discord.Client, message : Discord.Message, ...content : string[]) {
     const now = new Date()
-    if((now.getDate() - last_update.getDate()) > 0){
-        tracker.forEach((value, key) =>{
-            tracker.set(key, new Map<string, number>())
-        })
-        last_update = now
-    }
 
     if (!started){
         console.log('Start tracker')
         last_update = new Date()
         client.on('presenceUpdate', (before, after) =>{
-            // console.log(`presence change #${after.user.username}`)
+            if((now.getDate() - last_update.getDate()) > 0){
+                console.log('Reset Tracker -> New Day')
+                for (const k of tracker.keys()){
+                    tracker.set(k, new Map<string, number>())
+                }
+                last_update = now
+            }
+
             if(!tracker.has(after.user.username))
                 return
-            // console.log(`presence change post #${after.user.username}`)
             return ActivityTracker(message, before, after)
         })
         started = true
+        last_update = now
     }
 
     if(!tracker.has(message.member.user.username)){
