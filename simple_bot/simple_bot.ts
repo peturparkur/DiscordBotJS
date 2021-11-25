@@ -66,16 +66,17 @@ class DiscordBot extends Discord.Client{
                 this.prefixes.set(msg.guild, cntn[1])
                 await msg.channel.send(`prefix changed to ${cntn[1]}`)
         })
-        this.addEvent('help', async (client : Discord.Client, msg : Discord.Message, cntn : string) => {
-            let ret = ""
+        this.addEvent('help', CommandConstructor(async (client : Discord.Client, msg : Discord.Message, cntn : string) => {
+
+            let ret = "For more detail about a specific command use .detail <command> \n"
             for (const k of this.commandHandler.listeners.keys()){
                 ret += `${k}`
                 ret += "\n"
             }
             await msg.channel.send(ret)
-        })
+        }, 'Shows all commands', []))
 
-        this.addEvent('detail', async (client : Discord.Client, msg : Discord.Message, content : string) => {
+        this.addEvent('detail', CommandConstructor(async (client : Discord.Client, msg : Discord.Message, content : string) => {
             const cntn = content.split(" ")
             const key = cntn[0]
             if (!this.commandHandler.listeners.has(key)){
@@ -87,7 +88,7 @@ class DiscordBot extends Discord.Client{
             desc = func.description
 
             msg.channel.send(`description of ${key} : ${desc}`)
-        })
+        }, "Show the description of all the commands", []))
 
         this.on('message', FilterTikTok)
 

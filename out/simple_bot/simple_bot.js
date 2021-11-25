@@ -12,6 +12,7 @@ import { config } from "dotenv";
 import { EventHandler } from "../utility/event_handler.js";
 import * as commands from "./commands/commands.js";
 import { FilterTikTok } from "./commands/src/tiktok.js";
+import { CommandConstructor } from "./utility/comm_class.js";
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
 config();
@@ -55,15 +56,15 @@ class DiscordBot extends Discord.Client {
                 this.prefixes.set(msg.guild, cntn[1]);
             yield msg.channel.send(`prefix changed to ${cntn[1]}`);
         }));
-        this.addEvent('help', (client, msg, cntn) => __awaiter(this, void 0, void 0, function* () {
-            let ret = "";
+        this.addEvent('help', CommandConstructor((client, msg, cntn) => __awaiter(this, void 0, void 0, function* () {
+            let ret = "For more detail about a specific command use .detail <command> \n";
             for (const k of this.commandHandler.listeners.keys()) {
                 ret += `${k}`;
                 ret += "\n";
             }
             yield msg.channel.send(ret);
-        }));
-        this.addEvent('detail', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
+        }), 'Shows all commands', []));
+        this.addEvent('detail', CommandConstructor((client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
             const key = cntn[0];
             if (!this.commandHandler.listeners.has(key)) {
@@ -74,7 +75,7 @@ class DiscordBot extends Discord.Client {
             let desc = func.toString();
             desc = func.description;
             msg.channel.send(`description of ${key} : ${desc}`);
-        }));
+        }), "Show the description of all the commands", []));
         this.on('message', FilterTikTok);
         //called when the user types typing
         this.on("typingStart", (chn, user) => __awaiter(this, void 0, void 0, function* () {
