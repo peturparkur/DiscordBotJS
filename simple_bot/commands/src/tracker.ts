@@ -27,7 +27,7 @@ export function StartTracker(client : Discord.Client){
 
             if(!tracker.has(after.user.username))
                 return
-            return ActivityTracker(new Discord.Message(client, {}, new Discord.TextChannel(new Discord.Guild(client, {}))), before, after)
+            return ActivityTracker(null, before, after)
         })
         LoadTracker() // loads saved data
         started = true
@@ -95,7 +95,7 @@ function playing(activities:Array<Discord.Activity>) : Discord.Activity | null{
     return null
 }
 
-function ActivityTracker(message : Discord.Message, before : Discord.Presence, after : Discord.Presence){
+function ActivityTracker(message : Discord.Message | null, before : Discord.Presence, after : Discord.Presence){
     // need both information
     if(!before || !after)
         return

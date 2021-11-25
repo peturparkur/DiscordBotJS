@@ -7,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import * as Discord from "discord.js";
 import { CommandConstructor } from "../../utility/comm_class.js";
 import fs from "fs"; //file system
 const tracker = new Map(); // number measure UTC milliseconds
@@ -33,7 +32,7 @@ export function StartTracker(client) {
             }
             if (!tracker.has(after.user.username))
                 return;
-            return ActivityTracker(new Discord.Message(client, {}, new Discord.TextChannel(new Discord.Guild(client, {}))), before, after);
+            return ActivityTracker(null, before, after);
         });
         LoadTracker(); // loads saved data
         started = true;
@@ -119,9 +118,11 @@ function ActivityTracker(message, before, after) {
     if (!tracker.has(after.user.username)) {
         return;
     }
+    console.log(`${after.member.user.username} : status change`);
     const activity = playing(before.activities);
     if (!playing(after.activities) && activity) {
         // Was playing -> Now they don't
+        console.log(`${after.member.user.username} : Changed play status!`);
         const prev = tracker.get(after.member.user.username);
         const prev_time = prev.get(activity.name);
         console.log(activity.timestamps);
