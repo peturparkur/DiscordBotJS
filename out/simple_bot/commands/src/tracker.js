@@ -32,7 +32,7 @@ export function StartTracker(client) {
             }
             if (!tracker.has(after.user.username))
                 return;
-            return ActivityTracker(null, before, after);
+            return ActivityTracker(before, after);
         });
         LoadTracker(); // loads saved data
         started = true;
@@ -99,7 +99,7 @@ function playing(activities) {
     }
     return null;
 }
-function ActivityTracker(message, before, after) {
+function ActivityTracker(before, after) {
     // need both information
     if (!before || !after)
         return;
