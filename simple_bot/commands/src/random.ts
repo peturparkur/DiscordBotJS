@@ -35,8 +35,8 @@ async function _Random(client : Discord.Client, message : Discord.Message, ...co
 }
 
 export const Random = CommandConstructor(_Random, "Generate a random integer between given minimum and maximum values", [])
-export const Random_Normal = CommandConstructor(_Random, "Generate a Normal distribution sample with given mean and variance", [])
-export const Coin_Toss = CommandConstructor(_Random, "Random -> Heads or Tails", [])
+export const Random_Normal = CommandConstructor(_Random_Normal, "Generate a Normal distribution sample with given mean and variance", [])
+export const Coin_Toss = CommandConstructor(_Coin_Toss, "Random -> Heads or Tails", [])
 
 export async function _Random_Normal(client : Discord.Client, message : Discord.Message, ...content : string[]){
     function get_args(...content : string[]){

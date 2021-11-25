@@ -41,8 +41,8 @@ function _Random(client, message, ...content) {
     });
 }
 export const Random = CommandConstructor(_Random, "Generate a random integer between given minimum and maximum values", []);
-export const Random_Normal = CommandConstructor(_Random, "Generate a Normal distribution sample with given mean and variance", []);
-export const Coin_Toss = CommandConstructor(_Random, "Random -> Heads or Tails", []);
+export const Random_Normal = CommandConstructor(_Random_Normal, "Generate a Normal distribution sample with given mean and variance", []);
+export const Coin_Toss = CommandConstructor(_Coin_Toss, "Random -> Heads or Tails", []);
 export function _Random_Normal(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         function get_args(...content) {
