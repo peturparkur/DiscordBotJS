@@ -117,10 +117,12 @@ function ActivityTracker(message : Discord.Message, before : Discord.Presence, a
     if(!tracker.has(after.user.username)){
         return
     }
+    console.log(`${after.member.user.username} : status change`)
 
     const activity = playing(before.activities)
     if(!playing(after.activities) && activity){
         // Was playing -> Now they don't
+        console.log(`${after.member.user.username} : Changed play status!`)
         const prev = tracker.get(after.member.user.username)
         const prev_time = prev.get(activity.name)
         console.log(activity.timestamps)
