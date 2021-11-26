@@ -57,6 +57,7 @@ class DiscordBot extends Discord.Client{
         this.addEvent('track', commands.PlaytimeTracker)
         this.addEvent('check', commands.CheckPlaytimeTracker)
         this.addEvent('stopt', commands.StopPlaytimeTracker)
+        this.addEvent('define', commands.GetDefinition)
 
 
         this.addEvent('settings', async (client : Discord.Client, msg : Discord.Message, content : string) => {

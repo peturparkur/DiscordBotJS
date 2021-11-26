@@ -49,6 +49,7 @@ class DiscordBot extends Discord.Client {
         this.addEvent('track', commands.PlaytimeTracker);
         this.addEvent('check', commands.CheckPlaytimeTracker);
         this.addEvent('stopt', commands.StopPlaytimeTracker);
+        this.addEvent('define', commands.GetDefinition);
         this.addEvent('settings', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
             const stg = cntn[0]; //setting to change
