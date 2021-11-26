@@ -18,18 +18,18 @@ let last_update = new Date();
  * @param client
  */
 export function StartTracker(client) {
-    const now = new Date();
     if (!started) {
         console.log('Start tracker');
         last_update = new Date();
         client.on('presenceUpdate', (before, after) => {
+            const now = new Date();
             console.log(`Reset Tracker -> ${(now.getDate() - last_update.getDate())} difference, : ${(now.getTime() - last_update.getTime())}`);
             if ((now.getDate() - last_update.getDate()) > 0) {
                 console.log('Reset Tracker -> New Day');
                 for (const k of tracker.keys()) {
                     tracker.set(k, new Map());
                 }
-                last_update = now;
+                last_update = new Date();
             }
             if (!tracker.has(after.user.username))
                 return;
@@ -37,7 +37,7 @@ export function StartTracker(client) {
         });
         LoadTracker(); // loads saved data
         started = true;
-        last_update = now;
+        last_update = new Date();
     }
 }
 function SaveTracker() {
