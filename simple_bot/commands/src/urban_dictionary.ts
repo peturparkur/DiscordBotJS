@@ -22,7 +22,7 @@ async function UrbanDefine(name : string, api_key : string) : Promise<Array<obje
 export const GetDefinition = CommandConstructor(_GetDefinition, "searches the definition of a word on urban dictionary", [])
 
 function Defintion_2_String(defn : object){
-    return `${defn['definition'].replaceAll("[", "").replaceAll("]", "")} \n author : ${defn['author']} \n date : ${defn['written_on']}`
+    return `${defn['definition'].replaceAll("[", "").replaceAll("]", "")} \n Examples : \n ${defn['example']} \n date : ${defn['written_on']}`
 }
 
 function ToStringCounter(x : number){
