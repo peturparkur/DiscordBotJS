@@ -87,7 +87,7 @@ class DiscordBot extends Discord.Client{
             let desc = func.toString()
             desc = func.description
 
-            msg.channel.send(`description of ${key} : ${desc}`)
+            msg.channel.send(`${key} : ${desc}`)
         }, "Show the description of all the commands", []))
 
         this.on('message', FilterTikTok)

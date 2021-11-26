@@ -17,6 +17,7 @@ export function StartTracker(client : Discord.Client){
         console.log('Start tracker')
         last_update = new Date()
         client.on('presenceUpdate', (before, after) =>{
+            console.log(`Reset Tracker -> ${(now.getDate() - last_update.getDate())} difference, : ${(now.getTime() - last_update.getTime())}`)
             if((now.getDate() - last_update.getDate()) > 0){
                 console.log('Reset Tracker -> New Day')
                 for (const k of tracker.keys()){

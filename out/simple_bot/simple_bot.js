@@ -74,7 +74,7 @@ class DiscordBot extends Discord.Client {
             const func = this.commandHandler.listeners.get(key)[0];
             let desc = func.toString();
             desc = func.description;
-            msg.channel.send(`description of ${key} : ${desc}`);
+            msg.channel.send(`${key} : ${desc}`);
         }), "Show the description of all the commands", []));
         this.on('message', FilterTikTok);
         //called when the user types typing
