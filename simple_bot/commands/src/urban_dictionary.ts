@@ -9,7 +9,12 @@ function load_api_key(){
     config()
     return process.env.URBAN_API_KEY
 }
-
+/**
+ * API query to Urban Dictionary -> https://rapidapi.com/community/api/urban-dictionary/
+ * @param name term to search for
+ * @param api_key api key to query
+ * @returns 
+ */
 async function UrbanDefine(name : string, api_key : string) : Promise<Array<object>> {
     const response = await fetch('https://mashape-community-urban-dictionary.p.rapidapi.com/define?' + new URLSearchParams({term : name}),
             {method : 'GET', 

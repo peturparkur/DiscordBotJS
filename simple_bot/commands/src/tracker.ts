@@ -17,9 +17,8 @@ export function StartTracker(client : Discord.Client){
         last_update = new Date()
         client.on('presenceUpdate', (before, after) =>{
             const now = new Date()
-            console.log(`Reset Tracker -> ${(now.getDate() - last_update.getDate())} difference, : ${(now.getTime() - last_update.getTime())}`)
             if((now.getDate() - last_update.getDate()) > 0){
-                console.log('Reset Tracker -> New Day')
+                console.log(`Reset Tracker -> New Day ${now} - ${last_update}`)
                 for (const k of tracker.keys()){
                     tracker.set(k, new Map<string, number>())
                 }
@@ -118,15 +117,18 @@ function ActivityTracker(before : Discord.Presence, after : Discord.Presence){
     if(!tracker.has(after.user.username)){
         return
     }
-    console.log(`${after.member.user.username} : status change`)
+    //console.log(`${after.member.user.username} : status change`)
 
     const activity = playing(before.activities)
     if(!playing(after.activities) && activity){
         // Was playing -> Now they don't
-        console.log(`${after.member.user.username} : Changed play status!`)
+        //console.log(`${after.member.user.username} : Changed play status!`)
         const prev = tracker.get(after.member.user.username)
         const prev_time = prev.get(activity.name)
-        console.log(activity.timestamps)
+        //console.log(activity.timestamps)
+        if(activity.timestamps == null){
+            console.log(`WEIRD? ${after.user.username} -> Timestamp doesn't exist for ${activity}`)
+        }
 
         const start = activity.timestamps.start
 
