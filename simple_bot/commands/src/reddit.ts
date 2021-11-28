@@ -76,6 +76,7 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
                 const loc = post['url_overridden_by_dest']
 
                 // Tries to detect if it's an embeded link
+                console.log(`Embeded : ${IsEmbeded(post)}`)
                 if (IsEmbeded(post)){
                     try{
                         message.channel.send(`${post['title']}`)
