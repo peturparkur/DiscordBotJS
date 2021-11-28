@@ -33,7 +33,8 @@ function FilterTodaysPost(posts) {
     return todays;
 }
 function IsEmbeded(post) {
-    if (post['url_overriden_by_dest'].includes("https://i.redd.it/"))
+    console.log(`URL -> ${post['url_overridden_by_dest']}`);
+    if (post['url_overridden_by_dest'].includes("https://i.redd.it/"))
         return false;
     return true;
 }
