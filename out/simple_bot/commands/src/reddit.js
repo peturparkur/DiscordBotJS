@@ -39,7 +39,7 @@ function IsEmbeded(post) {
 }
 function IsNSFW(post) {
     if ('over_18' in post) {
-        return true;
+        return post['over_18'];
     }
     return false;
 }
@@ -66,7 +66,7 @@ function _GetRedditTodaysTop(client, message, ...content) {
             const post = todays.length > index ? todays[index] : todays[todays.length - 1];
             const is_video = post['is_video'];
             const is_nsfw = IsNSFW(post);
-            console.log(`IS NSFW : ${is_nsfw}`);
+            //console.log(`IS NSFW : ${is_nsfw}`)
             if (is_video) {
                 const loc = post['secure_media']['reddit_video']['fallback_url'];
                 const end = loc.split('.')[3];
@@ -93,11 +93,14 @@ function _GetRedditTodaysTop(client, message, ...content) {
                     // console.log(`Embeded : ${IsEmbeded(post)}`)
                     if (IsEmbeded(post)) {
                         try {
-                            message.channel.send(`${post['title']}`);
-                            if (is_nsfw)
+                            if (is_nsfw) {
+                                message.channel.send(`${post['title']}`);
                                 message.channel.send(Text2Spoiler(loc));
-                            else
+                            }
+                            else {
+                                message.channel.send(`${post['title']}`);
                                 message.channel.send(loc);
+                            }
                             return;
                         }
                         catch (err) {

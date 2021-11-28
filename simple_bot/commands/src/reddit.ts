@@ -34,7 +34,7 @@ function IsEmbeded(post : Object){
 
 function IsNSFW(post : Object){
     if ('over_18' in post){
-        return true
+        return (post['over_18'] as boolean)
     }
     return false
 }
@@ -65,7 +65,7 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
         const post = todays.length > index ? todays[index] : todays[todays.length - 1]
         const is_video = post['is_video']
         const is_nsfw = IsNSFW(post)
-        console.log(`IS NSFW : ${is_nsfw}`)
+        //console.log(`IS NSFW : ${is_nsfw}`)
         
 
         if (is_video){
@@ -95,11 +95,14 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
                 // console.log(`Embeded : ${IsEmbeded(post)}`)
                 if (IsEmbeded(post)){
                     try{
-                        message.channel.send(`${post['title']}`)
-                        if (is_nsfw)
+                        if (is_nsfw){
+                            message.channel.send(`${post['title']}`)
                             message.channel.send(Text2Spoiler(loc))
-                        else
+                        }
+                        else{
+                            message.channel.send(`${post['title']}`)
                             message.channel.send(loc)
+                        }
                         return
                     }
                     catch (err){
