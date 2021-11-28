@@ -96,7 +96,7 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
                 if (IsEmbeded(post)){
                     try{
                         if (is_nsfw){
-                            message.channel.send(`${post['title']}`)
+                            message.channel.send(`NSFW -- ${post['title']}`)
                             message.channel.send(Text2Spoiler(loc))
                         }
                         else{
@@ -116,11 +116,14 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
                 // const blob = await response.blob()
                 // console.log(response)
                 try{
-                    message.channel.send(`${post['title']}`)
-                    if(is_nsfw)
+                    if(is_nsfw){
+                        message.channel.send(`NSFW -- ${post['title']}`)
                         message.channel.send({files : [{attachment : loc, name: "SPOILER_FILE." + end}]})
-                    else
+                    }
+                    else{
+                        message.channel.send(`${post['title']}`)
                         message.channel.send({files : [loc]})
+                    }
                 }
                 catch (err){
                     console.log(`Failed to send reddit post ${err}`)
