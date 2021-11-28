@@ -26,7 +26,7 @@ function FilterTodaysPost(posts : any){
 }
 
 function IsEmbeded(post : Object){
-    if (post['url_overriden_by_dest'].includes("https://i.redd.it/"))
+    if ((post['url_overriden_by_dest'] as string).includes("https://i.redd.it/"))
         return false
     return true
 }
