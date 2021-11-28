@@ -1,5 +1,6 @@
 import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
+import { arrayBuffer } from "stream/consumers";
 import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
 
 async function GetReddit(subreddit : string, count : number = 50){
@@ -26,10 +27,20 @@ function FilterTodaysPost(posts : any){
 }
 
 function IsEmbeded(post : Object){
-    console.log(`URL -> ${post['url_overridden_by_dest']}`)
     if ((post['url_overridden_by_dest'] as string).includes("https://i.redd.it/"))
         return false
     return true
+}
+
+function IsNSFW(post : Object){
+    if ('nsfw' in post){
+        return true
+    }
+    return false
+}
+
+function Text2Spoiler(text : string){
+    return "||" + text + "||"
 }
 
 export const GetRedditTodaysTop = CommandConstructor(_GetRedditTodaysTop, 'Get a random (or given) random post from Todays top reddit posts', [])
@@ -52,8 +63,8 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
             return
         }
         const post = todays.length > index ? todays[index] : todays[todays.length - 1]
-
         const is_video = post['is_video']
+        const is_nsfw = IsNSFW(post)
         if (is_video){
             const loc = post['secure_media']['reddit_video']['fallback_url']
             const end = loc.split('.')[3]
@@ -64,6 +75,7 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
                     message.channel.send({files : [loc]})
                 }
                 catch (err){
+                    console.log(`URL -> ${post['url_overridden_by_dest']}`)
                     console.log(`Failed to send reddit MP4 ${err}`)
                 }
             }
@@ -77,11 +89,14 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
                 const loc = post['url_overridden_by_dest']
 
                 // Tries to detect if it's an embeded link
-                console.log(`Embeded : ${IsEmbeded(post)}`)
+                // console.log(`Embeded : ${IsEmbeded(post)}`)
                 if (IsEmbeded(post)){
                     try{
                         message.channel.send(`${post['title']}`)
-                        message.channel.send(loc)
+                        if (is_nsfw)
+                            message.channel.send(Text2Spoiler(loc))
+                        else
+                            message.channel.send(loc)
                         return
                     }
                     catch (err){
@@ -89,14 +104,17 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
                         return
                     }
                 }
-                const end = loc.split('.')[3]
+                const end = loc[(loc as string).slice(-3)]//loc.split('.')[3]
 
                 // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
                 // const blob = await response.blob()
                 // console.log(response)
                 try{
                     message.channel.send(`${post['title']}`)
-                    message.channel.send({files : [loc]})
+                    if(is_nsfw)
+                        message.channel.send({files : [{attachment : loc, name: "SPOILER_FILE." + end}]})
+                    else
+                        message.channel.send({files : [loc]})
                 }
                 catch (err){
                     console.log(`Failed to send reddit post ${err}`)

@@ -33,10 +33,18 @@ function FilterTodaysPost(posts) {
     return todays;
 }
 function IsEmbeded(post) {
-    console.log(`URL -> ${post['url_overridden_by_dest']}`);
     if (post['url_overridden_by_dest'].includes("https://i.redd.it/"))
         return false;
     return true;
+}
+function IsNSFW(post) {
+    if ('nsfw' in post) {
+        return true;
+    }
+    return false;
+}
+function Text2Spoiler(text) {
+    return "||" + text + "||";
 }
 export const GetRedditTodaysTop = CommandConstructor(_GetRedditTodaysTop, 'Get a random (or given) random post from Todays top reddit posts', []);
 function _GetRedditTodaysTop(client, message, ...content) {
@@ -57,6 +65,7 @@ function _GetRedditTodaysTop(client, message, ...content) {
             }
             const post = todays.length > index ? todays[index] : todays[todays.length - 1];
             const is_video = post['is_video'];
+            const is_nsfw = IsNSFW(post);
             if (is_video) {
                 const loc = post['secure_media']['reddit_video']['fallback_url'];
                 const end = loc.split('.')[3];
@@ -67,6 +76,7 @@ function _GetRedditTodaysTop(client, message, ...content) {
                         message.channel.send({ files: [loc] });
                     }
                     catch (err) {
+                        console.log(`URL -> ${post['url_overridden_by_dest']}`);
                         console.log(`Failed to send reddit MP4 ${err}`);
                     }
                 }
@@ -79,11 +89,14 @@ function _GetRedditTodaysTop(client, message, ...content) {
                 if ('url_overridden_by_dest' in post) {
                     const loc = post['url_overridden_by_dest'];
                     // Tries to detect if it's an embeded link
-                    console.log(`Embeded : ${IsEmbeded(post)}`);
+                    // console.log(`Embeded : ${IsEmbeded(post)}`)
                     if (IsEmbeded(post)) {
                         try {
                             message.channel.send(`${post['title']}`);
-                            message.channel.send(loc);
+                            if (is_nsfw)
+                                message.channel.send(Text2Spoiler(loc));
+                            else
+                                message.channel.send(loc);
                             return;
                         }
                         catch (err) {
@@ -91,13 +104,16 @@ function _GetRedditTodaysTop(client, message, ...content) {
                             return;
                         }
                     }
-                    const end = loc.split('.')[3];
+                    const end = loc[loc.slice(-3)]; //loc.split('.')[3]
                     // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
                     // const blob = await response.blob()
                     // console.log(response)
                     try {
                         message.channel.send(`${post['title']}`);
-                        message.channel.send({ files: [loc] });
+                        if (is_nsfw)
+                            message.channel.send({ files: [{ attachment: loc, name: "SPOILER_FILE." + end }] });
+                        else
+                            message.channel.send({ files: [loc] });
                     }
                     catch (err) {
                         console.log(`Failed to send reddit post ${err}`);
