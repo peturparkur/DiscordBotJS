@@ -25,6 +25,12 @@ function FilterTodaysPost(posts : any){
     return todays
 }
 
+function IsEmbeded(post : Object){
+    if (post['url_overriden_by_dest'].includes("https://i.redd.it/"))
+        return false
+    return true
+}
+
 export const GetRedditTodaysTop = CommandConstructor(_GetRedditTodaysTop, 'Get a random (or given) random post from Todays top reddit posts', [])
 
 async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Message, ...content : string[]){
@@ -68,6 +74,19 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
         else{
             if ('url_overridden_by_dest' in post){
                 const loc = post['url_overridden_by_dest']
+
+                // Tries to detect if it's an embeded link
+                if (IsEmbeded(post)){
+                    try{
+                        message.channel.send(`${post['title']}`)
+                        message.channel.send({files : [loc]})
+                        return
+                    }
+                    catch (err){
+                        console.log(`Failed to send embeded reddit post ${err}`)
+                        return
+                    }
+                }
                 const end = loc.split('.')[3]
 
                 // const response = await fetch(loc, {method : 'GET', headers : {'User-agent' : 'reddit_discord_bot v0.05'}})
