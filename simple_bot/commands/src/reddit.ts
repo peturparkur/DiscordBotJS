@@ -81,7 +81,7 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
                 if (IsEmbeded(post)){
                     try{
                         message.channel.send(`${post['title']}`)
-                        message.channel.send({files : [loc]})
+                        message.channel.send(loc)
                         return
                     }
                     catch (err){

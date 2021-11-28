@@ -83,7 +83,7 @@ function _GetRedditTodaysTop(client, message, ...content) {
                     if (IsEmbeded(post)) {
                         try {
                             message.channel.send(`${post['title']}`);
-                            message.channel.send({ files: [loc] });
+                            message.channel.send(loc);
                             return;
                         }
                         catch (err) {
