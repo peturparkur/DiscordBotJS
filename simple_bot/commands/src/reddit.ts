@@ -66,12 +66,13 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
         const is_video = post['is_video']
         const is_nsfw = IsNSFW(post)
         //console.log(`IS NSFW : ${is_nsfw}`)
-        
 
         if (is_video){
             const loc = post['secure_media']['reddit_video']['fallback_url']
             const end = loc.split('.')[3]
             //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
+            console.log(`File size: ${loc.size / (1024 * 1024)}`)
+
             if (loc.includes('.mp4')){
                 if(loc.size / (1024 * 1024) >= 8){
                     message.channel.send(`${post['title']}`)
@@ -95,6 +96,8 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
         else{
             if ('url_overridden_by_dest' in post){
                 const loc = post['url_overridden_by_dest']
+
+                console.log(`File size: ${loc.size / (1024 * 1024)}`)
 
                 // Tries to detect if it's an embeded link
                 // console.log(`Embeded : ${IsEmbeded(post)}`)
