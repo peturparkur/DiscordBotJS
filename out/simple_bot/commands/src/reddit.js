@@ -72,6 +72,11 @@ function _GetRedditTodaysTop(client, message, ...content) {
                 const end = loc.split('.')[3];
                 //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
                 if (loc.includes('.mp4')) {
+                    if (loc.size / (1024 * 1024) >= 8) {
+                        message.channel.send(`${post['title']}`);
+                        message.channel.send(`File size is too large ${loc}`);
+                        return;
+                    }
                     try {
                         message.channel.send(`${post['title']}`);
                         message.channel.send({ files: [loc] });
@@ -91,6 +96,11 @@ function _GetRedditTodaysTop(client, message, ...content) {
                     const loc = post['url_overridden_by_dest'];
                     // Tries to detect if it's an embeded link
                     // console.log(`Embeded : ${IsEmbeded(post)}`)
+                    if (loc.size / (1024 * 1024) >= 8) {
+                        message.channel.send(`${post['title']}`);
+                        message.channel.send(`File size is too large ${loc}`);
+                        return;
+                    }
                     if (IsEmbeded(post)) {
                         try {
                             if (is_nsfw) {
