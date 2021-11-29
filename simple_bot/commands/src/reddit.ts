@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
+import https from "https";
 import fetch from "node-fetch" // making web requests
-import { arrayBuffer } from "stream/consumers";
 import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
 
 async function GetReddit(subreddit : string, count : number = 50){
@@ -24,6 +24,16 @@ function FilterTodaysPost(posts : any){
         todays.push(data)
     }
     return todays
+}
+
+function GetFileSize(url:string) {
+    return new Promise<number>((resolve, reject) => {
+        let req = https.get(url);
+        req.once("response", r => {
+            req.destroy()
+            resolve(parseInt(r.headers['content-length']))
+        })
+    })
 }
 
 function IsEmbeded(post : Object){
@@ -51,7 +61,7 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
     let subreddit = cntn[0]
     let index = cntn.length >= 2 ? parseInt(cntn[1]) : -1
     //const posts = await GetReddit(subreddit, 100)
-    GetReddit(subreddit, 100).then(posts => {
+    GetReddit(subreddit, 100).then(async posts => {
         const todays = FilterTodaysPost(posts)
 
         if (index < 0){
@@ -71,10 +81,10 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
             const loc = post['secure_media']['reddit_video']['fallback_url']
             const end = loc.split('.')[3]
             //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
-            console.log(`File size: ${loc.size / (1024 * 1024)}`)
+            console.log(`File size: ${await GetFileSize(loc)}`)
 
             if (loc.includes('.mp4')){
-                if(loc.size / (1024 * 1024) >= 8){
+                if((await GetFileSize(loc))/ (1024 * 1024) >= 8){
                     message.channel.send(`${post['title']}`)
                     message.channel.send(`File size is too large ${loc}`)
                     return
@@ -97,11 +107,11 @@ async function _GetRedditTodaysTop(client : Discord.Client, message : Discord.Me
             if ('url_overridden_by_dest' in post){
                 const loc = post['url_overridden_by_dest']
 
-                console.log(`File size: ${loc.size / (1024 * 1024)}`)
+                console.log(`File size: ${(await GetFileSize(loc)) / (1024 * 1024)}`)
 
                 // Tries to detect if it's an embeded link
                 // console.log(`Embeded : ${IsEmbeded(post)}`)
-                if(loc.size / (1024 * 1024) >= 8){
+                if((await GetFileSize(loc)) / (1024 * 1024) >= 8){
                     message.channel.send(`${post['title']}`)
                     message.channel.send(`File size is too large ${loc}`)
                     return

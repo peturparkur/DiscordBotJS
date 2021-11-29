@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import https from "https";
 import fetch from "node-fetch"; // making web requests
 import { CommandConstructor } from "../../utility/comm_class.js";
 function GetReddit(subreddit, count = 50) {
@@ -32,6 +33,15 @@ function FilterTodaysPost(posts) {
     }
     return todays;
 }
+function GetFileSize(url) {
+    return new Promise((resolve, reject) => {
+        let req = https.get(url);
+        req.once("response", r => {
+            req.destroy();
+            resolve(parseInt(r.headers['content-length']));
+        });
+    });
+}
 function IsEmbeded(post) {
     if (post['url_overridden_by_dest'].includes("https://i.redd.it/"))
         return false;
@@ -54,7 +64,7 @@ function _GetRedditTodaysTop(client, message, ...content) {
         let subreddit = cntn[0];
         let index = cntn.length >= 2 ? parseInt(cntn[1]) : -1;
         //const posts = await GetReddit(subreddit, 100)
-        GetReddit(subreddit, 100).then(posts => {
+        GetReddit(subreddit, 100).then((posts) => __awaiter(this, void 0, void 0, function* () {
             const todays = FilterTodaysPost(posts);
             if (index < 0) {
                 index = Math.floor(Math.random() * todays.length);
@@ -71,9 +81,9 @@ function _GetRedditTodaysTop(client, message, ...content) {
                 const loc = post['secure_media']['reddit_video']['fallback_url'];
                 const end = loc.split('.')[3];
                 //console.log(`${typeof loc} loc ${loc} -> ${loc.includes('.mp4')}`)
-                console.log(`File size: ${loc.size / (1024 * 1024)}`);
+                console.log(`File size: ${yield GetFileSize(loc)}`);
                 if (loc.includes('.mp4')) {
-                    if (loc.size / (1024 * 1024) >= 8) {
+                    if ((yield GetFileSize(loc)) / (1024 * 1024) >= 8) {
                         message.channel.send(`${post['title']}`);
                         message.channel.send(`File size is too large ${loc}`);
                         return;
@@ -95,10 +105,10 @@ function _GetRedditTodaysTop(client, message, ...content) {
             else {
                 if ('url_overridden_by_dest' in post) {
                     const loc = post['url_overridden_by_dest'];
-                    console.log(`File size: ${loc.size / (1024 * 1024)}`);
+                    console.log(`File size: ${(yield GetFileSize(loc)) / (1024 * 1024)}`);
                     // Tries to detect if it's an embeded link
                     // console.log(`Embeded : ${IsEmbeded(post)}`)
-                    if (loc.size / (1024 * 1024) >= 8) {
+                    if ((yield GetFileSize(loc)) / (1024 * 1024) >= 8) {
                         message.channel.send(`${post['title']}`);
                         message.channel.send(`File size is too large ${loc}`);
                         return;
@@ -139,6 +149,6 @@ function _GetRedditTodaysTop(client, message, ...content) {
                     }
                 }
             }
-        });
+        }));
     });
 }
