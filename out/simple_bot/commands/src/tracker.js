@@ -9,35 +9,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { CommandConstructor } from "../../utility/comm_class.js";
 import fs from "fs"; //file system
+import * as schedule from "node-schedule";
 const tracker = new Map(); // number measure UTC milliseconds
 const updater = new Map();
 let started = false;
 let last_update = new Date();
+function ResetTracker() {
+    console.log(`Reset Tracker @${new Date()}`);
+    for (const k of tracker.keys()) {
+        tracker.set(k, new Map());
+    }
+}
 /**
  * Starts the tracker -> run on discord bot setup
  * @param client
  */
 export function StartTracker(client) {
-    if (!started) {
-        console.log('Start tracker');
-        last_update = new Date();
-        client.on('presenceUpdate', (before, after) => {
-            const now = new Date();
-            if ((now.getDate() - last_update.getDate()) > 0) {
-                console.log(`Reset Tracker -> New Day ${now} - ${last_update}`);
-                for (const k of tracker.keys()) {
-                    tracker.set(k, new Map());
-                }
-                last_update = new Date();
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!started) {
+            console.log('Start tracker');
+            last_update = new Date();
+            schedule.scheduleJob("tracker_reset", "0 0 * * *", (firedate) => { ResetTracker(); });
+            client.on('presenceUpdate', (before, after) => {
+                if (!tracker.has(after.user.username))
+                    return;
+                return ActivityTracker(before, after);
+            });
+            if ((yield LoadTrackerData()) === 1) { // loads saved data
+                //error
+                LoadTracker();
             }
-            if (!tracker.has(after.user.username))
-                return;
-            return ActivityTracker(before, after);
-        });
-        LoadTracker(); // loads saved data
-        started = true;
-        last_update = new Date();
-    }
+            started = true;
+        }
+    });
 }
 function SaveTracker() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -47,6 +51,41 @@ function SaveTracker() {
         }
         const data = JSON.stringify(Array.from(tracker.keys()));
         return fs.writeFile('./data/tracker.json', data, (err) => { });
+    });
+}
+function SaveTrackerData() {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log('Saving Tracker with Data');
+        if (!fs.existsSync("./data")) {
+            fs.mkdir("./data", (err) => { });
+        }
+        let obj = {};
+        for (const k of tracker.keys()) {
+            const vals = Object.fromEntries(tracker[k]);
+            obj[k] = vals;
+        }
+        const data = JSON.stringify(obj);
+        return fs.writeFile("./data/tracker_data.json", data, (err) => { });
+    });
+}
+function LoadTrackerData() {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!fs.existsSync("./data")) {
+            return 1;
+        }
+        if (!fs.existsSync("./data/tracker_data.json")) {
+            return 1;
+        }
+        console.log('Loading Tracker');
+        fs.readFile('./data/tracker_data.json', (err, data) => {
+            let trk = JSON.parse(data.toString());
+            tracker.clear();
+            for (const k of trk.keys()) {
+                tracker.set(k, trk.get(k));
+            }
+            console.log(`Now tracking ${Array.from(tracker.keys())}`);
+        });
+        return 0;
     });
 }
 function LoadTracker() {
@@ -138,6 +177,7 @@ function ActivityTracker(before, after) {
         else {
             tracker.set(after.member.user.username, prev.set(activity.name, now.getTime() - start.getTime()));
         }
+        SaveTrackerData();
     }
 }
 /**
@@ -150,7 +190,7 @@ function TrackPlaytime(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!tracker.has(message.member.user.username)) {
             tracker.set(message.member.user.username, new Map());
-            SaveTracker(); // saves current tracker files
+            SaveTrackerData(); // saves current tracker files
             return message.channel.send(`Now tracking playtime of ${message.author.username}`);
         }
         return message.channel.send(`Already tracking playtime of ${message.member.user.username}`);

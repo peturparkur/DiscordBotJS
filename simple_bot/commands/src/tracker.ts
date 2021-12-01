@@ -1,37 +1,40 @@
 import * as Discord from "discord.js";
 import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
 import fs from "fs" //file system
+import * as schedule from "node-schedule"
+
 
 const tracker : Map<string, Map<string, number>> = new Map() // number measure UTC milliseconds
 const updater : Map<string, number> = new Map()
 let started : boolean = false
 let last_update : Date = new Date()
 
+function ResetTracker(){
+    console.log(`Reset Tracker @${new Date()}`)
+    for(const k of tracker.keys()){
+        tracker.set(k, new Map<string, number>())
+    }
+}
+
 /**
  * Starts the tracker -> run on discord bot setup
  * @param client 
  */
-export function StartTracker(client : Discord.Client){
+export async function StartTracker(client : Discord.Client){
     if (!started){
         console.log('Start tracker')
         last_update = new Date()
+        schedule.scheduleJob("tracker_reset", "0 0 * * *", (firedate) => {ResetTracker()})
         client.on('presenceUpdate', (before, after) =>{
-            const now = new Date()
-            if((now.getDate() - last_update.getDate()) > 0){
-                console.log(`Reset Tracker -> New Day ${now} - ${last_update}`)
-                for (const k of tracker.keys()){
-                    tracker.set(k, new Map<string, number>())
-                }
-                last_update = new Date()
-            }
-
             if(!tracker.has(after.user.username))
                 return
             return ActivityTracker(before, after)
         })
-        LoadTracker() // loads saved data
+        if ((await LoadTrackerData()) === 1){ // loads saved data
+            //error
+            LoadTracker()
+        }
         started = true
-        last_update = new Date()
     }
 }
 
@@ -42,6 +45,39 @@ async function SaveTracker() {
     }
     const data = JSON.stringify(Array.from(tracker.keys()))
     return fs.writeFile('./data/tracker.json', data, (err) =>{})
+}
+
+async function SaveTrackerData(){
+    console.log('Saving Tracker with Data')
+    if (!fs.existsSync("./data")){
+        fs.mkdir("./data", (err) =>{})
+    }
+    let obj = {}
+    for(const k of tracker.keys()){
+        const vals = Object.fromEntries(tracker[k])
+        obj[k] = vals
+    }
+    const data = JSON.stringify(obj)
+    return fs.writeFile("./data/tracker_data.json", data, (err) => {})
+}
+
+async function LoadTrackerData(){
+    if (!fs.existsSync("./data")){
+        return 1
+    }
+    if (!fs.existsSync("./data/tracker_data.json")){
+        return 1
+    }
+    console.log('Loading Tracker')
+    fs.readFile('./data/tracker_data.json', (err, data) => {
+        let trk = JSON.parse(data.toString()) as Map<string, Map<string, number>>
+        tracker.clear()
+        for(const k of trk.keys()){
+            tracker.set(k, trk.get(k))
+        }
+        console.log(`Now tracking ${Array.from(tracker.keys())}`)
+    })
+    return 0
 }
 
 async function LoadTracker(){
@@ -142,6 +178,7 @@ function ActivityTracker(before : Discord.Presence, after : Discord.Presence){
             tracker.set(after.member.user.username, prev.set(activity.name, 
                 now.getTime() - start.getTime()))
         }
+        SaveTrackerData()
     }
 }
 
@@ -154,7 +191,7 @@ function ActivityTracker(before : Discord.Presence, after : Discord.Presence){
 async function TrackPlaytime(client : Discord.Client, message : Discord.Message, ...content : string[]) {
     if(!tracker.has(message.member.user.username)){
         tracker.set(message.member.user.username, new Map<string, number>())
-        SaveTracker() // saves current tracker files
+        SaveTrackerData() // saves current tracker files
         return message.channel.send(`Now tracking playtime of ${message.author.username}`)
     }
     return message.channel.send(`Already tracking playtime of ${message.member.user.username}`)
