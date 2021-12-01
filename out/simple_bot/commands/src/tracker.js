@@ -61,10 +61,11 @@ function SaveTrackerData() {
         }
         let obj = {};
         for (const k of tracker.keys()) {
-            const vals = Object.fromEntries(tracker[k]);
+            const vals = Object.fromEntries(tracker.get(k));
             obj[k] = vals;
         }
         const data = JSON.stringify(obj);
+        console.log(data);
         return fs.writeFile("./data/tracker_data.json", data, (err) => { });
     });
 }
