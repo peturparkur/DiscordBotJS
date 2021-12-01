@@ -72,8 +72,6 @@ async function LoadTrackerData(){
     console.log('Loading Tracker')
     fs.readFile('./data/tracker_data.json', (err, data) => {
         let trk = JSON.parse(data.toString())
-        console.log(trk)
-        console.log(Object.entries(trk))
         tracker.clear()
         for(const k in trk){
             tracker.set(k, new Map<string, number>())
