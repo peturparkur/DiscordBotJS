@@ -80,11 +80,14 @@ function LoadTrackerData() {
         console.log('Loading Tracker');
         fs.readFile('./data/tracker_data.json', (err, data) => {
             let trk = JSON.parse(data.toString());
-            console.log(trk);
             tracker.clear();
-            for (const k of trk.keys()) {
-                tracker.set(k, trk.get(k));
+            for (const k of trk) {
+                tracker.set(k, new Map());
+                for (const j of trk[k]) {
+                    tracker.get(k).set(j, trk[k][j]);
+                }
             }
+            console.log(tracker);
             console.log(`Now tracking ${Array.from(tracker.keys())}`);
         });
         return 0;
