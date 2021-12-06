@@ -1,3 +1,5 @@
 ## ignore internal configuration for environment
 **/node_modules/
 .env
+.env.swp
+data/
