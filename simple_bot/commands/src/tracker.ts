@@ -25,15 +25,15 @@ export async function StartTracker(client : Discord.Client){
         console.log('Start tracker')
         last_update = new Date()
         schedule.scheduleJob("tracker_reset", "0 0 * * *", (firedate) => {ResetTracker()})
+        if ((await LoadTrackerData()) === 1){ // loads saved data
+            //error
+            LoadTracker()
+        }
         client.on('presenceUpdate', (before, after) =>{
             if(!tracker.has(after.user.username))
                 return
             return ActivityTracker(before, after)
         })
-        if ((await LoadTrackerData()) === 1){ // loads saved data
-            //error
-            LoadTracker()
-        }
         started = true
     }
 }
