@@ -39,7 +39,7 @@ class DiscordBot extends Discord.Client{
         this.commandHandler = new EventHandler()
         this.on("ready", () => {
             this.Setup()
-            commands.StartTracker(this)
+            //commands.StartTracker(this)
         })
 
         // Assume all commands have format: (message, content, ...args) => void
@@ -54,9 +54,9 @@ class DiscordBot extends Discord.Client{
         this.addEvent('random', commands.Random)
         this.addEvent('rand', commands.Random_Normal)
         this.addEvent('function', commands.RandomFunction)
-        this.addEvent('track', commands.PlaytimeTracker)
+        //this.addEvent('track', commands.PlaytimeTracker)
         this.addEvent('check', commands.CheckPlaytimeTracker)
-        this.addEvent('stopt', commands.StopPlaytimeTracker)
+        //this.addEvent('stopt', commands.StopPlaytimeTracker)
         this.addEvent('define', commands.GetDefinition)
 
 
