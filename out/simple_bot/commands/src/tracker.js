@@ -30,15 +30,15 @@ export function StartTracker(client) {
             console.log('Start tracker');
             last_update = new Date();
             schedule.scheduleJob("tracker_reset", "0 0 * * *", (firedate) => { ResetTracker(); });
+            LoadTracker();
+            //if ((await LoadTrackerData()) === 1){ // loads saved data
+            //error
+            //}
             client.on('presenceUpdate', (before, after) => {
                 if (!tracker.has(after.user.username))
                     return;
                 return ActivityTracker(before, after);
             });
-            if ((yield LoadTrackerData()) === 1) { // loads saved data
-                //error
-                LoadTracker();
-            }
             started = true;
         }
     });
@@ -182,7 +182,7 @@ function ActivityTracker(before, after) {
         else {
             tracker.set(after.member.user.username, prev.set(activity.name, now.getTime() - start.getTime()));
         }
-        SaveTrackerData();
+        //SaveTrackerData()
     }
 }
 /**
@@ -195,7 +195,7 @@ function TrackPlaytime(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!tracker.has(message.member.user.username)) {
             tracker.set(message.member.user.username, new Map());
-            SaveTrackerData(); // saves current tracker files
+            SaveTracker(); // saves current tracker files
             return message.channel.send(`Now tracking playtime of ${message.author.username}`);
         }
         return message.channel.send(`Already tracking playtime of ${message.member.user.username}`);

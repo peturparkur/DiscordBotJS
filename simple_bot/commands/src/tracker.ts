@@ -25,10 +25,10 @@ export async function StartTracker(client : Discord.Client){
         console.log('Start tracker')
         last_update = new Date()
         schedule.scheduleJob("tracker_reset", "0 0 * * *", (firedate) => {ResetTracker()})
-        if ((await LoadTrackerData()) === 1){ // loads saved data
+        LoadTracker()
+        //if ((await LoadTrackerData()) === 1){ // loads saved data
             //error
-            LoadTracker()
-        }
+        //}
         client.on('presenceUpdate', (before, after) =>{
             if(!tracker.has(after.user.username))
                 return
@@ -183,7 +183,7 @@ function ActivityTracker(before : Discord.Presence, after : Discord.Presence){
             tracker.set(after.member.user.username, prev.set(activity.name, 
                 now.getTime() - start.getTime()))
         }
-        SaveTrackerData()
+        //SaveTrackerData()
     }
 }
 
@@ -196,7 +196,7 @@ function ActivityTracker(before : Discord.Presence, after : Discord.Presence){
 async function TrackPlaytime(client : Discord.Client, message : Discord.Message, ...content : string[]) {
     if(!tracker.has(message.member.user.username)){
         tracker.set(message.member.user.username, new Map<string, number>())
-        SaveTrackerData() // saves current tracker files
+        SaveTracker() // saves current tracker files
         return message.channel.send(`Now tracking playtime of ${message.author.username}`)
     }
     return message.channel.send(`Already tracking playtime of ${message.member.user.username}`)
