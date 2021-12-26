@@ -43,8 +43,10 @@ function ToStringCounter(x : number){
 async function _GetDefinition(client : Discord.Client, message : Discord.Message, ...content : string[]){
     //const cntn = content.split(" ")
     const cntn = content
-    let name = cntn[0]
-    let index = cntn.length >= 2 ? parseInt(cntn[1]) : 0
+    //let name = cntn[0]
+    let name = cntn.join(' ')
+    let index = 0
+    //let index = cntn.length >= 2 ? parseInt(cntn[1]) : 0
 
     const results = await UrbanDefine(name, API_KEY)
     if (results.length <= 0){
