@@ -158,3 +158,21 @@ async function PlaySong(guild : Discord.Guild, txtChannel : Discord.TextChannel,
     });
     return txtChannel.send(`Playing ${song.title}, ${song.url}`)
 }
+
+export const JoinVoiceChannel = CommandConstructor(_JoinVoiceChannel, "Leave the currently joined voice channel", [])
+async function _JoinVoiceChannel(client : Discord.Client, message : Discord.Message, ...args : string[]) {
+    // .join
+    const vc = message.member.voice.channel
+    vc.join()
+}
+
+export const LeaveVoiceChannel = CommandConstructor(_LeaveVoiceChannel, "Leave the currently joined voice channel", [])
+async function _LeaveVoiceChannel(client : Discord.Client, message : Discord.Message, ...args : string[]) {
+    // .join
+    try{
+        message.member.voice.channel.leave()
+    }
+    catch (error) {
+        return message.channel.send(`Couldn't leave voice channel due to ${error}`)
+    }
+}

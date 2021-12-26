@@ -47,13 +47,18 @@ async function _GetDefinition(client : Discord.Client, message : Discord.Message
     let name = cntn.join(' ')
     let index = 0
     //let index = cntn.length >= 2 ? parseInt(cntn[1]) : 0
-
-    const results = await UrbanDefine(name, API_KEY)
-    if (results.length <= 0){
-        return message.channel.send(`No definition found for ${name}`)
+    try 
+    {
+        const results = await UrbanDefine(name, API_KEY)
+        if (results.length <= 0){
+            return message.channel.send(`No definition found for ${name}`)
+        }
+        if(index >= results.length){
+            return message.channel.send(`No ${ToStringCounter(index)} definition for ${name}`)
+        }
+        return message.channel.send(`Definition ${name} \n ${Defintion_2_String(results[index])}`)
+    } catch (error) 
+    {
+        return message.channel.send(`Error occured with definition ${name}`)
     }
-    if(index >= results.length){
-        return message.channel.send(`No ${ToStringCounter(index)} definition for ${name}`)
-    }
-    return message.channel.send(`Definition ${name} \n ${Defintion_2_String(results[index])}`)
 }

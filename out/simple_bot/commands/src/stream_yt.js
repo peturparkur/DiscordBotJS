@@ -161,3 +161,23 @@ function PlaySong(guild, txtChannel, playlist) {
         return txtChannel.send(`Playing ${song.title}, ${song.url}`);
     });
 }
+export const JoinVoiceChannel = CommandConstructor(_JoinVoiceChannel, "Leave the currently joined voice channel", []);
+function _JoinVoiceChannel(client, message, ...args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // .join
+        const vc = message.member.voice.channel;
+        vc.join();
+    });
+}
+export const LeaveVoiceChannel = CommandConstructor(_LeaveVoiceChannel, "Leave the currently joined voice channel", []);
+function _LeaveVoiceChannel(client, message, ...args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // .join
+        try {
+            message.member.voice.channel.leave();
+        }
+        catch (error) {
+            return message.channel.send(`Couldn't leave voice channel due to ${error}`);
+        }
+    });
+}

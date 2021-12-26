@@ -44,12 +44,18 @@ class DiscordBot extends Discord.Client{
 
         // Assume all commands have format: (message, content, ...args) => void
         this.addEvent('test', commands.Test)
+
         this.addEvent('reddit', commands.GetRedditTodaysTop)
+
         this.addEvent('invite', commands.InviteLink)
+
         this.addEvent('play', commands.StreamYT)
         this.addEvent('skip', commands.SkipYT)
         this.addEvent('stop', commands.StopYT)
         this.addEvent('playlist', commands.ShowPlaylist)
+        this.addEvent('join', commands.JoinVoiceChannel)
+        this.addEvent('leave', commands.LeaveVoiceChannel)
+
         this.addEvent('coin', commands.Coin_Toss)
         this.addEvent('random', commands.Random)
         this.addEvent('rand', commands.Random_Normal)
