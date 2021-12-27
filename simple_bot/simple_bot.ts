@@ -1,13 +1,13 @@
 import * as Discord from "discord.js";
 import {config} from "dotenv";
-import { type } from "os";
+//import { type } from "os";
 import {EventHandler} from "../utility/event_handler.js"
-import { Mention } from "./utility/util.js";
+import { Mention, Map2Obj, Obj2Map, SaveObjectJson, LoadObjectJson, FileExists } from "./utility/util.js";
 import * as commands from "./commands/commands.js"
 import {FilterTikTok} from "./commands/src/tiktok.js"
 
-import ytdl from "ytdl-core"; //youtube system
-import fs from "fs" // file-system
+//import ytdl from "ytdl-core"; //youtube system
+//import fs from "fs" // file-system
 import { Command } from "./utility/comm_class.js";
 import { CommandConstructor, ICommand } from "./utility/comm_class.js"
 
@@ -25,8 +25,9 @@ console.log("Hello World")
 
 class DiscordBot extends Discord.Client{
     commandHandler : EventHandler //handles command requests
-    commandPrefix : string = '!'
+    commandPrefix : string = '.'
     prefixes : Map<Discord.Guild, string> = new Map()
+    prefix_map : Map<string, string> = new Map() // Create mapping from guild_id -> prefix
 
     constructor(prefix : string = '.', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
         ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 
@@ -71,6 +72,8 @@ class DiscordBot extends Discord.Client{
             const stg = cntn[0] //setting to change
             if (stg == "prefix")
                 this.prefixes.set(msg.guild, cntn[1])
+                this.prefix_map.set(msg.guild.id, cntn[1])
+                console.log(`Saving prefix map success: ${this.SaveSettings()}`)
                 await msg.channel.send(`prefix changed to ${cntn[1]}`)
         })
         this.addEvent('help', CommandConstructor(async (client : Discord.Client, msg : Discord.Message, cntn : string) => {
@@ -105,11 +108,63 @@ class DiscordBot extends Discord.Client{
         });
     }
 
+    /**
+     * Save Command prefix of the bot on a per server basis
+     */
+    private SaveSettings()
+    {
+        try {
+            return SaveObjectJson(Map2Obj(this.prefix_map), 'prefix_map', './data', true)
+        } catch (error) {
+            console.log(`Error occured in Saving Object -> ${error}`)
+            return false
+        }
+    }
+
+    private LoadSettings(verbose : boolean = true){
+        const obj = LoadObjectJson('prefix_map', './data')
+        if(!obj){
+            if(verbose) console.log(`Couldn't load prefix settings`)
+            return null
+        }
+        if(verbose) console.log(`Returning loaded object ${obj} to map conversion`)
+        return Obj2Map<string>(obj)
+    }
+
+    private ExistSettings(verbose : boolean = true){
+        if(verbose) console.log(`Checking if prefix_map.json exists`)
+        return FileExists('prefix_map.json', './data')
+    }
+
     private Setup(debug : boolean = false){
         this.guilds.cache.forEach(guild => {
             console.log("Connected guilds: ", guild.name)
             this.prefixes.set(guild, this.commandPrefix)
         })
+
+        // Load saved prefix mapping
+        if(!this.ExistSettings())
+        {
+            //this.prefix_map.set(guild.id, this.commandPrefix) // set for each connected guild the default prefix
+            this.prefix_map = new Map()
+            this.guilds.cache.forEach(guild => {
+                this.prefix_map.set(guild.id, this.commandPrefix)
+            })
+        }
+        else
+        {
+            const map = this.LoadSettings()
+            if(map){
+                this.prefix_map = new Map(map)
+            }
+            else{
+                // null response couldn't read the mapping
+                this.prefix_map = new Map()
+                this.guilds.cache.forEach(guild => {
+                    this.prefix_map.set(guild.id, this.commandPrefix)
+                })
+            }
+        }
 
         this.voice.connections.forEach(vc => {
             vc.disconnect()
