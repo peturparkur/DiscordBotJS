@@ -3,7 +3,7 @@ import { NextSong, Playlist, PrintPlaylist, Song} from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search"
 import fs from "fs" // file-system
-import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
+import { CommandConstructor, ICommand } from "../../../discord_utils/comm_class.js"
 
 const playlists : Map<Discord.Guild, Playlist> = new Map()
 

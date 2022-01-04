@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
 import { parse } from 'node-html-parser';
-import { CommandConstructor } from "../../utility/comm_class.js";
+import { CommandConstructor } from "../../../discord_utils/comm_class.js";
 
 function get_elem(obj : Object, idx : number){
     return obj[Object.keys(obj)[0]]

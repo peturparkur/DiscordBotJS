@@ -1,5 +1,5 @@
 import * as Discord from "discord.js"
-import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
+import { CommandConstructor, ICommand } from "../../../discord_utils/comm_class.js"
 
 export const Test = CommandConstructor(_Test, "Test function for testing the connection", [])
 

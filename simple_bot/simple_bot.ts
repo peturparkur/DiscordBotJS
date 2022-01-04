@@ -2,14 +2,14 @@ import * as Discord from "discord.js";
 import {config} from "dotenv";
 //import { type } from "os";
 import {EventHandler} from "../utility/event_handler.js"
-import { Mention, Map2Obj, Obj2Map, SaveObjectJson, LoadObjectJson, FileExists } from "./utility/util.js";
+import { Mention, Map2Obj, Obj2Map, SaveObjectJson, LoadObjectJson, FileExists } from "../discord_utils/util.js";
 import * as commands from "./commands/commands.js"
 import {FilterTikTok} from "./commands/src/tiktok.js"
 
 //import ytdl from "ytdl-core"; //youtube system
 //import fs from "fs" // file-system
-import { Command } from "./utility/comm_class.js";
-import { CommandConstructor, ICommand } from "./utility/comm_class.js"
+import { Command } from "../discord_utils/comm_class.js";
+import { CommandConstructor, ICommand } from "../discord_utils/comm_class.js"
 
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";

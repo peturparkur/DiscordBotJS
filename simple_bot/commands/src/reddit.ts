@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import https from "https";
 import fetch from "node-fetch" // making web requests
-import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
+import { CommandConstructor, ICommand } from "../../../discord_utils/comm_class.js"
 
 async function GetReddit(subreddit : string, count : number = 50){
     const response = await fetch(`https://www.reddit.com/r/${subreddit}/.json?limit=${count}`, 

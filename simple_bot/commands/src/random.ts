@@ -1,6 +1,6 @@
 import * as Discord from "discord.js"
 import { Gaussian, RandInt } from "../../../utility/putil_maths.js"
-import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
+import { CommandConstructor, ICommand } from "../../../discord_utils/comm_class.js"
 
 function get_min_max(...content : string[]){
     let _min = 0

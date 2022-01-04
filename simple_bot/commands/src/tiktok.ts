@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
-import { Mention } from "../../utility/util.js";
+import { Mention } from "../../../discord_utils/util.js";
 
 type DiscordCommand = (client : Discord.Client, message : Discord.Message, ...args : string[]) => void
 

@@ -1,4 +1,4 @@
-import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
+import { CommandConstructor, ICommand } from "../../../discord_utils/comm_class.js"
 import * as Discord from "discord.js";
 import fetch from "node-fetch" // making web requests
 import {config} from "dotenv";

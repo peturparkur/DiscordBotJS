@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { CommandConstructor, ICommand } from "../../utility/comm_class.js"
+import { CommandConstructor, ICommand } from "../../../discord_utils/comm_class.js"
 import fs from "fs" //file system
 import * as schedule from "node-schedule"
 
