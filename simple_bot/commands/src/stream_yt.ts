@@ -159,11 +159,19 @@ async function PlaySong(guild : Discord.Guild, txtChannel : Discord.TextChannel,
     return txtChannel.send(`Playing ${song.title}, ${song.url}`)
 }
 
-export const JoinVoiceChannel = CommandConstructor(_JoinVoiceChannel, "Leave the currently joined voice channel", [])
+export const JoinVoiceChannel = CommandConstructor(_JoinVoiceChannel, "Join the voice channel", [])
 async function _JoinVoiceChannel(client : Discord.Client, message : Discord.Message, ...args : string[]) {
     // .join
     const vc = message.member.voice.channel
-    vc.join()
+    if(!vc){
+        return message.channel.send(`${message.member.nickname} you're not in a voice channel!`)
+    }
+    try{
+        vc.join()
+    }
+    catch (err) {
+        return message.channel.send(`Couldn't join the voice channel due to ${err}`)
+    }
 }
 
 export const LeaveVoiceChannel = CommandConstructor(_LeaveVoiceChannel, "Leave the currently joined voice channel", [])
