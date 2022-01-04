@@ -1,17 +1,18 @@
 import * as Discord from "discord.js";
-import {config} from "dotenv";
+import {config} from "dotenv"; //used only for getting API KEYS
 import { CommandConstructor, ICommand } from "../discord_utils/comm_class.js";
 import { FileExists, LoadObjectJson, Map2Obj, Obj2Map, SaveObjectJson } from "../discord_utils/util.js";
 import {EventHandler} from "../utility/event_handler.js"
 
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
-config()
+
+//config() // used for loading api keys in memory
 
 // Invite Link: https://discord.com/api/oauth2/authorize?client_id=867508786033590272&permissions=8&scope=bot
 
-let TOKEN = process.env.TOKEN
-console.log(`Hello World ${TOKEN}`)
+//let TOKEN = process.env.TOKEN
+//console.log(`Hello World ${TOKEN}`)
 
 //type DiscordCommand = (message : Discord.Message, content : string, ...args : unknown[]) => void
 
@@ -31,7 +32,7 @@ export class BaseDiscordBot extends Discord.Client{
         this.settings['prefix_map'] = x;
     }
 
-    constructor(prefix : string = '.', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
+    constructor(token : string, prefix : string = '.', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
         ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 
         'GUILD_PRESENCES', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES', 
         'DIRECT_MESSAGES', 'GUILD_MESSAGE_TYPING', 'GUILD_MESSAGE_REACTIONS']}},
@@ -184,7 +185,7 @@ export class BaseDiscordBot extends Discord.Client{
         this.commandHandler.addEventListener(eventName, callback)
     }
 
-    public Start(){
-        return this.login(TOKEN)
+    public Start(token : string){
+        return this.login(token)
     }
 }
