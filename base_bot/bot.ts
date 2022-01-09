@@ -16,7 +16,7 @@ import {EventHandler} from "../utility/event_handler.js"
 
 //type DiscordCommand = (message : Discord.Message, content : string, ...args : unknown[]) => void
 
-export class BaseDiscordBot extends Discord.Client{
+export abstract class BaseDiscordBot extends Discord.Client{
     commandHandler : EventHandler //handles command requests
     commandPrefix : string = '.'
 
@@ -32,7 +32,18 @@ export class BaseDiscordBot extends Discord.Client{
         this.settings['prefix_map'] = x;
     }
 
-    constructor(token : string, prefix : string = '.', debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
+    AddCommands(commands : Array<[string, ICommand]>){
+        for(const [ev, command] of commands){
+            try {
+                this.addEvent(ev, command);
+            } 
+            catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    constructor(prefix : string = '.', save_path : string = "./data", debug : boolean = true, options : Discord.ClientOptions | null = {ws: { intents: 
         ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 
         'GUILD_PRESENCES', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES', 
         'DIRECT_MESSAGES', 'GUILD_MESSAGE_TYPING', 'GUILD_MESSAGE_REACTIONS']}},
@@ -42,10 +53,10 @@ export class BaseDiscordBot extends Discord.Client{
         this.commandPrefix = prefix //prefix should be server specific
         this.commandHandler = new EventHandler()
         this.settings['prefix_map'] = new Map<string, string>();
+        this.settings['save_path'] = save_path;
 
         this.on("ready", () => {
             this.Setup()
-            this.emit('Setup')
             //commands.StartTracker(this)
         })
 
@@ -94,7 +105,7 @@ export class BaseDiscordBot extends Discord.Client{
     private SaveSettings()
     {
         try {
-            return SaveObjectJson(Map2Obj(this.prefix_map), 'prefix_map', './data', true)
+            return SaveObjectJson(Map2Obj(this.prefix_map), 'prefix_map', this.settings['save_path'], true)
         } catch (error) {
             console.log(`Error occured in Saving Object -> ${error}`)
             return false
@@ -102,7 +113,7 @@ export class BaseDiscordBot extends Discord.Client{
     }
 
     private LoadSettings(verbose : boolean = true){
-        const obj = LoadObjectJson('prefix_map', './data')
+        const obj = LoadObjectJson('prefix_map', this.settings['save_path'])
         if(!obj){
             if(verbose) console.log(`Couldn't load prefix settings`)
             return null
@@ -113,10 +124,10 @@ export class BaseDiscordBot extends Discord.Client{
 
     private ExistSettings(verbose : boolean = true){
         if(verbose) console.log(`Checking if prefix_map.json exists`)
-        return FileExists('prefix_map.json', './data')
+        return FileExists('prefix_map.json', this.settings['save_path'])
     }
 
-    private Setup(debug : boolean = false){
+    public Setup(debug : boolean = false){
         this.guilds.cache.forEach(guild => {
             console.log("Connected guilds: ", guild.name)
         })

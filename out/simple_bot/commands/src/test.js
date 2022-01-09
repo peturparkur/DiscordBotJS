@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { CommandConstructor } from "../../utility/comm_class.js";
+import { CommandConstructor } from "../../../discord_utils/comm_class.js";
 export const Test = CommandConstructor(_Test, "Test function for testing the connection", []);
 function _Test(client, message, ...content) {
     return __awaiter(this, void 0, void 0, function* () {

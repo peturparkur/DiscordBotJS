@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Mention } from "../../utility/util.js";
+import { Mention } from "../../../discord_utils/util.js";
 function IsTikTok(s) {
     if (s.includes('https://www.tiktok.com/'))
         return true;

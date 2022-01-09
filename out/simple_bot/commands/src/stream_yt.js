@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Playlist, PrintPlaylist, Song } from "./music_classes.js";
 import ytdl from "ytdl-core"; //youtube system
 import yts from "yt-search";
-import { CommandConstructor } from "../../utility/comm_class.js";
+import { CommandConstructor } from "../../../discord_utils/comm_class.js";
 const playlists = new Map();
 function finder(query) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -161,12 +161,20 @@ function PlaySong(guild, txtChannel, playlist) {
         return txtChannel.send(`Playing ${song.title}, ${song.url}`);
     });
 }
-export const JoinVoiceChannel = CommandConstructor(_JoinVoiceChannel, "Leave the currently joined voice channel", []);
+export const JoinVoiceChannel = CommandConstructor(_JoinVoiceChannel, "Join the voice channel", []);
 function _JoinVoiceChannel(client, message, ...args) {
     return __awaiter(this, void 0, void 0, function* () {
         // .join
         const vc = message.member.voice.channel;
-        vc.join();
+        if (!vc) {
+            return message.channel.send(`${message.member.nickname} you're not in a voice channel!`);
+        }
+        try {
+            vc.join();
+        }
+        catch (err) {
+            return message.channel.send(`Couldn't join the voice channel due to ${err}`);
+        }
     });
 }
 export const LeaveVoiceChannel = CommandConstructor(_LeaveVoiceChannel, "Leave the currently joined voice channel", []);

@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { CommandConstructor } from "../../utility/comm_class.js";
+import { CommandConstructor } from "../../../discord_utils/comm_class.js";
 import fs from "fs"; //file system
 import * as schedule from "node-schedule";
 const tracker = new Map(); // number measure UTC milliseconds

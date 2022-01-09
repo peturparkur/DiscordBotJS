@@ -5,6 +5,34 @@ export function Mention(user : Discord.User){
     return `<@${user.id}>`
 }
 
+/**
+* Construct Date-like structure from utc number -> interpret as time spent from 0
+* @param dt Time delta
+* @returns \{days, hours, minutes, seconds} : additive
+*/
+export function DeltaTime(dt : number){
+    // time is measured in milli seconds
+    // 1000dt = 1s
+    // 60000dt => 1min
+    // 3,600,000dt => 1h
+    // 86,400,000dt = 1day
+    let diffDays = Math.floor(dt / (86400 * 1000))
+    dt -= diffDays * (86400 * 1000)
+    let diffHrs = Math.floor(dt / (3600 * 1000))
+    dt -= diffHrs * (3600 * 1000)
+    let diffMins = Math.floor(dt / (60 * 1000))
+    dt -= diffMins * (60 * 1000)
+    let diffSeconds = Math.floor(dt / (1000))
+
+   return {
+       "days" : diffDays,
+       "hours" : diffHrs,
+       "minutes" : diffMins,
+       "seconds" : diffSeconds,
+       'raw' : dt
+   }
+}
+
 export function FileExists(filename : string, path : string){
     return fs.existsSync(path + "/" + filename)
 }
@@ -14,8 +42,10 @@ export function Map2Obj<T>(map : Map<string, T>)
     return Object.fromEntries(map)
 }
 
-export function Obj2Map<T>(obj : Object)
-{
+export function Obj2Map<T>(obj : Object | undefined)
+{   
+    console.log(obj)
+    if(obj == undefined) return null
     return new Map<string, T>(Object.entries(obj))
 }
 
@@ -25,33 +55,31 @@ export function SaveObjectJson(obj : Object, filename : string, path : string, c
     if(!fs.existsSync(path)){
         if(create_path)
             fs.mkdir(path, (error) => {
-                console.log(`Error occured when creating path ${path} -> ${error}`)
-                return false;
+                if(error)
+                {
+                    console.log(`Error occured when creating path ${path} -> ${error}`)
+                    return false;
+                }
             })
         else
             return false;
     }
     fs.writeFile(path + "/" + filename + ".json", data, (err) => {
-        console.log(`Error occured while writing file[${filename}] to path[${path}] -> ${err}`)
-        return false
+        if(err){
+            console.log(`Error occured while writing file[${filename}] to path[${path}] -> ${err}`)
+            return false
+        }
     })
     return true
 }
 
 export function LoadObjectJson(filename : string, path : string) : Object
 {
-    if(!fs.existsSync(path)){
+    if(!fs.existsSync(path + "/" + filename + ".json")){
         //throw new Error(`path[${path}] doesn't exists`) // path doesn't exists
-        console.log(`path[${path}] doesn't exists`)
+        console.log(`path[${path + "/" + filename + ".json"}] doesn't exists`)
         return null
     }
-    fs.readFile(path + "/" + filename + ".json", (err, data) => {
-        if(err)
-        {
-            console.log(`Error Occured in loading file[${filename}] from path[${path}] -> ${err}`)
-            return null
-            //throw new Error(`Error Occured in loading file[${filename}] from path[${path}] -> ${err}`)
-        }
-        return JSON.parse(data.toString())
-    })
+    const data = fs.readFileSync(path + "/" + filename + ".json");
+    return JSON.parse(data.toString())
 }

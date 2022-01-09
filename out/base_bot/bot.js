@@ -8,62 +8,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as Discord from "discord.js";
-import { config } from "dotenv";
-//import { type } from "os";
-import { EventHandler } from "../utility/event_handler.js";
-import { Map2Obj, Obj2Map, SaveObjectJson, LoadObjectJson, FileExists } from "../discord_utils/util.js";
-import * as commands from "./commands/commands.js";
-import { FilterTikTok } from "./commands/src/tiktok.js";
 import { CommandConstructor } from "../discord_utils/comm_class.js";
+import { FileExists, LoadObjectJson, Map2Obj, Obj2Map, SaveObjectJson } from "../discord_utils/util.js";
+import { EventHandler } from "../utility/event_handler.js";
 //import {EventHandler, Room} from '../utility/classes.js';
 //import { TicTacToe } from "../utility/games.js";
-config();
+//config() // used for loading api keys in memory
 // Invite Link: https://discord.com/api/oauth2/authorize?client_id=867508786033590272&permissions=8&scope=bot
-let TOKEN = process.env.TOKEN;
-console.log(TOKEN);
-console.log("Hello World");
+//let TOKEN = process.env.TOKEN
+//console.log(`Hello World ${TOKEN}`)
 //type DiscordCommand = (message : Discord.Message, content : string, ...args : unknown[]) => void
-class DiscordBot extends Discord.Client {
-    constructor(prefix = '.', debug = true, options = { ws: { intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES',
+export class BaseDiscordBot extends Discord.Client {
+    constructor(prefix = '.', save_path = "./data", debug = true, options = { ws: { intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES',
                 'GUILD_PRESENCES', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES',
                 'DIRECT_MESSAGES', 'GUILD_MESSAGE_TYPING', 'GUILD_MESSAGE_REACTIONS'] } }) {
         super(options);
         this.commandPrefix = '.';
-        this.prefixes = new Map();
-        this.prefix_map = new Map(); // Create mapping from guild_id -> prefix
+        this.settings = {
+            'prefix_map': new Map()
+        };
         this.commandPrefix = prefix; //prefix should be server specific
         this.commandHandler = new EventHandler();
+        this.settings['prefix_map'] = new Map();
+        this.settings['save_path'] = save_path;
         this.on("ready", () => {
             this.Setup();
             //commands.StartTracker(this)
         });
-        // Assume all commands have format: (message, content, ...args) => void
-        this.addEvent('test', commands.Test);
-        this.addEvent('reddit', commands.GetRedditTodaysTop);
-        this.addEvent('invite', commands.InviteLink);
-        this.addEvent('play', commands.StreamYT);
-        this.addEvent('skip', commands.SkipYT);
-        this.addEvent('stop', commands.StopYT);
-        this.addEvent('playlist', commands.ShowPlaylist);
-        this.addEvent('join', commands.JoinVoiceChannel);
-        this.addEvent('leave', commands.LeaveVoiceChannel);
-        this.addEvent('coin', commands.Coin_Toss);
-        this.addEvent('random', commands.Random);
-        this.addEvent('rand', commands.Random_Normal);
-        this.addEvent('function', commands.RandomFunction);
-        //this.addEvent('track', commands.PlaytimeTracker)
-        //this.addEvent('check', commands.CheckPlaytimeTracker)
-        //this.addEvent('stopt', commands.StopPlaytimeTracker)
-        this.addEvent('define', commands.GetDefinition);
-        this.addEvent('settings', (client, msg, content) => __awaiter(this, void 0, void 0, function* () {
+        this.addEvent('settings', CommandConstructor((client, msg, content) => __awaiter(this, void 0, void 0, function* () {
             const cntn = content.split(" ");
             const stg = cntn[0]; //setting to change
             if (stg == "prefix")
-                this.prefixes.set(msg.guild, cntn[1]);
-            this.prefix_map.set(msg.guild.id, cntn[1]);
+                this.prefix_map.set(msg.guild.id, cntn[1]);
             console.log(`Saving prefix map success: ${this.SaveSettings()}`);
             yield msg.channel.send(`prefix changed to ${cntn[1]}`);
-        }));
+        }), "Change bot settings", []));
         this.addEvent('help', CommandConstructor((client, msg, cntn) => __awaiter(this, void 0, void 0, function* () {
             let ret = "For more detail about a specific command use .detail <command> \n";
             for (const k of this.commandHandler.listeners.keys()) {
@@ -84,18 +63,34 @@ class DiscordBot extends Discord.Client {
             desc = func.description;
             msg.channel.send(`${key} : ${desc}`);
         }), "Show the description of all the commands", []));
-        this.on('message', FilterTikTok);
         //called when the user types typing
         this.on("typingStart", (chn, user) => __awaiter(this, void 0, void 0, function* () {
             console.log(`User ${user.username} is typing in channel ${chn.id}`);
         }));
+    }
+    //prefix_map : Map<string, string> = new Map() // Create mapping from guild_id -> prefix
+    get prefix_map() {
+        return this.settings['prefix_map'];
+    }
+    set prefix_map(x) {
+        this.settings['prefix_map'] = x;
+    }
+    AddCommands(commands) {
+        for (const [ev, command] of commands) {
+            try {
+                this.addEvent(ev, command);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
     }
     /**
      * Save Command prefix of the bot on a per server basis
      */
     SaveSettings() {
         try {
-            return SaveObjectJson(Map2Obj(this.prefix_map), 'prefix_map', './data', true);
+            return SaveObjectJson(Map2Obj(this.prefix_map), 'prefix_map', this.settings['save_path'], true);
         }
         catch (error) {
             console.log(`Error occured in Saving Object -> ${error}`);
@@ -103,7 +98,7 @@ class DiscordBot extends Discord.Client {
         }
     }
     LoadSettings(verbose = true) {
-        const obj = LoadObjectJson('prefix_map', './data');
+        const obj = LoadObjectJson('prefix_map', this.settings['save_path']);
         if (!obj) {
             if (verbose)
                 console.log(`Couldn't load prefix settings`);
@@ -116,12 +111,11 @@ class DiscordBot extends Discord.Client {
     ExistSettings(verbose = true) {
         if (verbose)
             console.log(`Checking if prefix_map.json exists`);
-        return FileExists('prefix_map.json', './data');
+        return FileExists('prefix_map.json', this.settings['save_path']);
     }
     Setup(debug = false) {
         this.guilds.cache.forEach(guild => {
             console.log("Connected guilds: ", guild.name);
-            this.prefixes.set(guild, this.commandPrefix);
         });
         // Load saved prefix mapping
         if (!this.ExistSettings()) {
@@ -156,7 +150,7 @@ class DiscordBot extends Discord.Client {
             const content = message.content.toLowerCase().trim();
             const contentRaw = message.content.trim();
             // console.log("guild: ", message.guild.name)
-            const call = content.startsWith(this.prefixes.get(message.guild));
+            const call = content.startsWith(this.prefix_map.get(message.guild.id));
             if (debug)
                 console.log(`[${message.member.displayName}, ${call}] : ${content}`);
             // Assume command message format: "prefix_command ...args"
@@ -181,7 +175,7 @@ class DiscordBot extends Discord.Client {
     addEvent(eventName, callback) {
         this.commandHandler.addEventListener(eventName, callback);
     }
+    Start(token) {
+        return this.login(token);
+    }
 }
-const bot = new DiscordBot();
-bot.login(TOKEN);
-export { DiscordBot };

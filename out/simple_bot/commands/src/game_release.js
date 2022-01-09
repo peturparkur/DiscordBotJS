@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import fetch from "node-fetch"; // making web requests
-import { CommandConstructor } from "../../utility/comm_class.js";
+import { CommandConstructor } from "../../../discord_utils/comm_class.js";
 function get_elem(obj, idx) {
     return obj[Object.keys(obj)[0]];
 }

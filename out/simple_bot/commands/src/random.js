@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Gaussian, RandInt } from "../../../utility/putil_maths.js";
-import { CommandConstructor } from "../../utility/comm_class.js";
+import { CommandConstructor } from "../../../discord_utils/comm_class.js";
 function get_min_max(...content) {
     let _min = 0;
     let _max = 1;

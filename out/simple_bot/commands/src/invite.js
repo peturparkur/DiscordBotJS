@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { INVITE_LINK } from "../../constants.js";
-import { CommandConstructor } from "../../utility/comm_class.js";
+import { CommandConstructor } from "../../../discord_utils/comm_class.js";
 export const InviteLink = CommandConstructor(_InviteLink, "Returns the invite link of the bot", []);
 function _InviteLink(client, message) {
     return __awaiter(this, void 0, void 0, function* () {
