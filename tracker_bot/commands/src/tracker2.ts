@@ -78,7 +78,7 @@ export class Tracker2{
      * Starts the tracker -> run on discord bot setup
      * @param client 
     */
-     Start(client : Discord.Client, verbose : boolean = true){
+    Start(client : Discord.Client, verbose : boolean = true){
         if(verbose) console.log('Start tracker online')
 
         client.on('presenceUpdate', (before, after) =>{
@@ -349,8 +349,6 @@ export class Tracker2{
     }
 
     async ActivityChange(before : Discord.Presence, after : Discord.Presence, verbose : boolean = true, _tracker : Tracker2 = this){
-        if(!_tracker.started) return
-
         // need both information
         if(!before || !after)
             return
@@ -565,6 +563,17 @@ export class Tracker2{
      * @param content 
     */
     async CheckMostPlayed(_tracker : Tracker2 = this, client : Discord.Client, message : Discord.Message, ...content : string[]){
+
+        let count : number = 5
+        if(content.length > 0){
+            try{
+                count = parseInt(content.join(' '))
+            }
+            catch (err){
+                console.log('content cannot be converted to number ' + err);
+            }
+        }
+
         await _tracker.Connect(_tracker)
         console.log('Running top on ' + message.guild.name)
         for(const x of message.guild.members.cache.values()){
@@ -588,25 +597,27 @@ export class Tracker2{
                         playtime : {$sum : '$playtime'}
                     }},
             {$sort : {'playtime' : -1}}, // order groups in descending order
-            {$limit : 5} //return 10 of the resulted groups
+            {$limit : count} //return 10 of the resulted groups
         ]).toArray() as IPlaytimeData[])
         _tracker.Disconnect(_tracker)
 
         console.log('tops???')
         console.log(res) 
 
-        message.channel.send(`Daily Top Players on ${message.guild.name}!`)
+        message.channel.send(`Daily Top ${res.length} Players on ${message.guild.name}!`)
         let promises : Promise<any>[] = []
         for(const [i, x] of res.entries()){
             let dt = DeltaTime(x.playtime)
             let line = '';
             line += `${i + 1}.`;
-            if(i == 0)
-                line += " 👑"
+            if(i == 0) line += " 👑🥇"
+            if(i == 1) line += " 🥈"
+            if(i == 2) line += " 🥉"
             line += ` ${message.guild.members.cache.find(member => {return member.user.username == x.user_name}).displayName}`
             line += ` => ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds `
-            if(i == 0)
-                line += " 👑"
+            if(i == 0) line += " 👑🥇"
+            if(i == 1) line += " 🥈"
+            if(i == 2) line += " 🥉"
             promises.push(message.channel.send(line))
         }
         await Promise.all(promises)
@@ -621,6 +632,16 @@ export class Tracker2{
      * @param content 
     */
      async CheckGlobalMostPlayed(_tracker : Tracker2 = this, client : Discord.Client, message : Discord.Message, ...content : string[]){
+        let count : number = 5
+        if(content.length > 0){
+            try{
+                count = parseInt(content.join(' '))
+            }
+            catch (err){
+                console.log('content cannot be converted to number ' + err);
+            }
+        }
+
         await _tracker.Connect(_tracker)
         console.log('Running top on ' + message.guild.name)
         await _tracker._UpdateAllUsers(_tracker, client.guilds.cache.values(), false) // update all users on all servers
@@ -644,24 +665,26 @@ export class Tracker2{
                         playtime : {$sum : '$playtime'}
                     }},
             {$sort : {'playtime' : -1}}, // order groups in descending order
-            {$limit : 5} //return 10 of the resulted groups
+            {$limit : count} //return 10 of the resulted groups
         ]).toArray() as IPlaytimeData[])
         _tracker.Disconnect(_tracker)
         console.log('tops???')
         console.log(res) 
 
-        message.channel.send(`Daily Top Players Globally!`)
+        message.channel.send(`Daily Top ${res.length} Players Globally!`)
         let promises : Promise<any>[] = []
         for(const [i, x] of res.entries()){
             let dt = DeltaTime(x.playtime)
             let line = '';
             line += `${i + 1}.`;
-            if(i == 0)
-                line += " 👑"
+            if(i == 0) line += " 👑🥇"
+            if(i == 1) line += " 🥈"
+            if(i == 2) line += " 🥉"
             line += ` ${x.user_name}`
             line += ` => ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds `
-            if(i == 0)
-                line += " 👑"
+            if(i == 0) line += " 👑🥇"
+            if(i == 1) line += " 🥈"
+            if(i == 2) line += " 🥉"
             promises.push(message.channel.send(line))
         }
         await Promise.all(promises)

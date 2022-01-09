@@ -323,8 +323,6 @@ export class Tracker2 {
     }
     ActivityChange(before, after, verbose = true, _tracker = this) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!_tracker.started)
-                return;
             // need both information
             if (!before || !after)
                 return;
@@ -495,10 +493,10 @@ export class Tracker2 {
             const ranks = [server_ranking.findIndex(value => { return value.user_id == user.id; }), global_ranking.findIndex(value => { return value.user_id == user.id; })];
             console.log(ranks);
             if (ranks[0] >= 0) {
-                message.channel.send(`Ranked ${ranks[0] + 1} on ${message.guild.name}`);
+                message.channel.send(`Ranked ${ranks[0] + 1} / ${server_ranking.length} on ${message.guild.name}`);
             }
             if (ranks[1] >= 0) {
-                message.channel.send(`Ranked ${ranks[1] + 1} globally`);
+                message.channel.send(`Ranked ${ranks[1] + 1} / ${global_ranking.length} globally`);
             }
             return;
         });
@@ -526,6 +524,15 @@ export class Tracker2 {
     */
     CheckMostPlayed(_tracker = this, client, message, ...content) {
         return __awaiter(this, void 0, void 0, function* () {
+            let count = 5;
+            if (content.length > 0) {
+                try {
+                    count = parseInt(content.join(' '));
+                }
+                catch (err) {
+                    console.log('content cannot be converted to number ' + err);
+                }
+            }
             yield _tracker.Connect(_tracker);
             console.log('Running top on ' + message.guild.name);
             for (const x of message.guild.members.cache.values()) {
@@ -548,23 +555,31 @@ export class Tracker2 {
                         playtime: { $sum: '$playtime' }
                     } },
                 { $sort: { 'playtime': -1 } },
-                { $limit: 5 } //return 10 of the resulted groups
+                { $limit: count } //return 10 of the resulted groups
             ]).toArray();
             _tracker.Disconnect(_tracker);
             console.log('tops???');
             console.log(res);
-            message.channel.send(`Daily Top Players on ${message.guild.name}!`);
+            message.channel.send(`Daily Top ${res.length} Players on ${message.guild.name}!`);
             let promises = [];
             for (const [i, x] of res.entries()) {
                 let dt = DeltaTime(x.playtime);
                 let line = '';
                 line += `${i + 1}.`;
                 if (i == 0)
-                    line += " 👑";
+                    line += " 👑🥇";
+                if (i == 1)
+                    line += " 🥈";
+                if (i == 2)
+                    line += " 🥉";
                 line += ` ${message.guild.members.cache.find(member => { return member.user.username == x.user_name; }).displayName}`;
                 line += ` => ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds `;
                 if (i == 0)
-                    line += " 👑";
+                    line += " 👑🥇";
+                if (i == 1)
+                    line += " 🥈";
+                if (i == 2)
+                    line += " 🥉";
                 promises.push(message.channel.send(line));
             }
             yield Promise.all(promises);
@@ -580,6 +595,15 @@ export class Tracker2 {
     */
     CheckGlobalMostPlayed(_tracker = this, client, message, ...content) {
         return __awaiter(this, void 0, void 0, function* () {
+            let count = 5;
+            if (content.length > 0) {
+                try {
+                    count = parseInt(content.join(' '));
+                }
+                catch (err) {
+                    console.log('content cannot be converted to number ' + err);
+                }
+            }
             yield _tracker.Connect(_tracker);
             console.log('Running top on ' + message.guild.name);
             yield _tracker._UpdateAllUsers(_tracker, client.guilds.cache.values(), false); // update all users on all servers
@@ -602,23 +626,31 @@ export class Tracker2 {
                         playtime: { $sum: '$playtime' }
                     } },
                 { $sort: { 'playtime': -1 } },
-                { $limit: 5 } //return 10 of the resulted groups
+                { $limit: count } //return 10 of the resulted groups
             ]).toArray();
             _tracker.Disconnect(_tracker);
             console.log('tops???');
             console.log(res);
-            message.channel.send(`Daily Top Players Globally!`);
+            message.channel.send(`Daily Top ${res.length} Players Globally!`);
             let promises = [];
             for (const [i, x] of res.entries()) {
                 let dt = DeltaTime(x.playtime);
                 let line = '';
                 line += `${i + 1}.`;
                 if (i == 0)
-                    line += " 👑";
+                    line += " 👑🥇";
+                if (i == 1)
+                    line += " 🥈";
+                if (i == 2)
+                    line += " 🥉";
                 line += ` ${x.user_name}`;
                 line += ` => ${dt.hours} hours, ${dt.minutes} minutes, ${dt.seconds} seconds `;
                 if (i == 0)
-                    line += " 👑";
+                    line += " 👑🥇";
+                if (i == 1)
+                    line += " 🥈";
+                if (i == 2)
+                    line += " 🥉";
                 promises.push(message.channel.send(line));
             }
             yield Promise.all(promises);
