@@ -62123,3 +62123,883 @@ Connected guilds:  Bot Testing
 Checking if prefix_map.json exists
 Start tracker online
 Tracker is started
+User FrenzyFire is typing in channel 737970695597719593
+Called CheckPlaytime
+connected
+AddPlaytime
+[
+  {
+    _id: new ObjectId("61db15a264d1c8043588e88e"),
+    user_id: '134007279832793088',
+    game_id: '356875988589740042',
+    user_name: 'Vyzud',
+    game_name: 'Dota 2',
+    playtime: 12037729,
+    server_ids: [ '695595363276554311' ],
+    last_update: 1641752832847
+  }
+]
+{
+  _id: new ObjectId("61db15a264d1c8043588e88e"),
+  user_id: '134007279832793088',
+  game_id: '356875988589740042',
+  user_name: 'Vyzud',
+  game_name: 'Dota 2',
+  playtime: 12037729,
+  server_ids: [ '695595363276554311' ],
+  last_update: 1641752832847
+}
+startT: prev 1641752832847 ~~ 1641752034889
+_UpdateEntry => 
+{ user_id: '134007279832793088', game_id: '356875988589740042' }
+[
+  {
+    _id: new ObjectId("61db15a264d1c8043588e88e"),
+    user_id: '134007279832793088',
+    game_id: '356875988589740042',
+    user_name: 'Vyzud',
+    game_name: 'Dota 2',
+    playtime: 12037729,
+    server_ids: [ '695595363276554311' ],
+    last_update: 1641752832847
+  }
+]
+server_ids is an array
+[ '695595363276554311' ]
+Updated Vyzud
+Update All Users
+Updated Gino
+Updated Zephyr
+Updated Genkai
+Updated Kasper19
+Updated Toxic Nemo 88
+AddPlaytime
+Updated killer HUN 13
+Updated levente
+Updated Laceeey
+Updated Coli
+Updated xXH3kT0RXx
+Updated sUnnY
+Updated Szlero
+AddPlaytime
+Updated Miteus.
+AddPlaytime
+Updated Sicko
+Updated viktor
+Updated Sipi
+Updated Deresur
+Updated Dizan
+Updated ᲼᲼᲼
+Updated BugosG
+AddPlaytime
+Updated CTGuy
+Updated Peterurfi
+Updated thesoupcube
+Updated finny
+Updated Barkattila
+AddPlaytime
+Updated Zala
+Updated geri
+AddPlaytime
+Updated skyman1221
+Updated KubaSmoka420
+Updated ProfiÉsTaho
+Updated tam1729
+Updated Apubevadul
+AddPlaytime
+Updated Satix™
+AddPlaytime
+AddPlaytime
+Updated Pedro.-
+Updated EDM
+Updated Fenyő
+Updated David101
+Updated saurus
+Updated BErik16
+Updated FrenzyFire
+Updated Bazsi_
+Updated udvardiendre
+Updated NagymatheRichard
+Updated Nøbu
+Updated AtomJason-Zarefin
+Updated Saiko
+Updated Nezy
+Updated ThaiFun
+Updated Aron777
+Updated Valentin
+AddPlaytime
+Updated HUBIMAN
+Updated sneakstream
+AddPlaytime
+Updated levente
+Updated Sal
+Updated FrenzyFire
+Updated alpal88w
+Updated Denes
+Updated V.G
+AddPlaytime
+AddPlaytime
+Updated Danger Mallard
+Updated Shawerma_on_platform
+Updated splintr
+AddPlaytime
+Updated The19juicer
+Updated JacobHeth
+Updated tam1729
+Updated hosandi
+Updated Sal
+Updated Push
+Updated Gino
+Updated joshi_woshi_2003
+AddPlaytime
+Updated CTGuy
+AddPlaytime
+Updated viktor
+Updated killer HUN 13
+Updated Miteus.
+Updated JejeWalla
+Updated Gaming_shadow
+Updated FrenzyFire
+AddPlaytime
+Updated viktor
+[
+  {
+    _id: new ObjectId("61dacc2364d1c8043588e87d"),
+    user_id: '407664078535000065',
+    game_id: '401518684763586560',
+    user_name: 'Smokey',
+    game_name: 'League of Legends',
+    playtime: 3633282,
+    server_ids: [ '695595363276554311', '436237469134880768' ],
+    last_update: 1641752832687
+  }
+]
+{
+  _id: new ObjectId("61dacc2364d1c8043588e87d"),
+  user_id: '407664078535000065',
+  game_id: '401518684763586560',
+  user_name: 'Smokey',
+  game_name: 'League of Legends',
+  playtime: 3633282,
+  server_ids: [ '695595363276554311', '436237469134880768' ],
+  last_update: 1641752832687
+}
+startT: prev 1641752832687 ~~ 1641753111000
+_UpdateEntry => 
+{ user_id: '407664078535000065', game_id: '401518684763586560' }
+[
+  {
+    _id: new ObjectId("61db157f64d1c8043588e88b"),
+    user_id: '689598647565942825',
+    game_id: '438122941302046720',
+    user_name: 'verebala',
+    game_name: 'Rocket League®',
+    playtime: 5005117,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832344
+  }
+]
+{
+  _id: new ObjectId("61db157f64d1c8043588e88b"),
+  user_id: '689598647565942825',
+  game_id: '438122941302046720',
+  user_name: 'verebala',
+  game_name: 'Rocket League®',
+  playtime: 5005117,
+  server_ids: [ '436237469134880768' ],
+  last_update: 1641752832344
+}
+startT: prev 1641752832344 ~~ 1641747824362
+_UpdateEntry => 
+{ user_id: '689598647565942825', game_id: '438122941302046720' }
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e882"),
+    user_id: '580826303280971838',
+    game_id: '359508404034600990',
+    user_name: 'KUDA',
+    game_name: 'Space Engineers',
+    playtime: 6711436,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832510
+  }
+]
+{
+  _id: new ObjectId("61dacc2464d1c8043588e882"),
+  user_id: '580826303280971838',
+  game_id: '359508404034600990',
+  user_name: 'KUDA',
+  game_name: 'Space Engineers',
+  playtime: 6711436,
+  server_ids: [ '436237469134880768' ],
+  last_update: 1641752832510
+}
+startT: prev 1641752832510 ~~ 1641746507202
+_UpdateEntry => 
+{ user_id: '580826303280971838', game_id: '359508404034600990' }
+[
+  {
+    _id: new ObjectId("61db157e64d1c8043588e884"),
+    user_id: '320544288146587649',
+    game_id: '361968954954219521',
+    user_name: 'Vulpecula',
+    game_name: 'Squad',
+    playtime: 2881440,
+    server_ids: [ '695595363276554311', '436237469134880768' ],
+    last_update: 1641752832695
+  }
+]
+{
+  _id: new ObjectId("61db157e64d1c8043588e884"),
+  user_id: '320544288146587649',
+  game_id: '361968954954219521',
+  user_name: 'Vulpecula',
+  game_name: 'Squad',
+  playtime: 2881440,
+  server_ids: [ '695595363276554311', '436237469134880768' ],
+  last_update: 1641752832695
+}
+startT: prev 1641752832695 ~~ 1641752155000
+_UpdateEntry => 
+{ user_id: '320544288146587649', game_id: '361968954954219521' }
+[
+  {
+    _id: new ObjectId("61db157f64d1c8043588e889"),
+    user_id: '315384031464259584',
+    game_id: '356887282982191114',
+    user_name: 'WoLoW',
+    game_name: 'ARK: Survival Evolved',
+    playtime: 20428703,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832522
+  }
+]
+{
+  _id: new ObjectId("61db157f64d1c8043588e889"),
+  user_id: '315384031464259584',
+  game_id: '356887282982191114',
+  user_name: 'WoLoW',
+  game_name: 'ARK: Survival Evolved',
+  playtime: 20428703,
+  server_ids: [ '436237469134880768' ],
+  last_update: 1641752832522
+}
+startT: prev 1641752832522 ~~ 1641732400798
+_UpdateEntry => 
+{ user_id: '315384031464259584', game_id: '356887282982191114' }
+[
+  {
+    _id: new ObjectId("61db157e64d1c8043588e887"),
+    user_id: '484442629333975041',
+    game_id: '511658855466401793',
+    user_name: 'Nagymathe',
+    game_name: 'SMITE',
+    playtime: 8363538,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832518
+  }
+]
+{
+  _id: new ObjectId("61db157e64d1c8043588e887"),
+  user_id: '484442629333975041',
+  game_id: '511658855466401793',
+  user_name: 'Nagymathe',
+  game_name: 'SMITE',
+  playtime: 8363538,
+  server_ids: [ '436237469134880768' ],
+  last_update: 1641752832518
+}
+startT: prev 1641752832518 ~~ 1641744466000
+_UpdateEntry => 
+{ user_id: '484442629333975041', game_id: '511658855466401793' }
+[
+  {
+    _id: new ObjectId("61db157f64d1c8043588e88a"),
+    user_id: '265470322008915968',
+    game_id: '477175586805252107',
+    user_name: '-Krisz-',
+    game_name: 'Among Us',
+    playtime: 6507699,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832514
+  }
+]
+{
+  _id: new ObjectId("61db157f64d1c8043588e88a"),
+  user_id: '265470322008915968',
+  game_id: '477175586805252107',
+  user_name: '-Krisz-',
+  game_name: 'Among Us',
+  playtime: 6507699,
+  server_ids: [ '436237469134880768' ],
+  last_update: 1641752832514
+}
+startT: prev 1641752832514 ~~ 1641746322000
+_UpdateEntry => 
+{ user_id: '265470322008915968', game_id: '477175586805252107' }
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e87f"),
+    user_id: '278947004623618050',
+    game_id: '372438022647578634',
+    user_name: 'DarkCoreZone',
+    game_name: 'Destiny 2',
+    playtime: 3869867,
+    server_ids: [
+      '867883298717433896',
+      '695595363276554311',
+      '436237469134880768'
+    ],
+    last_update: 1641752832849
+  }
+]
+{
+  _id: new ObjectId("61dacc2464d1c8043588e87f"),
+  user_id: '278947004623618050',
+  game_id: '372438022647578634',
+  user_name: 'DarkCoreZone',
+  game_name: 'Destiny 2',
+  playtime: 3869867,
+  server_ids: [ '867883298717433896', '695595363276554311', '436237469134880768' ],
+  last_update: 1641752832849
+}
+startT: prev 1641752832849 ~~ 1641749516972
+_UpdateEntry => 
+{ user_id: '278947004623618050', game_id: '372438022647578634' }
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e881"),
+    user_id: '384715453874044938',
+    game_id: '363447565905166336',
+    user_name: 'Daniell',
+    game_name: 'Grand Theft Auto San Andreas',
+    playtime: 21687878,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832516
+  }
+]
+{
+  _id: new ObjectId("61dacc2464d1c8043588e881"),
+  user_id: '384715453874044938',
+  game_id: '363447565905166336',
+  user_name: 'Daniell',
+  game_name: 'Grand Theft Auto San Andreas',
+  playtime: 21687878,
+  server_ids: [ '436237469134880768' ],
+  last_update: 1641752832516
+}
+startT: prev 1641752832516 ~~ 1641736551507
+_UpdateEntry => 
+{ user_id: '384715453874044938', game_id: '363447565905166336' }
+[
+  {
+    _id: new ObjectId("61db15a264d1c8043588e88d"),
+    user_id: '543160538499252254',
+    game_id: null,
+    user_name: 'Rela3',
+    game_name: 'Timberborn',
+    playtime: 10378334,
+    server_ids: [ '695595363276554311' ],
+    last_update: 1641752832694
+  }
+]
+{
+  _id: new ObjectId("61db15a264d1c8043588e88d"),
+  user_id: '543160538499252254',
+  game_id: null,
+  user_name: 'Rela3',
+  game_name: 'Timberborn',
+  playtime: 10378334,
+  server_ids: [ '695595363276554311' ],
+  last_update: 1641752832694
+}
+startT: prev 1641752832694 ~~ 1641742452415
+_UpdateEntry => 
+{ user_id: '543160538499252254', game_id: null }
+[
+  {
+    _id: new ObjectId("61db15a264d1c8043588e88c"),
+    user_id: '421760162412494858',
+    game_id: '356889262362329098',
+    user_name: 'Demora',
+    game_name: 'FINAL FANTASY XIV',
+    playtime: 7144951,
+    server_ids: [ '695595363276554311' ],
+    last_update: 1641752832686
+  }
+]
+{
+  _id: new ObjectId("61db15a264d1c8043588e88c"),
+  user_id: '421760162412494858',
+  game_id: '356889262362329098',
+  user_name: 'Demora',
+  game_name: 'FINAL FANTASY XIV',
+  playtime: 7144951,
+  server_ids: [ '695595363276554311' ],
+  last_update: 1641752832686
+}
+startT: prev 1641752832686 ~~ 1641745685799
+_UpdateEntry => 
+{ user_id: '421760162412494858', game_id: '356889262362329098' }
+[]
+null
+[
+  {
+    _id: new ObjectId("61dacc2364d1c8043588e87d"),
+    user_id: '407664078535000065',
+    game_id: '401518684763586560',
+    user_name: 'Smokey',
+    game_name: 'League of Legends',
+    playtime: 3633282,
+    server_ids: [ '695595363276554311', '436237469134880768' ],
+    last_update: 1641752832687
+  }
+]
+{
+  _id: new ObjectId("61dacc2364d1c8043588e87d"),
+  user_id: '407664078535000065',
+  game_id: '401518684763586560',
+  user_name: 'Smokey',
+  game_name: 'League of Legends',
+  playtime: 3633282,
+  server_ids: [ '695595363276554311', '436237469134880768' ],
+  last_update: 1641752832687
+}
+startT: prev 1641752832687 ~~ 1641753111000
+_UpdateEntry => 
+{ user_id: '407664078535000065', game_id: '401518684763586560' }
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e87f"),
+    user_id: '278947004623618050',
+    game_id: '372438022647578634',
+    user_name: 'DarkCoreZone',
+    game_name: 'Destiny 2',
+    playtime: 3869867,
+    server_ids: [
+      '867883298717433896',
+      '695595363276554311',
+      '436237469134880768'
+    ],
+    last_update: 1641752832849
+  }
+]
+{
+  _id: new ObjectId("61dacc2464d1c8043588e87f"),
+  user_id: '278947004623618050',
+  game_id: '372438022647578634',
+  user_name: 'DarkCoreZone',
+  game_name: 'Destiny 2',
+  playtime: 3869867,
+  server_ids: [ '867883298717433896', '695595363276554311', '436237469134880768' ],
+  last_update: 1641752832849
+}
+startT: prev 1641752832849 ~~ 1641749516972
+_UpdateEntry => 
+{ user_id: '278947004623618050', game_id: '372438022647578634' }
+[
+  {
+    _id: new ObjectId("61db15a264d1c8043588e88e"),
+    user_id: '134007279832793088',
+    game_id: '356875988589740042',
+    user_name: 'Vyzud',
+    game_name: 'Dota 2',
+    playtime: 13026139,
+    server_ids: [ '695595363276554311' ],
+    last_update: 1641753821288
+  }
+]
+{
+  _id: new ObjectId("61db15a264d1c8043588e88e"),
+  user_id: '134007279832793088',
+  game_id: '356875988589740042',
+  user_name: 'Vyzud',
+  game_name: 'Dota 2',
+  playtime: 13026139,
+  server_ids: [ '695595363276554311' ],
+  last_update: 1641753821288
+}
+startT: prev 1641753821288 ~~ 1641752034889
+_UpdateEntry => 
+{ user_id: '134007279832793088', game_id: '356875988589740042' }
+[
+  {
+    _id: new ObjectId("61db157e64d1c8043588e884"),
+    user_id: '320544288146587649',
+    game_id: '361968954954219521',
+    user_name: 'Vulpecula',
+    game_name: 'Squad',
+    playtime: 2881440,
+    server_ids: [ '695595363276554311', '436237469134880768' ],
+    last_update: 1641752832695
+  }
+]
+{
+  _id: new ObjectId("61db157e64d1c8043588e884"),
+  user_id: '320544288146587649',
+  game_id: '361968954954219521',
+  user_name: 'Vulpecula',
+  game_name: 'Squad',
+  playtime: 2881440,
+  server_ids: [ '695595363276554311', '436237469134880768' ],
+  last_update: 1641752832695
+}
+startT: prev 1641752832695 ~~ 1641752155000
+_UpdateEntry => 
+{ user_id: '320544288146587649', game_id: '361968954954219521' }
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e87f"),
+    user_id: '278947004623618050',
+    game_id: '372438022647578634',
+    user_name: 'DarkCoreZone',
+    game_name: 'Destiny 2',
+    playtime: 3869867,
+    server_ids: [
+      '867883298717433896',
+      '695595363276554311',
+      '436237469134880768'
+    ],
+    last_update: 1641752832849
+  }
+]
+{
+  _id: new ObjectId("61dacc2464d1c8043588e87f"),
+  user_id: '278947004623618050',
+  game_id: '372438022647578634',
+  user_name: 'DarkCoreZone',
+  game_name: 'Destiny 2',
+  playtime: 3869867,
+  server_ids: [ '867883298717433896', '695595363276554311', '436237469134880768' ],
+  last_update: 1641752832849
+}
+startT: prev 1641752832849 ~~ 1641749516972
+_UpdateEntry => 
+{ user_id: '278947004623618050', game_id: '372438022647578634' }
+[
+  {
+    _id: new ObjectId("61db157f64d1c8043588e88b"),
+    user_id: '689598647565942825',
+    game_id: '438122941302046720',
+    user_name: 'verebala',
+    game_name: 'Rocket League®',
+    playtime: 5005117,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832344
+  }
+]
+server_ids is an array
+[ '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61db157e64d1c8043588e884"),
+    user_id: '320544288146587649',
+    game_id: '361968954954219521',
+    user_name: 'Vulpecula',
+    game_name: 'Squad',
+    playtime: 2881440,
+    server_ids: [ '695595363276554311', '436237469134880768' ],
+    last_update: 1641752832695
+  }
+]
+server_ids is an array
+[ '436237469134880768', '695595363276554311' ]
+[
+  {
+    _id: new ObjectId("61dacc2364d1c8043588e87d"),
+    user_id: '407664078535000065',
+    game_id: '401518684763586560',
+    user_name: 'Smokey',
+    game_name: 'League of Legends',
+    playtime: 3633282,
+    server_ids: [ '695595363276554311', '436237469134880768' ],
+    last_update: 1641752832687
+  }
+]
+server_ids is an array
+[ '436237469134880768', '695595363276554311' ]
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e882"),
+    user_id: '580826303280971838',
+    game_id: '359508404034600990',
+    user_name: 'KUDA',
+    game_name: 'Space Engineers',
+    playtime: 6711436,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832510
+  }
+]
+server_ids is an array
+[ '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61db157f64d1c8043588e889"),
+    user_id: '315384031464259584',
+    game_id: '356887282982191114',
+    user_name: 'WoLoW',
+    game_name: 'ARK: Survival Evolved',
+    playtime: 20428703,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832522
+  }
+]
+server_ids is an array
+[ '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61db157e64d1c8043588e887"),
+    user_id: '484442629333975041',
+    game_id: '511658855466401793',
+    user_name: 'Nagymathe',
+    game_name: 'SMITE',
+    playtime: 8363538,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832518
+  }
+]
+server_ids is an array
+[ '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e881"),
+    user_id: '384715453874044938',
+    game_id: '363447565905166336',
+    user_name: 'Daniell',
+    game_name: 'Grand Theft Auto San Andreas',
+    playtime: 21687878,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832516
+  }
+]
+server_ids is an array
+[ '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e87f"),
+    user_id: '278947004623618050',
+    game_id: '372438022647578634',
+    user_name: 'DarkCoreZone',
+    game_name: 'Destiny 2',
+    playtime: 3869867,
+    server_ids: [
+      '867883298717433896',
+      '695595363276554311',
+      '436237469134880768'
+    ],
+    last_update: 1641752832849
+  }
+]
+server_ids is an array
+[ '436237469134880768', '867883298717433896', '695595363276554311' ]
+[
+  {
+    _id: new ObjectId("61db157f64d1c8043588e88a"),
+    user_id: '265470322008915968',
+    game_id: '477175586805252107',
+    user_name: '-Krisz-',
+    game_name: 'Among Us',
+    playtime: 6507699,
+    server_ids: [ '436237469134880768' ],
+    last_update: 1641752832514
+  }
+]
+server_ids is an array
+[ '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61db15a264d1c8043588e88c"),
+    user_id: '421760162412494858',
+    game_id: '356889262362329098',
+    user_name: 'Demora',
+    game_name: 'FINAL FANTASY XIV',
+    playtime: 7144951,
+    server_ids: [ '695595363276554311' ],
+    last_update: 1641752832686
+  }
+]
+server_ids is an array
+[ '695595363276554311' ]
+[
+  {
+    _id: new ObjectId("61db15a264d1c8043588e88d"),
+    user_id: '543160538499252254',
+    game_id: null,
+    user_name: 'Rela3',
+    game_name: 'Timberborn',
+    playtime: 10378334,
+    server_ids: [ '695595363276554311' ],
+    last_update: 1641752832694
+  }
+]
+server_ids is an array
+[ '695595363276554311' ]
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e87f"),
+    user_id: '278947004623618050',
+    game_id: '372438022647578634',
+    user_name: 'DarkCoreZone',
+    game_name: 'Destiny 2',
+    playtime: 3869867,
+    server_ids: [
+      '867883298717433896',
+      '695595363276554311',
+      '436237469134880768'
+    ],
+    last_update: 1641752832849
+  }
+]
+server_ids is an array
+[ '867883298717433896', '695595363276554311', '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61db157e64d1c8043588e884"),
+    user_id: '320544288146587649',
+    game_id: '361968954954219521',
+    user_name: 'Vulpecula',
+    game_name: 'Squad',
+    playtime: 2881440,
+    server_ids: [ '695595363276554311', '436237469134880768' ],
+    last_update: 1641752832695
+  }
+]
+server_ids is an array
+[ '695595363276554311', '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61db15a264d1c8043588e88e"),
+    user_id: '134007279832793088',
+    game_id: '356875988589740042',
+    user_name: 'Vyzud',
+    game_name: 'Dota 2',
+    playtime: 13026139,
+    server_ids: [ '695595363276554311' ],
+    last_update: 1641753821288
+  }
+]
+server_ids is an array
+[ '695595363276554311' ]
+[
+  {
+    _id: new ObjectId("61dacc2364d1c8043588e87d"),
+    user_id: '407664078535000065',
+    game_id: '401518684763586560',
+    user_name: 'Smokey',
+    game_name: 'League of Legends',
+    playtime: 3633282,
+    server_ids: [ '695595363276554311', '436237469134880768' ],
+    last_update: 1641752832687
+  }
+]
+server_ids is an array
+[ '695595363276554311', '436237469134880768' ]
+[
+  {
+    _id: new ObjectId("61dacc2464d1c8043588e87f"),
+    user_id: '278947004623618050',
+    game_id: '372438022647578634',
+    user_name: 'DarkCoreZone',
+    game_name: 'Destiny 2',
+    playtime: 3869867,
+    server_ids: [
+      '867883298717433896',
+      '695595363276554311',
+      '436237469134880768'
+    ],
+    last_update: 1641752832849
+  }
+]
+server_ids is an array
+[ '695595363276554311', '867883298717433896', '436237469134880768' ]
+Updated Inferno
+Updated Vulpecula
+Updated verebala
+Updated WoLoW
+Updated KUDA
+Updated Smokey
+Updated Nagymathe
+Updated Demora
+Updated Daniell
+Updated -Krisz-
+Updated Rela3
+Updated DarkCoreZone
+Updated DarkCoreZone
+Updated Smokey
+Updated Vyzud
+Updated Vulpecula
+Updated DarkCoreZone
+Collect global information
+[
+  {
+    _id: '134007279832793088',
+    user_id: '134007279832793088',
+    user_name: 'Vyzud',
+    last_update: 1641753823391,
+    playtime: 13027641
+  },
+  {
+    _id: '543160538499252254',
+    user_id: '543160538499252254',
+    user_name: 'Rela3',
+    last_update: 1641753823150,
+    playtime: 11368264
+  },
+  {
+    _id: '421760162412494858',
+    user_id: '421760162412494858',
+    user_name: 'Demora',
+    last_update: 1641753823148,
+    playtime: 8135042
+  },
+  {
+    _id: '319032732007137280',
+    user_id: '319032732007137280',
+    user_name: 'Inferno',
+    last_update: 1641753822780,
+    playtime: 6914327
+  },
+  {
+    _id: '496756232632401941',
+    user_id: '496756232632401941',
+    user_name: 'JacobHeth',
+    last_update: 1641752832691,
+    playtime: 6423225
+  },
+  {
+    _id: '278947004623618050',
+    user_id: '278947004623618050',
+    user_name: 'DarkCoreZone',
+    last_update: 1641753823395,
+    playtime: 5281202
+  },
+  {
+    _id: '407664078535000065',
+    user_id: '407664078535000065',
+    user_name: 'Smokey',
+    last_update: 1641753823393,
+    playtime: 4345066
+  },
+  {
+    _id: '320544288146587649',
+    user_id: '320544288146587649',
+    user_name: 'Vulpecula',
+    last_update: 1641753823389,
+    playtime: 3871703
+  },
+  {
+    _id: '319554532361240577',
+    user_id: '319554532361240577',
+    user_name: 'Denes',
+    last_update: 1641747938688,
+    playtime: 2127485
+  },
+  {
+    _id: '356551572026818560',
+    user_id: '356551572026818560',
+    user_name: 'killer HUN 13',
+    last_update: 1641747961187,
+    playtime: 420097
+  }
+]
+[ 0, 2 ]

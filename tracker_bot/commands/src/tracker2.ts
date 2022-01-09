@@ -534,10 +534,10 @@ export class Tracker2{
         const ranks = [server_ranking.findIndex(value => {return value.user_id == user.id}), global_ranking.findIndex(value => {return value.user_id == user.id})]
         console.log(ranks)
         if(ranks[0] >= 0){
-            message.channel.send(`Ranked ${ranks[0] + 1} on ${message.guild.name}`)
+            message.channel.send(`Ranked ${ranks[0] + 1} / ${server_ranking.length} on ${message.guild.name}`)
         }
         if(ranks[1] >= 0){
-            message.channel.send(`Ranked ${ranks[1] + 1} globally`)
+            message.channel.send(`Ranked ${ranks[1] + 1} / ${global_ranking.length} globally`)
         }
 
         return
