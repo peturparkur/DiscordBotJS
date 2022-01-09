@@ -70243,3 +70243,102 @@ Connected guilds:  Bot Testing
 Checking if prefix_map.json exists
 Start tracker online
 Tracker is started
+/root/DiscordBotJS/node_modules/mongodb/lib/sessions.js:647
+        return new error_1.MongoExpiredSessionError();
+               ^
+
+MongoExpiredSessionError: Cannot use a session that has ended
+    at applySession (/root/DiscordBotJS/node_modules/mongodb/lib/sessions.js:647:16)
+    at Connection.command (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection.js:185:53)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/sdam/server.js:183:18
+    at Object.callback (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:266:13)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:474:29
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:402:13
+    at callback (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connect.js:52:9)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connect.js:120:21
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/auth/scram.js:163:20
+    at MessageStream.messageHandler (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection.js:479:9)
+
+> discordbotjs@1.0.0 start_tracker
+> node ./out/tracker_bot/tracker_bot.js
+
+Connected guilds:  PC Game Lounge
+Connected guilds:  Tam's Streaming Server
+Connected guilds:  Bot Testing
+Checking if prefix_map.json exists
+Start tracker online
+Tracker is started
+/root/DiscordBotJS/node_modules/mongodb/lib/utils.js:367
+    throw new error_1.MongoNotConnectedError('MongoClient must be connected to perform this operation');
+          ^
+
+MongoNotConnectedError: MongoClient must be connected to perform this operation
+    at getTopology (/root/DiscordBotJS/node_modules/mongodb/lib/utils.js:367:11)
+    at Collection.find (/root/DiscordBotJS/node_modules/mongodb/lib/collection.js:243:69)
+    at Tracker2.<anonymous> (file:///root/DiscordBotJS/out/tracker_bot/commands/src/tracker2.js:184:45)
+    at Generator.next (<anonymous>)
+    at fulfilled (file:///root/DiscordBotJS/out/tracker_bot/commands/src/tracker2.js:4:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+
+> discordbotjs@1.0.0 start_tracker
+> node ./out/tracker_bot/tracker_bot.js
+
+Connected guilds:  PC Game Lounge
+Connected guilds:  Tam's Streaming Server
+Connected guilds:  Bot Testing
+Checking if prefix_map.json exists
+Start tracker online
+Tracker is started
+/root/DiscordBotJS/node_modules/mongodb/lib/sessions.js:647
+        return new error_1.MongoExpiredSessionError();
+               ^
+
+MongoExpiredSessionError: Cannot use a session that has ended
+    at applySession (/root/DiscordBotJS/node_modules/mongodb/lib/sessions.js:647:16)
+    at Connection.command (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection.js:185:53)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/sdam/server.js:183:18
+    at Object.callback (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:266:13)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:474:29
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:402:13
+    at callback (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connect.js:52:9)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connect.js:120:21
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/auth/scram.js:163:20
+    at MessageStream.messageHandler (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection.js:479:9)
+
+> discordbotjs@1.0.0 start_tracker
+> node ./out/tracker_bot/tracker_bot.js
+
+Connected guilds:  PC Game Lounge
+Connected guilds:  Tam's Streaming Server
+Connected guilds:  Bot Testing
+Checking if prefix_map.json exists
+Start tracker online
+Tracker is started
+/root/DiscordBotJS/node_modules/mongodb/lib/sessions.js:647
+        return new error_1.MongoExpiredSessionError();
+               ^
+
+MongoExpiredSessionError: Cannot use a session that has ended
+    at applySession (/root/DiscordBotJS/node_modules/mongodb/lib/sessions.js:647:16)
+    at Connection.command (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection.js:185:53)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/sdam/server.js:183:18
+    at Object.callback (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:266:13)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:474:29
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection_pool.js:402:13
+    at callback (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connect.js:52:9)
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/connect.js:120:21
+    at /root/DiscordBotJS/node_modules/mongodb/lib/cmap/auth/scram.js:163:20
+    at MessageStream.messageHandler (/root/DiscordBotJS/node_modules/mongodb/lib/cmap/connection.js:479:9)
+
+> discordbotjs@1.0.0 start_tracker
+> node ./out/tracker_bot/tracker_bot.js
+
+Connected guilds:  PC Game Lounge
+Connected guilds:  Tam's Streaming Server
+Connected guilds:  Bot Testing
+Checking if prefix_map.json exists
+Start tracker online
+Tracker is started
+AddPlaytime
+[]
+null
